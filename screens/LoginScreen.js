@@ -48,7 +48,7 @@ function Login({ navigation }, props) {
     const [email, setemail] = store.useState("email");
 
     const handleLogin = async () => {
-
+        navigation.navigate('TabNavigation');
         await Client.post('/login', loginInfo)
             .then(function (res) {
                 if (res.data.type == 'error') {
@@ -60,7 +60,7 @@ function Login({ navigation }, props) {
                     navigation.navigate('Sign Up');
                 } else if (res.data.type == 'success') {
                     email.email = loginInfo.email
-                    navigation.navigate('Home');
+                    navigation.navigate('TabNavigation');
                 }
             }).catch(function (e) {
                 console.log(e)
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
 
     centeredView: {
         flex: 1,
-        top: 50,
+        top: 2,
         left: 110,
         // justifyContent: "flex-start",
         alignItems: "center",

@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
 
     centeredView: {
         flex: 1,
-        top: 50,
+        top: 2,
         left: 110,
         // justifyContent: "flex-start",
         alignItems: "center",

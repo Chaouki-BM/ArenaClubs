@@ -19,6 +19,7 @@
     "@mui/material": "^5.11.5",
     "@mui/styled-engine-sc": "^5.11.0",
     "@react-native-masked-view/masked-view": "^0.2.8",
+    "@react-navigation/bottom-tabs": "^6.5.4",
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/native-stack": "^6.9.8",
     "@ui-kitten/components": "^5.1.2",

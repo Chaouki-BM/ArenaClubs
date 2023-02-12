@@ -6,18 +6,21 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './screens/LoginScreen';
 import Reset from './screens/RestScreen'
 import SignUp from './screens/RegisterScreen'
-import HomePage from './screens/HomePage';
+//import home from './screens/HomePage';
 import NextRegister from './screens/NextRegister';
+import TabNavigation from './Navigations/TabNavigation'
 
 const Stack = createNativeStackNavigator();
+
 function App() {
   return (
     <View style={styles.container}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="LoginScreen"
+          initialRouteName="Login"
           screenOptions={{
-            headerShown: true,
+            headerShown: false,
+            animationEnabled: false,
             //headerStyle: { backgroundColor: '#f66723'},
           }}
         >
@@ -25,9 +28,12 @@ function App() {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Reset" component={Reset} />
           <Stack.Screen name="Sign-Up" component={SignUp} />
-          <Stack.Screen name="Home" component={HomePage} />
           <Stack.Screen name="Sign Up" component={NextRegister} />
+          <Stack.Screen name="TabNavigation" component={TabNavigation} />
+
+
         </Stack.Navigator>
+
       </NavigationContainer>
 
     </View>
