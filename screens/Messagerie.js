@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const FollowersPage = () => {
+const Messagerie = () => {
     return (
         <View>
-            <Text>FollowersPageeeee</Text>
+            <Text>Messagerie</Text>
         </View>
     )
 }
 
-export default FollowersPage
+export default Messagerie
 
 const styles = StyleSheet.create({})

@@ -1,19 +1,20 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Modal } from 'react-native'
+import { View, Text, StyleSheet, ImageBackground, ScrollView, TouchableOpacity, Modal, TextInput } from 'react-native'
 import store from '../components/Store';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-//import TabNavigation from '../Navigations/TabNavigation'
+import { Avatar } from 'react-native-elements';
+import TabBarProfil from '../Navigations/TabBarProfil';
 function HomePage({ navigation }) {
     const [img, setimg] = store.useState("img");
     const [mode, setmode] = store.useState("mode");
     const [Moons, setSun] = store.useState("Moons");
     const [textcoler, settextcoler] = store.useState("textcoler");
-    const [inputS, setinputS] = store.useState("inputS");
     const [modalVisible, setModalVisible] = useState(false);
     const [maincolor, setmaincolor] = store.useState("maincolor");
+
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -23,28 +24,26 @@ function HomePage({ navigation }) {
 
     };
 
+    const bio = ' BiOhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh'
     const handleThemeChange = () => {
         setmode(mode == "#ffffff" ? "#242526" : "#ffffff");
         settextcoler(textcoler == "#242526" ? "#ffffff" : "#242526");
         setSun(Moons == 'brightness-high' ? 'brightness-2' : 'brightness-high');
-        setinputS(inputS == '#f2f2f2' ? '#343434' : '#f2f2f2');
     };
     const handelMaincolor = (main) => {
         setmaincolor(main)
         setModalVisible(false)
     }
-    const [isFocus, setisFocus] = useState(false);
-    const [isFocusM, setisFocusM] = useState(false);
+
 
     return (
 
         <View style={[styles.container, { backgroundColor: mode }]}>
 
-
             <TouchableOpacity onPress={handelModal}>
                 <View style={styles.iconPContainer} >
                     <Ionicons name="color-palette-sharp" size={27}
-                        color={textcoler}
+                        color='#8e8e8f'
                         style={{
 
                             resizeMode: 'contain',
@@ -103,9 +102,10 @@ function HomePage({ navigation }) {
 
                 </View>
             </Modal >
+
             <TouchableOpacity onPress={handleThemeChange}>
                 <View style={styles.iconMContainer}>
-                    <MaterialIcons name={Moons} size={26} color={textcoler}
+                    <MaterialIcons name={Moons} size={26} color='#8e8e8f'
                         style={{
                             top: -30
 
@@ -113,156 +113,57 @@ function HomePage({ navigation }) {
                     />
                 </View>
             </TouchableOpacity>
-            <ScrollView>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
-                <Text>Profile</Text>
+
+
+
+            <ScrollView
+                nestedScrollEnabled={true}
+                showsVerticalScrollIndicator={false}
+
+                style={styles.ViewStyle}>
+
+                <ImageBackground source={{ uri: 'https://reactjs.org/logo-og.png' }} resizeMode="cover" style={styles.cover}>
+                    <Text style={styles.text}></Text>
+                </ImageBackground>
+                <Avatar
+                    rounded
+                    size={100}
+                    icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
+                    overlayContainerStyle={{ backgroundColor: 'gray' }}
+                    onPress={() => console.log("Works!")}
+                    containerStyle={{ flex: 1, marginTop: 40 }}
+                //source={{ uri: img }}
+                />
+                <View style={{ flexDirection: 'row', padding: 10 }}>
+                    <Text style={{ marginRight: 10, fontSize: 20, fontStyle: 'bold', color: textcoler, }}>Name</Text>
+                    <Text style={{ marginRight: 10, fontSize: 20, fontStyle: 'bold', color: textcoler, }}>#Tag</Text>
+                </View>
+                <View style={{ padding: 10 }}>
+                    <Text style={{ width: 300, height: 50, color: textcoler, }}>{bio}</Text>
+                </View>
+                <View style={{ padding: 10 }}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ marginRight: 10, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Followers:</Text>
+                        <Text style={{ marginRight: 70, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>2</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ marginRight: 10, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Following:</Text>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic' }}>2</Text>
+                        </View>
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ marginRight: 20, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Albums:</Text>
+                        <Text style={{ marginRight: 70, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>2</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ marginRight: 20, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Pictures:</Text>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic' }}>2</Text>
+                        </View>
+                    </View>
+
+                </View>
+                <TabBarProfil />
+
             </ScrollView>
+
         </View >
 
     )
@@ -297,7 +198,7 @@ const styles = StyleSheet.create({
         height: '100%',
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        alignItems: 'center',
+        alignItems: 'baseline',
         // backgroundColor: '#ECF1FE',
         padding: 10,
 
@@ -321,6 +222,21 @@ const styles = StyleSheet.create({
         // backgroundColor: "white",
         marginStart: 250,
 
+    },
+
+
+    ViewStyle: {
+        flexDirection: 'column',
+        width: '100%',
+        height: '100%',
+        //flex: 1
+        //padding: 10,
+    },
+    cover: {
+        flex: 1,
+        justifyContent: 'center',
+        width: '100%',
+        height: '650%'
     },
 
 

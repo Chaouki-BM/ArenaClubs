@@ -136,7 +136,7 @@ function RegisterScreen({ navigation }) {
             <TouchableOpacity onPress={handelModal}>
                 <View style={styles.iconPContainer} >
                     <Ionicons name="color-palette-sharp" size={27}
-                        color={textcoler}
+                        color='#8e8e8f'
                         style={{
 
                             resizeMode: 'contain',
@@ -197,7 +197,7 @@ function RegisterScreen({ navigation }) {
             </Modal >
             <TouchableOpacity onPress={handleThemeChange}>
                 <View style={styles.iconMContainer}>
-                    <MaterialIcons name={Moons} size={26} color={textcoler}
+                    <MaterialIcons name={Moons} size={26} color='#8e8e8f'
                         style={{
                             top: -30
 

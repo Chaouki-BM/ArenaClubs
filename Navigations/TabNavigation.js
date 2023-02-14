@@ -1,42 +1,44 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AccueilPage from '../screens/AccueilPage';
-import AlbumPage from '../screens/AlbumPage';
+import Notification from '../screens/Notification'
 import SettingPage from '../screens/SettingPage';
-import FollowersPage from '../screens/FollowersPage';
-import FollowingPage from '../screens/FollowingPage'
 import HomePage from '../screens/HomePage';
+import Messagerie from '../screens/Messagerie'
 import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { SafeAreaView, StyleSheet } from 'react-native';
+import store from '../components/Store';
+import TabBarProfil from './TabBarProfil';
 const Tab = createBottomTabNavigator()
-const TabNavigation = () => {
-    return (
 
+const TabNavigation = () => {
+    const [maincolor, setmaincolor] = store.useState("maincolor");
+    const [mode, setmode] = store.useState("mode");
+    return (
         <SafeAreaView style={styles.container}>
             <Tab.Navigator
                 screenOptions={{
-                    tabBarActiveTintColor: 'red',
-                    tabBarInactiveTintColor: 'black',
+                    tabBarActiveTintColor: maincolor,
+                    tabBarInactiveTintColor: '#8e8e8f',
                     headerShown: false,
-
+                    tabBarStyle: { backgroundColor: mode }
                 }}
             >
                 <Tab.Screen name="HomePage" component={HomePage}
                     options={{
-                        tabBarBadge: 10, title: 'Profile',
+                        title: 'Account',
                         tabBarIcon: ({ focused, color, size }) => (
                             <FontAwesome5 name="user-alt" color={color} size={size} />
 
                         ),
                     }}
-
                 />
                 <Tab.Screen
                     name="AccueilPage" component={AccueilPage}
                     options={{
-                        tabBarBadge: 3, title: 'Accueil',
+                        title: 'Home',
                         tabBarIcon: ({ focused, color, size }) => (
                             <Entypo name="home" color={color} size={size} />
 
@@ -44,27 +46,19 @@ const TabNavigation = () => {
 
                     }}
                 />
-                <Tab.Screen name='AlbumPage' component={AlbumPage}
+                <Tab.Screen name='Notification' component={Notification}
                     options={{
-                        title: 'Album',
+                        tabBarBadge: 10, title: 'Notification',
                         tabBarIcon: ({ focused, color, size }) => (
-                            <Ionicons name="md-albums" color={color} size={size} />
+                            <Ionicons name="notifications" color={color} size={size} />
                         ),
                     }}
                 />
-                <Tab.Screen name="FollowersPage" component={FollowersPage}
+                <Tab.Screen name="Messagerie" component={Messagerie}
                     options={{
-                        title: 'Followers',
+                        tabBarBadge: 3, title: 'Messagerie',
                         tabBarIcon: ({ focused, color, size }) => (
-                            <FontAwesome5 name="user-friends" color={color} size={size} />
-                        ),
-                    }}
-                />
-                <Tab.Screen name="FollowingPage" component={FollowingPage}
-                    options={{
-                        title: 'Following',
-                        tabBarIcon: ({ focused, color, size }) => (
-                            <FontAwesome5 name="user-check" color={color} size={size} />
+                            <Entypo name="message" color={color} size={size} />
                         ),
                     }}
                 />
@@ -83,7 +77,7 @@ const TabNavigation = () => {
 }
 const styles = StyleSheet.create({
     container: {
-        //width: '100%',
+        width: '100%',
         height: '91%',
         //flexDirection: 'column',
         //justifyContent: 'flex-start',

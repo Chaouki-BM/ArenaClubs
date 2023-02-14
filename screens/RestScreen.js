@@ -65,6 +65,7 @@ function RestScreen({ navigation }) {
         setmaincolor(main)
         setModalVisible(false)
     }
+
     const [isFocusC, setisFocusC] = useState(false);
     const [isFocusNP, setisFocusNP] = useState(false);
     const [isFocusP, setisFocusP] = useState(false);
@@ -76,7 +77,7 @@ function RestScreen({ navigation }) {
             <TouchableOpacity onPress={handelModal}>
                 <View style={styles.iconPContainer} >
                     <Ionicons name="color-palette-sharp" size={27}
-                        color={textcoler}
+                        color='#8e8e8f'
                         style={{
 
                             resizeMode: 'contain',
@@ -137,7 +138,7 @@ function RestScreen({ navigation }) {
             </Modal >
             <TouchableOpacity onPress={handleThemeChange}>
                 <View style={styles.iconMContainer}>
-                    <MaterialIcons name={Moons} size={26} color={textcoler}
+                    <MaterialIcons name={Moons} size={26} color='#8e8e8f'
                         style={{
                             top: -30
 
