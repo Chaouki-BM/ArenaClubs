@@ -14,7 +14,7 @@ function HomePage({ navigation }) {
     const [textcoler, settextcoler] = store.useState("textcoler");
     const [modalVisible, setModalVisible] = useState(false);
     const [maincolor, setmaincolor] = store.useState("maincolor");
-
+    const [inputS, setinputS] = store.useState("inputS");
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -29,6 +29,7 @@ function HomePage({ navigation }) {
         setmode(mode == "#ffffff" ? "#242526" : "#ffffff");
         settextcoler(textcoler == "#242526" ? "#ffffff" : "#242526");
         setSun(Moons == 'brightness-high' ? 'brightness-2' : 'brightness-high');
+        setinputS(inputS == '#f2f2f2' ? '#343434' : '#f2f2f2');
     };
     const handelMaincolor = (main) => {
         setmaincolor(main)
@@ -173,8 +174,8 @@ const styles = StyleSheet.create({
         flex: 1,
         top: 2,
         left: 110,
-        // justifyContent: "flex-start",
-        alignItems: "center",
+        //justifyContent: "flex-start",
+        alignItems: 'center',
         marginTop: 50
     },
     modalView: {
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
         //justifyContent: "center",
         // alignItems: "center",
         // backgroundColor: "white",
-        marginStart: 320,
+        marginStart: 340,
 
     },
     iconMContainer: {
@@ -220,7 +221,7 @@ const styles = StyleSheet.create({
         //justifyContent: "center",
         // alignItems: "center",
         // backgroundColor: "white",
-        marginStart: 250,
+        marginStart: 300,
 
     },
 
@@ -234,9 +235,9 @@ const styles = StyleSheet.create({
     },
     cover: {
         flex: 1,
-        justifyContent: 'center',
+        //justifyContent: 'center',
         width: '100%',
-        height: '650%'
+        height: '700%'
     },
 
 

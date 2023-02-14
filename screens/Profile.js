@@ -1,14 +1,15 @@
-import { StyleSheet, Text, View, ScrollView, SafeArray } from 'react-native'
+import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import React from 'react'
-
+import store from '../components/Store';
 const Profile = () => {
+    const [mode, setmode] = store.useState("mode");
     return (
-        <View>
+        <View style={[styles.container, { backgroundColor: mode }]}>
             <ScrollView
                 nestedScrollEnabled={true}
                 showsVerticalScrollIndicator={false}
 
-                style={styles.container}>
+            >
                 <Text>Profile aghgh</Text>
                 <Text>Profile aghgh</Text>
                 <Text>Profile aghgh</Text>

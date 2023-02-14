@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, Pressable, Alert, Modal, ImagePickerIOS } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import Entypo from 'react-native-vector-icons/Entypo'
