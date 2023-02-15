@@ -10,7 +10,8 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { SafeAreaView, StyleSheet } from 'react-native';
 import store from '../components/Store';
-import TabBarProfil from './TabBarProfil';
+//import DrawerTab from './DrawerTab';
+
 const Tab = createBottomTabNavigator()
 
 const TabNavigation = () => {

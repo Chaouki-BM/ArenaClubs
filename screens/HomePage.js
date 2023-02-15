@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, ImageBackground, ScrollView, TouchableOpacity, Modal, TextInput } from 'react-native'
+import React, { useState, useRef } from 'react'
+import { View, Text, StyleSheet, ImageBackground, ScrollView, TouchableOpacity, Modal, Pressable } from 'react-native'
 import store from '../components/Store';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
@@ -7,7 +7,9 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Avatar } from 'react-native-elements';
 import TabBarProfil from '../Navigations/TabBarProfil';
+import RBSheet from "react-native-raw-bottom-sheet";
 function HomePage({ navigation }) {
+    const refRBSheet = useRef();
     const [img, setimg] = store.useState("img");
     const [mode, setmode] = store.useState("mode");
     const [Moons, setSun] = store.useState("Moons");
@@ -35,6 +37,10 @@ function HomePage({ navigation }) {
         setmaincolor(main)
         setModalVisible(false)
     }
+
+
+
+
 
 
     return (
@@ -159,11 +165,44 @@ function HomePage({ navigation }) {
                             <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic' }}>2</Text>
                         </View>
                     </View>
-
+                    <Pressable onPress={() => refRBSheet.current.open()}>
+                        <Text style={{ fontSize: 13, color: '#8e8e8f' }}>see more...</Text>
+                    </Pressable>
                 </View>
                 <TabBarProfil />
 
             </ScrollView>
+            <RBSheet
+                ref={refRBSheet}
+                closeOnDragDown={true}
+                closeOnPressMask={false}
+                customStyles={{
+                    wrapper: {
+                        backgroundColor: "transparent"
+                    },
+                    draggableIcon: {
+                        backgroundColor: maincolor
+                    },
+                    container: {
+                        backgroundColor: mode
+                    }
+
+                }}
+            >
+                <View style={{ padding: 10 }}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'Bold' }}>FaceBook :</Text>
+                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>Bla Bla Bla</Text>
+
+
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'Bold' }}>Instagram :</Text>
+                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>Bla Bla Bla</Text>
+
+                    </View>
+                </View>
+            </RBSheet>
 
         </View >
 
