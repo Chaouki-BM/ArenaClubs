@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Pressable, Alert, Modal } from 'react-native'
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Pressable, Alert, Modal, TextInput } from 'react-native'
 import React, { useRef, useState } from 'react'
 import store from '../components/Store';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -10,6 +10,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Feather from 'react-native-vector-icons/Feather'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import Client from '../api/Client';
 const SettingPage = () => {
     const refRBSheet = useRef();
     const [img, setimg] = store.useState("img");
@@ -19,6 +20,9 @@ const SettingPage = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [maincolor, setmaincolor] = store.useState("maincolor");
     const [inputS, setinputS] = store.useState("inputS");
+    const [isFocusM, setisFocusM] = useState(false);
+    const [isFocus, setisFocus] = useState(false);
+    const [email, setemail] = store.useState("email");
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -45,30 +49,132 @@ const SettingPage = () => {
             setchevron('chevron-right')
         }
     }
+    const [visible, setvisible] = useState('')
     const handelchangePassword = () => {
         refRBSheet.current.open()
+        setvisible('changepassword')
     }
     const handelchangeName = () => {
         refRBSheet.current.open()
+        setvisible('changename')
     }
     const handelchangePicture = () => {
         refRBSheet.current.open()
+        setvisible('')
     }
     const handelDeleteCouverture = () => {
         refRBSheet.current.open()
+        setvisible('')
     }
     const handelEditLinks = () => {
         refRBSheet.current.open()
+        setvisible('')
     }
     const handelAddAlbum = () => {
         refRBSheet.current.open()
+        setvisible('')
     }
     const handelContactUs = () => {
         refRBSheet.current.open()
+        setvisible('')
     }
     const handelLogOut = () => {
         refRBSheet.current.open()
+        setvisible('')
     }
+    const handelchangeBio = () => {
+        refRBSheet.current.open()
+        setvisible('changeBio')
+    }
+    const handelchangedata = () => {
+        refRBSheet.current.open()
+        setvisible('changedata')
+    }
+    const [changepassword, setchangepassword] = useState({
+        password: '',
+        password1: '',
+        password2: '',
+        email: '',
+    });
+    const initialState = {
+
+    };
+    const handelsavechange = async () => {
+        changepassword.email = email.email
+        console.log(changepassword)
+        await Client.post("/changepassword", changepassword).then(function (res) {
+            console.log(res.data)
+            if (res.data.type == 'success') {
+                Alert.alert('success', res.data.msg)
+                setchangepassword(initialState)
+            } else {
+                Alert.alert('error', res.data.msg)
+            }
+
+        }).catch(function (e) {
+            console.log("error from handelsave password", e)
+        })
+    }
+    const [changename, setchangename] = useState({
+        name: '',
+        tag: '',
+        email: '',
+
+    })
+    const handelsavechangename = async () => {
+        changename.email = email.email
+        await Client.post("/changename", changename).then(function (res) {
+            if (res.data.type == 'success') {
+                Alert.alert('success', res.data.msg)
+                setchangename(initialState)
+            } else if (res.data.type == 'info') {
+                Alert.alert('info', res.data.msg)
+            } else {
+                Alert.alert('error', res.data.msg)
+            }
+        }).catch(function (e) {
+            console.log('error from change name ande tag ', e)
+        })
+    }
+    const [changeBio, setchangeBio] = useState({
+        bio: '',
+        email: '',
+    })
+    const handelsaveBio = async () => {
+        changeBio.email = email.email
+        await Client.post("/modify_bio", changeBio).then(function (res) {
+            if (res.data.type == 'success') {
+                Alert.alert('success', res.data.msg)
+                setchangename(initialState)
+            } else {
+                Alert.alert('error', res.data.msg)
+                setchangename(initialState)
+            }
+        }).catch(function (e) {
+            console.log("error from change Bio", e)
+        })
+    }
+    const [changeData, setchangeData] = useState({
+        tel: '',
+        birthday: '',
+        adress: '',
+        email: '',
+    })
+    const handelsaveData = async () => {
+        changeData.email = email.email
+        await Client.post("/modify", changeData).then(function (res) {
+            if (res.data.type == 'success') {
+                Alert.alert('success', res.data.msg)
+                setchangeData(initialState)
+            } else {
+                Alert.alert('error', res.data.msg)
+                setchangeData(initialState)
+            }
+        }).catch(function (e) {
+            console.log("error from save data (tel,add,birth)", e)
+        })
+    }
+
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
             <TouchableOpacity onPress={handelModal}>
@@ -168,7 +274,7 @@ const SettingPage = () => {
                         </View>
                     </TouchableOpacity>
                     {chevron == 'chevron-down' &&
-                        <View>
+                        <View >
                             <View
                                 style={{
                                     borderBottomColor: maincolor,
@@ -179,28 +285,40 @@ const SettingPage = () => {
 
                                 }}
                             />
-                            <TouchableOpacity style={{ marginBottom: 10, }} onPress={() => handelchangePassword()}>
+                            <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangePassword()}>
                                 <View style={{ flexDirection: 'row' }}>
 
                                     <MaterialIcons name='security' size={25} color={maincolor} style={{ marginRight: 20 }} />
                                     <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Change password</Text>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ marginBottom: 10, }} onPress={() => handelchangeName()}>
+                            <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangeName()}>
                                 <View style={{ flexDirection: 'row' }}>
 
                                     <FontAwesome name='user' size={25} color={maincolor} style={{ marginRight: 20 }} />
                                     <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Change Name & Tag</Text>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ marginBottom: 10, }} onPress={() => handelchangePicture()}>
+                            <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangeBio()}>
+                                <View style={{ flexDirection: 'row' }}>
+                                    < FontAwesome name='pencil' size={23} color={maincolor} style={{ marginRight: 20 }} />
+                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Update Bio</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangedata()}>
+                                <View style={{ flexDirection: 'row' }}>
+                                    < FontAwesome name='pencil' size={23} color={maincolor} style={{ marginRight: 20 }} />
+                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Update cobbler profile</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangePicture()}>
                                 <View style={{ flexDirection: 'row' }}>
 
                                     < FontAwesome5 name='images' size={23} color={maincolor} style={{ marginRight: 20 }} />
                                     <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Update profile picture</Text>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ marginBottom: 10, }} onPress={() => handelDeleteCouverture()}>
+                            <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelDeleteCouverture()}>
                                 <View style={{ flexDirection: 'row' }}>
 
                                     < FontAwesome5 name='trash' size={25} color={maincolor} style={{ marginRight: 20 }} />
@@ -270,7 +388,7 @@ const SettingPage = () => {
 
                         }}
                     />
-                    <TouchableOpacity style={{ marginBottom: 10, }} onPress={() => handelLogOut()}>
+                    <TouchableOpacity style={{ marginBottom: 10, }} onPress={() => handelLogOut}>
                         <View style={{ flexDirection: 'row' }}>
 
                             <Entypo name='log-out' size={25} color={maincolor} style={{ marginRight: 20 }} />
@@ -294,7 +412,7 @@ const SettingPage = () => {
                 ref={refRBSheet}
                 closeOnDragDown={true}
                 closeOnPressMask={false}
-                height={500}
+                height={650}
                 openDuration={300}
                 customStyles={{
                     wrapper: {
@@ -309,10 +427,261 @@ const SettingPage = () => {
 
                 }}
             >
-                <View style={{ padding: 10 }}>
+                {visible == 'changepassword' &&
+                    <View style={{ padding: 10 }}>
+                        <Text style={{ marginHorizontal: 100, color: maincolor, fontSize: 18, marginVertical: 50 }}>Change password</Text>
+                        <TextInput
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 350,
+                                marginHorizontal: 10,
+                                marginBottom: 40,
 
-                </View>
-            </RBSheet>
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="password"
+                            onChangeText={val => {
+                                setchangepassword({ ...changepassword, password: val });
+                            }}
+                            value={changepassword.password}
+                        />
+                        <TextInput
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 350,
+                                marginHorizontal: 10,
+                                marginBottom: 40,
+
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="New password"
+                            onChangeText={val => {
+                                setchangepassword({ ...changepassword, password1: val });
+                            }}
+                            value={changepassword.password1}
+                        />
+                        <TextInput
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 350,
+                                marginHorizontal: 10,
+                                marginBottom: 70,
+
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="New password"
+                            onChangeText={val => {
+                                setchangepassword({ ...changepassword, password2: val });
+                            }}
+                            value={changepassword.password2}
+                        />
+                        <TouchableOpacity onPress={handelsavechange} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
+                            <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
+                        </TouchableOpacity>
+                    </View>}
+                {/* ------------------------Change-name------------------------------ */}
+                {visible == 'changename' &&
+                    <View style={{ padding: 10 }}>
+                        <Text style={{ marginHorizontal: 90, color: maincolor, fontSize: 18, marginVertical: 50 }}>Change Name and Tag</Text>
+                        <TextInput
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 350,
+                                marginHorizontal: 10,
+                                marginBottom: 40,
+
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="Name"
+                            onChangeText={val => {
+                                setchangename({ ...changename, name: val });
+                            }}
+                            value={changename.name}
+                        />
+                        <TextInput
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 350,
+                                marginHorizontal: 10,
+                                marginBottom: 40,
+
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="#Tag"
+                            onChangeText={val => {
+                                setchangename({ ...changename, tag: val });
+                            }}
+                            value={changename.tag}
+                        />
+
+                        <TouchableOpacity onPress={handelsavechangename} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
+                            <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
+                        </TouchableOpacity>
+                    </View>}
+                {/* ----------------------Bio------------------------ */}
+                {visible == 'changeBio' &&
+                    <View style={{ padding: 10 }}>
+                        <Text style={{ marginHorizontal: 130, color: maincolor, fontSize: 18, marginVertical: 50 }}>Change Bio</Text>
+                        <TextInput
+                            multiline
+                            numberOfLines={2}
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 300,
+                                //height: 100,
+                                marginHorizontal: 10,
+                                marginBottom: 40,
+
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="New Bio"
+                            onChangeText={val => {
+                                setchangeBio({ ...changeBio, bio: val });
+                            }}
+                            value={changeBio.bio}
+                        />
+                        <TouchableOpacity onPress={handelsaveBio} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
+                            <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
+                        </TouchableOpacity>
+                    </View>}
+                {/* -------------------change-Data----------------- */}
+                {visible == 'changedata' &&
+                    <View style={{ padding: 10 }}>
+                        <Text style={{ marginHorizontal: 90, color: maincolor, fontSize: 18, marginVertical: 50 }}>Change cobbler profile</Text>
+                        <TextInput
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 300,
+                                //height: 100,
+                                marginHorizontal: 10,
+                                marginBottom: 40,
+
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="Telephone"
+                            onChangeText={val => {
+                                setchangeData({ ...changeData, tel: val });
+                            }}
+                            value={changeData.tel}
+                        />
+                        <TextInput
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 300,
+                                //height: 100,
+                                marginHorizontal: 10,
+                                marginBottom: 40,
+
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="Address"
+                            onChangeText={val => {
+                                setchangeData({ ...changeData, adress: val });
+                            }}
+                            value={changeData.adress}
+                        />
+                        <TextInput
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 300,
+                                //height: 100,
+                                marginHorizontal: 10,
+                                marginBottom: 40,
+
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="Birthday"
+                            onChangeText={val => {
+                                setchangeData({ ...changeData, birthday: val });
+                            }}
+                            value={changeData.birthday}
+                        />
+                        <TouchableOpacity onPress={handelsaveData} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
+                            <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
+                        </TouchableOpacity>
+                    </View>}
+            </RBSheet >
         </View >
     )
 }

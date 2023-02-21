@@ -48,7 +48,6 @@ function Login({ navigation }, props) {
     const [email, setemail] = store.useState("email");
 
     const handleLogin = async () => {
-        navigation.navigate('TabNavigation');
         await Client.post('/login', loginInfo)
             .then(function (res) {
                 if (res.data.type == 'error') {

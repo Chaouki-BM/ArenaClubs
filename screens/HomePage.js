@@ -1,13 +1,16 @@
-import React, { useState, useRef } from 'react'
-import { View, Text, StyleSheet, ImageBackground, ScrollView, TouchableOpacity, Modal, Pressable } from 'react-native'
+import React, { useState, useRef, useEffect } from 'react'
+import { View, Text, StyleSheet, ImageBackground, ScrollView, TouchableOpacity, Modal, Pressable, Platform } from 'react-native'
 import store from '../components/Store';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Avatar } from 'react-native-elements';
 import TabBarProfil from '../Navigations/TabBarProfil';
 import RBSheet from "react-native-raw-bottom-sheet";
+import Client from '../api/Client';
 function HomePage({ navigation }) {
     const refRBSheet = useRef();
     const [img, setimg] = store.useState("img");
@@ -17,6 +20,7 @@ function HomePage({ navigation }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [maincolor, setmaincolor] = store.useState("maincolor");
     const [inputS, setinputS] = store.useState("inputS");
+    const [email, setemail] = store.useState("email");
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -25,8 +29,30 @@ function HomePage({ navigation }) {
         }
 
     };
+    // -----------------------------------------------
+    const [data, setdata] = useState([]);
+    const [datauser, setdatauser] = useState([]);
+    let avatarimg = "http://localhost:3000/" + data.image
+    useEffect(() => {
+        loadDataUser();
+        loadData();
+    }, []);
+    const loadDataUser = async () => {
+        await Client.post('/getuser', email).then(function (res) {
+            setdatauser(res.data)
+        }).catch(function (e) {
+            console.log('error data from laoddatauser')
+        })
+    }
+    const loadData = async () => {
+        await Client.post('/getprofil', email).then(function (res) {
+            setdata(res.data)
 
-    const bio = ' BiOhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh'
+        }).catch(function (e) {
+            console.log('error from loaddata')
+        })
+    }
+    // ----------------------------------------------------
     const handleThemeChange = () => {
         setmode(mode == "#ffffff" ? "#242526" : "#ffffff");
         settextcoler(textcoler == "#242526" ? "#ffffff" : "#242526");
@@ -38,7 +64,7 @@ function HomePage({ navigation }) {
         setModalVisible(false)
     }
 
-
+    let image = { uri: 'uploads\M9QyXqt197m59xzLAXRkPM0m.jpg' };
 
 
 
@@ -129,40 +155,47 @@ function HomePage({ navigation }) {
 
                 style={styles.ViewStyle}>
 
-                <ImageBackground source={{ uri: 'https://reactjs.org/logo-og.png' }} resizeMode="cover" style={styles.cover}>
+                <ImageBackground
+                    imageStyle={{ borderBottomLeftRadius: 25 }}
+                    source={{ uri: 'https://reactjs.org/logo-og.png' }}
+                    resizeMode="cover"
+                    style={styles.cover}
+                >
                     <Text style={styles.text}></Text>
                 </ImageBackground>
+
                 <Avatar
                     rounded
                     size={100}
-                    icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
+                    //icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
                     overlayContainerStyle={{ backgroundColor: 'gray' }}
-                    onPress={() => console.log("Works!")}
+                    //onPress={() => console.log("Works!")}
                     containerStyle={{ flex: 1, marginTop: 40 }}
-                //source={{ uri: img }}
+                //source={{ uri: 'http://localhost:3000/uploads\\iWiLKphnVPJAOXnr9T-Jxdm8.jpg' }}
                 />
                 <View style={{ flexDirection: 'row', padding: 10 }}>
-                    <Text style={{ marginRight: 10, fontSize: 20, fontStyle: 'bold', color: textcoler, }}>Name</Text>
-                    <Text style={{ marginRight: 10, fontSize: 20, fontStyle: 'bold', color: textcoler, }}>#Tag</Text>
+                    <Text style={{ marginRight: 10, fontSize: 20, fontStyle: 'bold', color: textcoler, }}>{datauser.name}</Text>
+                    <Text style={{ marginRight: 10, fontSize: 20, fontStyle: 'bold', color: textcoler, }}>{datauser.tag}</Text>
                 </View>
                 <View style={{ padding: 10 }}>
-                    <Text style={{ width: 300, height: 50, color: textcoler, }}>{bio}</Text>
+                    {/* --------------------------------------- */}
+                    <Text style={{ width: 300, height: 50, color: textcoler, }}>{data.bio}</Text>
                 </View>
                 <View style={{ padding: 10 }}>
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={{ marginRight: 10, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Followers:</Text>
-                        <Text style={{ marginRight: 70, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>2</Text>
+                        <Text style={{ marginRight: 70, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>{data.nb_followers}</Text>
                         <View style={{ flexDirection: 'row' }}>
                             <Text style={{ marginRight: 10, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Following:</Text>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic' }}>2</Text>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic' }}>{data.nb_following}</Text>
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={{ marginRight: 20, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Albums:</Text>
-                        <Text style={{ marginRight: 70, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>2</Text>
+                        <Text style={{ marginRight: 70, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>{data.nb_classe}</Text>
                         <View style={{ flexDirection: 'row' }}>
                             <Text style={{ marginRight: 20, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Pictures:</Text>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic' }}>2</Text>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic' }}>{data.nb_img}</Text>
                         </View>
                     </View>
                     <Pressable onPress={() => refRBSheet.current.open()}>
@@ -172,10 +205,13 @@ function HomePage({ navigation }) {
                 <TabBarProfil />
 
             </ScrollView>
+
             <RBSheet
                 ref={refRBSheet}
                 closeOnDragDown={true}
                 closeOnPressMask={false}
+                height={330}
+                openDuration={300}
                 customStyles={{
                     wrapper: {
                         backgroundColor: "transparent"
@@ -189,18 +225,35 @@ function HomePage({ navigation }) {
 
                 }}
             >
-                <View style={{ padding: 10 }}>
+                <View style={{ padding: 20 }}>
                     <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'Bold' }}>FaceBook :</Text>
-                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>Bla Bla Bla</Text>
+                        <FontAwesome name='mobile-phone' size={27} color={maincolor} style={{ marginRight: 20 }} />
+                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.tel}</Text>
 
 
                     </View>
                     <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'Bold' }}>Instagram :</Text>
-                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>Bla Bla Bla</Text>
+                        <FontAwesome name='birthday-cake' size={20} color={maincolor} style={{ marginRight: 10 }} />
+                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.birthday}</Text>
 
                     </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <FontAwesome name='map-marker' size={27} color={maincolor} style={{ marginRight: 15 }} />
+                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.adress}</Text>
+
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <MaterialCommunityIcons name='email' size={23} color={maincolor} style={{ marginRight: 10 }} />
+                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{datauser.email}</Text>
+
+                    </View>
+                    <View style={{ flexDirection: 'row', marginHorizontal: 100, marginVertical: 50, }}>
+                        <Entypo name='facebook' size={23} color={maincolor} style={{ marginRight: 20 }} />
+                        <Entypo name='instagram' size={23} color={maincolor} style={{ marginRight: 20 }} />
+                        <Entypo name='twitter' size={23} color={maincolor} style={{ marginRight: 20 }} />
+                        <FontAwesome name='snapchat' size={23} color={maincolor} style={{ marginRight: 10 }} />
+                    </View>
+
                 </View>
             </RBSheet>
 
@@ -276,7 +329,8 @@ const styles = StyleSheet.create({
         flex: 1,
         //justifyContent: 'center',
         width: '100%',
-        height: '700%'
+        height: '700%',
+
     },
 
 
