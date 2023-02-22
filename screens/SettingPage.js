@@ -11,9 +11,9 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Feather from 'react-native-vector-icons/Feather'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Client from '../api/Client';
+import { launchImageLibrary } from 'react-native-image-picker';
 const SettingPage = () => {
     const refRBSheet = useRef();
-    const [img, setimg] = store.useState("img");
     const [mode, setmode] = store.useState("mode");
     const [Moons, setSun] = store.useState("Moons");
     const [textcoler, settextcoler] = store.useState("textcoler");
@@ -58,17 +58,61 @@ const SettingPage = () => {
         refRBSheet.current.open()
         setvisible('changename')
     }
-    const handelchangePicture = () => {
-        refRBSheet.current.open()
-        setvisible('')
+    const upload = async () => {
+        const formData = new FormData()
+        formData.append('file', { uri: pict, type: 'image/jpeg', name: 'image.jpg' })
+        await Client.post('/upload', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(function (res) {
+            let path = res.data.file.path
+            imageup.path = path
+            imageup.email = email.email
+            postimg()
+        }).catch(function (e) {
+            console.log('err bcz update prfl img', e)
+        })
     }
+    const [imageup, setimageup] = useState({
+        path: '',
+        email: '',
+    })
+    const postimg = async () => {
+        await Client.post("/Upimage", imageup)
+            .then(function (res) {
+
+            }).catch(function (e) {
+                console.log('error postimg', e)
+            })
+    }
+    const handelchangePicture = () => {
+
+        let options = {
+            mediaType: 'photo',
+            quality: 1,
+            // includeBase64: true,
+        };
+
+        launchImageLibrary(options, res => {
+            if (!res.didCancel) {
+                setpict(res.assets[0].uri)
+                console.log("img ok", res.assets[0].uri)
+                upload()
+            }
+
+        })
+
+
+    }
+    const [pict, setpict] = useState('')
     const handelDeleteCouverture = () => {
         refRBSheet.current.open()
         setvisible('')
     }
     const handelEditLinks = () => {
         refRBSheet.current.open()
-        setvisible('')
+        setvisible('editlikns')
     }
     const handelAddAlbum = () => {
         refRBSheet.current.open()
@@ -172,6 +216,28 @@ const SettingPage = () => {
             }
         }).catch(function (e) {
             console.log("error from save data (tel,add,birth)", e)
+        })
+    }
+    const [changelink, setchangelink] = useState({
+        facebook: '',
+        instagram: '',
+        twitter: '',
+        snapchat: '',
+        tiktok: '',
+        email: '',
+    })
+    const handelsavechangelinks = async () => {
+        changelink.email = email.email
+        await Client.post("/changelinks", changelink).then(function (res) {
+            if (res.data.type == 'success') {
+                Alert.alert('success', res.data.msg)
+                setchangelink(initialState)
+            } else {
+                Alert.alert('error', res.data.msg)
+                setchangelink(initialState)
+            }
+        }).catch(function (e) {
+            console.log("error from change links", e)
         })
     }
 
@@ -678,6 +744,135 @@ const SettingPage = () => {
                             value={changeData.birthday}
                         />
                         <TouchableOpacity onPress={handelsaveData} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
+                            <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
+                        </TouchableOpacity>
+                    </View>}
+
+                {/* ----------------------links------------------------ */}
+                {visible == 'editlikns' &&
+                    <View style={{ padding: 10 }}>
+                        <Text style={{ marginHorizontal: 150, color: maincolor, fontSize: 18, marginVertical: 50 }}>Edit likns</Text>
+                        <TextInput
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 350,
+                                marginHorizontal: 10,
+                                marginBottom: 20,
+
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="Facebook link"
+                            onChangeText={val => {
+                                setchangelink({ ...changelink, facebook: val });
+                            }}
+                            value={changelink.facebook}
+                        />
+                        <TextInput
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 350,
+                                marginHorizontal: 10,
+                                marginBottom: 20,
+
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="Instagram link"
+                            onChangeText={val => {
+                                setchangelink({ ...changelink, instagram: val });
+                            }}
+                            value={changelink.instagram}
+                        />
+                        <TextInput
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 350,
+                                marginHorizontal: 10,
+                                marginBottom: 20,
+
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="Twitter link"
+                            onChangeText={val => {
+                                setchangelink({ ...changelink, twitter: val });
+                            }}
+                            value={changelink.twitter}
+                        />
+                        <TextInput
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 350,
+                                marginHorizontal: 10,
+                                marginBottom: 20,
+
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="Snapchat link"
+                            onChangeText={val => {
+                                setchangelink({ ...changelink, snapchat: val });
+                            }}
+                            value={changelink.snapchat}
+                        />
+                        <TextInput
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 350,
+                                marginHorizontal: 10,
+                                marginBottom: 70,
+
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="Tiktok link"
+                            onChangeText={val => {
+                                setchangelink({ ...changelink, tiktok: val });
+                            }}
+                            value={changelink.tiktok}
+                        />
+                        <TouchableOpacity onPress={handelsavechangelinks} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
                             <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
                         </TouchableOpacity>
                     </View>}

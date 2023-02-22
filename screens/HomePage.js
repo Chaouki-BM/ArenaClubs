@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { View, Text, StyleSheet, ImageBackground, ScrollView, TouchableOpacity, Modal, Pressable, Platform } from 'react-native'
+import { View, Text, StyleSheet, ImageBackground, ScrollView, TouchableOpacity, Modal, Pressable } from 'react-native'
 import store from '../components/Store';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
@@ -7,10 +7,13 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import { Avatar } from 'react-native-elements';
 import TabBarProfil from '../Navigations/TabBarProfil';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Client from '../api/Client';
+import { Linking, Switch } from 'react-native';
+
 function HomePage({ navigation }) {
     const refRBSheet = useRef();
     const [img, setimg] = store.useState("img");
@@ -32,7 +35,6 @@ function HomePage({ navigation }) {
     // -----------------------------------------------
     const [data, setdata] = useState([]);
     const [datauser, setdatauser] = useState([]);
-    let avatarimg = "http://localhost:3000/" + data.image
     useEffect(() => {
         loadDataUser();
         loadData();
@@ -47,7 +49,6 @@ function HomePage({ navigation }) {
     const loadData = async () => {
         await Client.post('/getprofil', email).then(function (res) {
             setdata(res.data)
-
         }).catch(function (e) {
             console.log('error from loaddata')
         })
@@ -64,13 +65,41 @@ function HomePage({ navigation }) {
         setModalVisible(false)
     }
 
-    let image = { uri: 'uploads\M9QyXqt197m59xzLAXRkPM0m.jpg' };
 
+    const handellinkfacebook = () => {
+        if (data.facebook != "") {
+            Linking.openURL(data.facebook)
+        }
 
-
-
+    }
+    const handellinkinstagram = () => {
+        if (data.instagram != "") {
+            Linking.openURL(data.instagram)
+        }
+    }
+    const handellinktwitter = () => {
+        if (data.twitter != "") {
+            Linking.openURL(data.twitter)
+        }
+    }
+    const handellinksnapchat = () => {
+        if (data.snapchat != "") {
+            Linking.openURL(data.snapchat)
+        }
+    }
+    const handellinktiktok = () => {
+        if (data.tiktok != "") {
+            Linking.openURL(data.tiktok)
+        }
+    }
+    //---------------------------------------------
+    const [switchtel, setswitchtel] = useState(true)
+    const [switchbirth, setswitchbirth] = useState(true)
+    const [switchadd, setswitchadd] = useState(true)
+    const [switchmai, setswitchmai] = useState(true)
+    let image = { uri: `http://192.168.1.16:3000/${datauser.image}` };
+    let couverture = { uri: `http://192.168.1.16:3000/${datauser.couverture}` };
     return (
-
         <View style={[styles.container, { backgroundColor: mode }]}>
 
             <TouchableOpacity onPress={handelModal}>
@@ -157,7 +186,7 @@ function HomePage({ navigation }) {
 
                 <ImageBackground
                     imageStyle={{ borderBottomLeftRadius: 25 }}
-                    source={{ uri: 'https://reactjs.org/logo-og.png' }}
+                    source={couverture}
                     resizeMode="cover"
                     style={styles.cover}
                 >
@@ -171,7 +200,7 @@ function HomePage({ navigation }) {
                     overlayContainerStyle={{ backgroundColor: 'gray' }}
                     //onPress={() => console.log("Works!")}
                     containerStyle={{ flex: 1, marginTop: 40 }}
-                //source={{ uri: 'http://localhost:3000/uploads\\iWiLKphnVPJAOXnr9T-Jxdm8.jpg' }}
+                    source={image}
                 />
                 <View style={{ flexDirection: 'row', padding: 10 }}>
                     <Text style={{ marginRight: 10, fontSize: 20, fontStyle: 'bold', color: textcoler, }}>{datauser.name}</Text>
@@ -228,30 +257,65 @@ function HomePage({ navigation }) {
                 <View style={{ padding: 20 }}>
                     <View style={{ flexDirection: 'row' }}>
                         <FontAwesome name='mobile-phone' size={27} color={maincolor} style={{ marginRight: 20 }} />
-                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.tel}</Text>
-
+                        <Text style={{ marginRight: 135, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.tel}</Text>
+                        <Switch
+                            // trackColor={{ false: '#767577', true: '#81b0ff' }}
+                            thumbColor={switchtel ? '#f5dd4b' : '#f4f3f4'}
+                            //ios_backgroundColor="#3e3e3e"
+                            onValueChange={() => switchtel ? setswitchtel(false) : setswitchtel(true)}
+                            value={switchtel}
+                        />
 
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <FontAwesome name='birthday-cake' size={20} color={maincolor} style={{ marginRight: 10 }} />
-                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.birthday}</Text>
-
+                        <Text style={{ marginRight: 100, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.birthday}</Text>
+                        <Switch
+                            // trackColor={{ false: '#767577', true: '#81b0ff' }}
+                            thumbColor={switchbirth ? '#f5dd4b' : '#f4f3f4'}
+                            //ios_backgroundColor="#3e3e3e"
+                            onValueChange={() => switchbirth ? setswitchbirth(false) : setswitchbirth(true)}
+                            value={switchbirth}
+                        />
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <FontAwesome name='map-marker' size={27} color={maincolor} style={{ marginRight: 15 }} />
-                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.adress}</Text>
-
+                        <Text style={{ marginRight: 125, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.adress}</Text>
+                        <Switch
+                            // trackColor={{ false: '#767577', true: '#81b0ff' }}
+                            thumbColor={switchadd ? '#f5dd4b' : '#f4f3f4'}
+                            //ios_backgroundColor="#3e3e3e"
+                            onValueChange={() => switchadd ? setswitchadd(false) : setswitchadd(true)}
+                            value={switchadd}
+                        />
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <MaterialCommunityIcons name='email' size={23} color={maincolor} style={{ marginRight: 10 }} />
-                        <Text style={{ marginRight: 10, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{datauser.email}</Text>
-
+                        <Text style={{ marginRight: 25, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{datauser.email}</Text>
+                        <Switch
+                            // trackColor={{ false: '#767577', true: '#81b0ff' }}
+                            thumbColor={switchmai ? '#f5dd4b' : '#f4f3f4'}
+                            //ios_backgroundColor="#3e3e3e"
+                            onValueChange={() => switchmai ? setswitchmai(false) : setswitchmai(true)}
+                            value={switchmai}
+                        />
                     </View>
-                    <View style={{ flexDirection: 'row', marginHorizontal: 100, marginVertical: 50, }}>
-                        <Entypo name='facebook' size={23} color={maincolor} style={{ marginRight: 20 }} />
-                        <Entypo name='instagram' size={23} color={maincolor} style={{ marginRight: 20 }} />
-                        <Entypo name='twitter' size={23} color={maincolor} style={{ marginRight: 20 }} />
-                        <FontAwesome name='snapchat' size={23} color={maincolor} style={{ marginRight: 10 }} />
+                    <View style={{ flexDirection: 'row', marginHorizontal: 90, marginVertical: 50, }}>
+                        <TouchableOpacity onPress={handellinkfacebook}>
+                            <Entypo name='facebook' size={23} color={maincolor} style={{ marginRight: 20 }} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handellinkinstagram}>
+                            <Entypo name='instagram' size={23} color={maincolor} style={{ marginRight: 20 }} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handellinktwitter}>
+                            <Entypo name='twitter' size={23} color={maincolor} style={{ marginRight: 20 }} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handellinksnapchat}>
+                            <FontAwesome name='snapchat' size={23} color={maincolor} style={{ marginRight: 10 }} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handellinktiktok}>
+                            <Entypo name='tumblr' size={22} color={maincolor} style={{ marginRight: 10 }} />
+                        </TouchableOpacity>
                     </View>
 
                 </View>
