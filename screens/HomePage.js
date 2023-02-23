@@ -12,8 +12,8 @@ import { Avatar } from 'react-native-elements';
 import TabBarProfil from '../Navigations/TabBarProfil';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Client from '../api/Client';
-import { Linking, Switch } from 'react-native';
-
+import { Linking } from 'react-native';
+import Ip from '../api/Ip';
 
 function HomePage({ navigation }) {
     const refRBSheet = useRef();
@@ -39,6 +39,7 @@ function HomePage({ navigation }) {
     useEffect(() => {
         loadDataUser();
         loadData();
+
     }, []);
     const loadDataUser = async () => {
         await Client.post('/getuser', email).then(function (res) {
@@ -50,6 +51,30 @@ function HomePage({ navigation }) {
     const loadData = async () => {
         await Client.post('/getprofil', email).then(function (res) {
             setdata(res.data)
+            if (res.data.test_tel == '1') {
+                setswitchtel("eye")
+                bodyswitch.test_tel = '1'
+            } else {
+                bodyswitch.test_tel = '0'
+            }
+            if (res.data.test_birthday == '1') {
+                setswitchbirth("eye")
+                bodyswitch.test_birthday = '1'
+            } else {
+                bodyswitch.test_birthday = '0'
+            }
+            if (res.data.test_adress == '1') {
+                setswitchtel("eye")
+                bodyswitch.test_adress = '1'
+            } else {
+                bodyswitch.test_adress = '0'
+            }
+            if (res.data.test_mail == '1') {
+                setswitchbirth("eye")
+                bodyswitch.test_mail = '1'
+            } else {
+                bodyswitch.test_mail = '0'
+            }
         }).catch(function (e) {
             console.log('error from loaddata')
         })
@@ -94,12 +119,80 @@ function HomePage({ navigation }) {
         }
     }
     //---------------------------------------------
-    const [switchtel, setswitchtel] = useState(true)
-    const [switchbirth, setswitchbirth] = useState(true)
-    const [switchadd, setswitchadd] = useState(true)
-    const [switchmai, setswitchmai] = useState(true)
-    let image = { uri: `http://192.168.1.16:3000/${datauser.image}` };
-    let couverture = { uri: `http://192.168.1.16:3000/${datauser.couverture}` };
+
+    const [switchtel, setswitchtel] = useState("eye-with-line")
+    const [switchbirth, setswitchbirth] = useState("eye-with-line")
+    const [switchadd, setswitchadd] = useState("eye-with-line")
+    const [switchmai, setswitchmai] = useState("eye-with-line")
+    const [bodyswitch, setbodyswitch] = useState({
+        test_tel: '',
+        test_birthday: '',
+        test_adress: '',
+        test_mail: '',
+        email: '',
+    })
+    const handelshowtel = async () => {
+        bodyswitch.email = email.email
+        if (switchtel == 'eye-with-line') {
+            setswitchtel("eye")
+            bodyswitch.test_tel = '1'
+        } else {
+            setswitchtel("eye-with-line")
+            bodyswitch.test_tel = '0'
+        }
+        await Client.post("/changetest", bodyswitch).then(function (res) {
+
+        }).catch(function (e) {
+            console.log('error from handelshow tel')
+        })
+    }
+    const handelshowbirth = async () => {
+        bodyswitch.email = email.email
+        if (switchbirth == 'eye-with-line') {
+            setswitchbirth("eye")
+            bodyswitch.test_birthday = '1'
+        } else {
+            setswitchbirth("eye-with-line")
+            bodyswitch.test_birthday = '0'
+        }
+        await Client.post("/changetest", bodyswitch).then(function (res) {
+
+        }).catch(function (e) {
+            console.log('error from handelshow birthday')
+        })
+    }
+    const handelshowadd = async () => {
+        bodyswitch.email = email.email
+        if (switchadd == 'eye-with-line') {
+            setswitchadd("eye")
+            bodyswitch.test_adress = '1'
+        } else {
+            setswitchadd("eye-with-line")
+            bodyswitch.test_adress = '0'
+        }
+        await Client.post("/changetest", bodyswitch).then(function (res) {
+
+        }).catch(function (e) {
+            console.log('error from handelshow add')
+        })
+    }
+    const handelshowmail = async () => {
+        bodyswitch.email = email.email
+        if (switchmai == 'eye-with-line') {
+            setswitchmai("eye")
+            bodyswitch.test_mail = '1'
+        } else {
+            setswitchmai("eye-with-line")
+            bodyswitch.test_mail = '0'
+        }
+        await Client.post("/changetest", bodyswitch).then(function (res) {
+
+        }).catch(function (e) {
+            console.log('error from handelshow mail')
+        })
+    }
+    let image = { uri: `${Ip}${datauser.image}` };
+    let couverture = { uri: `${Ip}${datauser.couverture}` };
     const [pic, setpic] = useState('')
     const handelchnagecover = () => {
         let options = {
@@ -312,47 +405,31 @@ function HomePage({ navigation }) {
                     <View style={{ flexDirection: 'row' }}>
                         <FontAwesome name='mobile-phone' size={27} color={maincolor} style={{ marginRight: 20 }} />
                         <Text style={{ marginRight: 135, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.tel}</Text>
-                        <Switch
-                            // trackColor={{ false: '#767577', true: '#81b0ff' }}
-                            thumbColor={switchtel ? '#f5dd4b' : '#f4f3f4'}
-                            //ios_backgroundColor="#3e3e3e"
-                            onValueChange={() => switchtel ? setswitchtel(false) : setswitchtel(true)}
-                            value={switchtel}
-                        />
+                        <TouchableOpacity onPress={handelshowtel}>
+                            <Entypo name={switchtel} size={20} color={maincolor} />
+                        </TouchableOpacity>
 
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <FontAwesome name='birthday-cake' size={20} color={maincolor} style={{ marginRight: 10 }} />
                         <Text style={{ marginRight: 100, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.birthday}</Text>
-                        <Switch
-                            // trackColor={{ false: '#767577', true: '#81b0ff' }}
-                            thumbColor={switchbirth ? '#f5dd4b' : '#f4f3f4'}
-                            //ios_backgroundColor="#3e3e3e"
-                            onValueChange={() => switchbirth ? setswitchbirth(false) : setswitchbirth(true)}
-                            value={switchbirth}
-                        />
+                        <TouchableOpacity onPress={handelshowbirth}>
+                            <Entypo name={switchbirth} size={20} color={maincolor} />
+                        </TouchableOpacity>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <FontAwesome name='map-marker' size={27} color={maincolor} style={{ marginRight: 15 }} />
                         <Text style={{ marginRight: 125, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.adress}</Text>
-                        <Switch
-                            // trackColor={{ false: '#767577', true: '#81b0ff' }}
-                            thumbColor={switchadd ? '#f5dd4b' : '#f4f3f4'}
-                            //ios_backgroundColor="#3e3e3e"
-                            onValueChange={() => switchadd ? setswitchadd(false) : setswitchadd(true)}
-                            value={switchadd}
-                        />
+                        <TouchableOpacity onPress={handelshowadd}>
+                            <Entypo name={switchadd} size={20} color={maincolor} />
+                        </TouchableOpacity>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <MaterialCommunityIcons name='email' size={23} color={maincolor} style={{ marginRight: 10 }} />
                         <Text style={{ marginRight: 25, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{datauser.email}</Text>
-                        <Switch
-                            // trackColor={{ false: '#767577', true: '#81b0ff' }}
-                            thumbColor={switchmai ? '#f5dd4b' : '#f4f3f4'}
-                            //ios_backgroundColor="#3e3e3e"
-                            onValueChange={() => switchmai ? setswitchmai(false) : setswitchmai(true)}
-                            value={switchmai}
-                        />
+                        <TouchableOpacity onPress={handelshowmail}>
+                            <Entypo name={switchmai} size={20} color={maincolor} />
+                        </TouchableOpacity>
                     </View>
                     <View style={{ flexDirection: 'row', marginHorizontal: 90, marginVertical: 50, }}>
                         <TouchableOpacity onPress={handellinkfacebook}>
