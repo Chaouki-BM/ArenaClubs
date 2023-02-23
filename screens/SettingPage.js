@@ -18,6 +18,7 @@ const SettingPage = () => {
     const [Moons, setSun] = store.useState("Moons");
     const [textcoler, settextcoler] = store.useState("textcoler");
     const [modalVisible, setModalVisible] = useState(false);
+    const [modal, setModal] = useState(false);
     const [maincolor, setmaincolor] = store.useState("maincolor");
     const [inputS, setinputS] = store.useState("inputS");
     const [isFocusM, setisFocusM] = useState(false);
@@ -72,6 +73,7 @@ const SettingPage = () => {
             postimg()
         }).catch(function (e) {
             console.log('err bcz update prfl img', e)
+            Alert.alert('Import your image again')
         })
     }
     const [imageup, setimageup] = useState({
@@ -81,7 +83,7 @@ const SettingPage = () => {
     const postimg = async () => {
         await Client.post("/Upimage", imageup)
             .then(function (res) {
-
+                Alert.alert('success')
             }).catch(function (e) {
                 console.log('error postimg', e)
             })
@@ -105,9 +107,10 @@ const SettingPage = () => {
 
 
     }
+
     const [pict, setpict] = useState('')
     const handelDeleteCouverture = () => {
-        refRBSheet.current.open()
+        setModal(true)
         setvisible('')
     }
     const handelEditLinks = () => {
@@ -140,6 +143,23 @@ const SettingPage = () => {
         password2: '',
         email: '',
     });
+    const [deletevar, setdeletevar] = useState({
+        path: '',
+        email: '',
+    })
+    const handelyesdelete = async () => {
+        setModal(!modal)
+        deletevar.email = email.email
+        await Client.post("/Upcouverture", deletevar)
+            .then(function (res) {
+                if (res.data.msg == 'suuu') {
+                    Alert.alert('success')
+                }
+            }).catch(function (e) {
+                console.log('error from delete  cover', e)
+
+            })
+    }
     const initialState = {
 
     };
@@ -877,6 +897,36 @@ const SettingPage = () => {
                         </TouchableOpacity>
                     </View>}
             </RBSheet >
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modal}
+                style={{ backgroundColor: maincolor }}
+                onRequestClose={() => {
+                    setModal(!modal);
+                }}>
+                <View style={styles.centeredViewdelete}>
+                    <View style={[styles.modalViewdelete, { backgroundColor: mode }]}>
+                        <Text style={{ fontSize: 25, color: maincolor }}>Are you sure!</Text>
+                        <View style={{ flexDirection: 'row', marginVertical: 45 }}>
+                            <Pressable
+                                style={[styles.button, styles.buttonClose]}
+                                onPress={handelyesdelete}>
+                                <View style={{ backgroundColor: '#00A300', marginRight: 70, width: 60, height: 40, borderRadius: 10 }}>
+                                    <Text style={{ fontSize: 25, color: 'white', left: 7 }}>Yes</Text>
+                                </View>
+                            </Pressable>
+                            <Pressable
+                                style={[styles.button, styles.buttonClose]}
+                                onPress={() => setModal(!modal)}>
+                                <View style={{ backgroundColor: '#A30000', width: 60, height: 40, borderRadius: 10 }}>
+                                    <Text style={{ fontSize: 25, color: 'white', left: 13 }}>No</Text>
+                                </View>
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </View >
     )
 }
@@ -892,7 +942,6 @@ const styles = StyleSheet.create({
         alignItems: 'baseline',
         // backgroundColor: '#ECF1FE',
         padding: 10,
-
     },
     centeredView: {
         flex: 1,
@@ -917,6 +966,29 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5
+    },
+    centeredViewdelete: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+    },
+    modalViewdelete: {
+        // margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 5,
+        // padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        width: 300,
+        height: 150,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
     },
     iconPContainer: {
         //width: 65,

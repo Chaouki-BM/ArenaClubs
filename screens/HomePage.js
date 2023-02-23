@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { View, Text, StyleSheet, ImageBackground, ScrollView, TouchableOpacity, Modal, Pressable } from 'react-native'
+import { View, Text, StyleSheet, ImageBackground, ScrollView, TouchableOpacity, Modal, Pressable, Alert } from 'react-native'
 import store from '../components/Store';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
@@ -7,12 +7,13 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import { launchImageLibrary } from 'react-native-image-picker';
 import { Avatar } from 'react-native-elements';
 import TabBarProfil from '../Navigations/TabBarProfil';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Client from '../api/Client';
 import { Linking, Switch } from 'react-native';
+
 
 function HomePage({ navigation }) {
     const refRBSheet = useRef();
@@ -99,6 +100,56 @@ function HomePage({ navigation }) {
     const [switchmai, setswitchmai] = useState(true)
     let image = { uri: `http://192.168.1.16:3000/${datauser.image}` };
     let couverture = { uri: `http://192.168.1.16:3000/${datauser.couverture}` };
+    const [pic, setpic] = useState('')
+    const handelchnagecover = () => {
+        let options = {
+            mediaType: 'photo',
+            quality: 1,
+            // includeBase64: true,
+        };
+
+        launchImageLibrary(options, res => {
+            if (!res.didCancel) {
+                setpic(res.assets[0].uri)
+                console.log("img ok", res.assets[0].uri)
+                upload()
+            }
+
+        })
+    }
+
+    const [cover, setcover] = useState({
+        path: '',
+        email: ''
+    })
+    const upload = async () => {
+        const formData = new FormData()
+        formData.append('file', { uri: pic, type: 'image/jpeg', name: 'image.jpg' })
+        await Client.post('/upload', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(function async(res) {
+            let path = res.data.file.path
+            cover.path = path
+            cover.email = email.email
+            postcover()
+        }).catch(function (e) {
+            console.log('err bcz update cover img', e)
+            Alert.alert('Import your image again')
+        })
+    }
+    const postcover = async () => {
+        await Client.post("/Upcouverture", cover)
+            .then(function (res) {
+                if (res.data.msg == 'suuu') {
+                    Alert.alert('success')
+                }
+            }).catch(function (e) {
+                console.log('error from post cover', e)
+
+            })
+    }
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
 
@@ -184,15 +235,18 @@ function HomePage({ navigation }) {
 
                 style={styles.ViewStyle}>
 
-                <ImageBackground
-                    imageStyle={{ borderBottomLeftRadius: 25 }}
-                    source={couverture}
-                    resizeMode="cover"
-                    style={styles.cover}
-                >
-                    <Text style={styles.text}></Text>
-                </ImageBackground>
-
+                {datauser.couverture != '' &&
+                    <ImageBackground
+                        imageStyle={{ borderBottomLeftRadius: 25 }}
+                        source={couverture}
+                        resizeMode="contain"
+                        style={styles.cover}
+                    >
+                        <Text style={styles.text}></Text>
+                    </ImageBackground>}
+                <TouchableOpacity onPress={handelchnagecover}>
+                    <Entypo name='camera' color={maincolor} size={23} style={{ top: 106, left: 340, }} />
+                </TouchableOpacity>
                 <Avatar
                     rounded
                     size={100}
