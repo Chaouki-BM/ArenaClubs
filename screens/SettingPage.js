@@ -22,8 +22,8 @@ const SettingPage = () => {
     const [maincolor, setmaincolor] = store.useState("maincolor");
     const [inputS, setinputS] = store.useState("inputS");
     const [isFocusM, setisFocusM] = useState(false);
-    const [isFocus, setisFocus] = useState(false);
     const [email, setemail] = store.useState("email");
+
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -61,7 +61,7 @@ const SettingPage = () => {
     }
     const upload = async () => {
         const formData = new FormData()
-        formData.append('file', { uri: pict, type: 'image/jpeg', name: 'image.jpg' })
+        formData.append('file', { uri: pict.pict, type: 'image/jpeg', name: 'image.jpg' })
         await Client.post('/upload', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -70,6 +70,7 @@ const SettingPage = () => {
             let path = res.data.file.path
             imageup.path = path
             imageup.email = email.email
+
             postimg()
         }).catch(function (e) {
             console.log('err bcz update prfl img', e)
@@ -98,7 +99,7 @@ const SettingPage = () => {
 
         launchImageLibrary(options, res => {
             if (!res.didCancel) {
-                setpict(res.assets[0].uri)
+                pict.pict = res.assets[0].uri
                 console.log("img ok", res.assets[0].uri)
                 upload()
             }
@@ -108,7 +109,7 @@ const SettingPage = () => {
 
     }
 
-    const [pict, setpict] = useState('')
+    const [pict, setpict] = useState({ pict: '' });
     const handelDeleteCouverture = () => {
         setModal(true)
         setvisible('')

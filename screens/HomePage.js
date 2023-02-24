@@ -12,7 +12,7 @@ import { Avatar } from 'react-native-elements';
 import TabBarProfil from '../Navigations/TabBarProfil';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Client from '../api/Client';
-import { Linking } from 'react-native';
+import { Linking, RefreshControl } from 'react-native';
 import Ip from '../api/Ip';
 
 function HomePage({ navigation }) {
@@ -136,9 +136,11 @@ function HomePage({ navigation }) {
         if (switchtel == 'eye-with-line') {
             setswitchtel("eye")
             bodyswitch.test_tel = '1'
+
         } else {
             setswitchtel("eye-with-line")
             bodyswitch.test_tel = '0'
+
         }
         await Client.post("/changetest", bodyswitch).then(function (res) {
 
@@ -191,19 +193,22 @@ function HomePage({ navigation }) {
             console.log('error from handelshow mail')
         })
     }
+
     let image = { uri: `${Ip}${datauser.image}` };
     let couverture = { uri: `${Ip}${datauser.couverture}` };
-    const [pic, setpic] = useState('')
+    const [pic, setpic] = useState({ pic: '' })
     const handelchnagecover = () => {
         let options = {
             mediaType: 'photo',
             quality: 1,
+
+
             // includeBase64: true,
         };
 
         launchImageLibrary(options, res => {
             if (!res.didCancel) {
-                setpic(res.assets[0].uri)
+                pic.pic = res.assets[0].uri
                 console.log("img ok", res.assets[0].uri)
                 upload()
             }
@@ -217,12 +222,12 @@ function HomePage({ navigation }) {
     })
     const upload = async () => {
         const formData = new FormData()
-        formData.append('file', { uri: pic, type: 'image/jpeg', name: 'image.jpg' })
+        formData.append('file', { uri: pic.pic, type: 'image/jpeg', name: 'image.jpg' })
         await Client.post('/upload', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
-        }).then(function async(res) {
+        }).then(function (res) {
             let path = res.data.file.path
             cover.path = path
             cover.email = email.email
@@ -237,6 +242,7 @@ function HomePage({ navigation }) {
             .then(function (res) {
                 if (res.data.msg == 'suuu') {
                     Alert.alert('success')
+                    loadDataUser();
                 }
             }).catch(function (e) {
                 console.log('error from post cover', e)
@@ -245,7 +251,7 @@ function HomePage({ navigation }) {
     }
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
-
+            {/* --------------------------------- */}
             <TouchableOpacity onPress={handelModal}>
                 <View style={styles.iconPContainer} >
                     <Ionicons name="color-palette-sharp" size={27}
