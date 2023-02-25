@@ -8,6 +8,9 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import store from '../components/Store';
 import Client from '../api/Client';
 function Login({ navigation }, props) {
+    const initialState = {
+
+    };
     const alertmsg = (msg) => {
         Alert.alert('error', msg)
 
@@ -59,6 +62,7 @@ function Login({ navigation }, props) {
                     navigation.navigate('Sign Up');
                 } else if (res.data.type == 'success') {
                     email.email = loginInfo.email
+                    setLoginInfo(initialState)
                     navigation.navigate('TabNavigation');
                 }
             }).catch(function (e) {
@@ -72,6 +76,7 @@ function Login({ navigation }, props) {
     const [inputS, setinputS] = store.useState("inputS");
     const [modalVisible, setModalVisible] = useState(false);
     const [maincolor, setmaincolor] = store.useState("maincolor");
+    const [albumS, setalbumS] = store.useState("albumS")
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -85,6 +90,7 @@ function Login({ navigation }, props) {
         settextcoler(textcoler == "#242526" ? "#ffffff" : "#242526");
         setSun(Moons == 'brightness-high' ? 'brightness-2' : 'brightness-high');
         setinputS(inputS == '#f2f2f2' ? '#343434' : '#f2f2f2');
+        setalbumS(albumS == '#DEDEDE' ? '#6B6B6B' : '#DEDEDE')
     };
     const handelMaincolor = (main) => {
         setmaincolor(main)

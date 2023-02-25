@@ -25,6 +25,7 @@ function HomePage({ navigation }) {
     const [maincolor, setmaincolor] = store.useState("maincolor");
     const [inputS, setinputS] = store.useState("inputS");
     const [email, setemail] = store.useState("email");
+    const [albumS, setalbumS] = store.useState("albumS")
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -85,6 +86,7 @@ function HomePage({ navigation }) {
         settextcoler(textcoler == "#242526" ? "#ffffff" : "#242526");
         setSun(Moons == 'brightness-high' ? 'brightness-2' : 'brightness-high');
         setinputS(inputS == '#f2f2f2' ? '#343434' : '#f2f2f2');
+        setalbumS(albumS == '#DEDEDE' ? '#6B6B6B' : '#DEDEDE')
     };
     const handelMaincolor = (main) => {
         setmaincolor(main)
@@ -118,6 +120,7 @@ function HomePage({ navigation }) {
             Linking.openURL(data.tiktok)
         }
     }
+
     //---------------------------------------------
 
     const [switchtel, setswitchtel] = useState("eye-with-line")
@@ -131,6 +134,10 @@ function HomePage({ navigation }) {
         test_mail: '',
         email: '',
     })
+    const handelseemore = () => {
+        loadData();
+        refRBSheet.current.open()
+    }
     const handelshowtel = async () => {
         bodyswitch.email = email.email
         if (switchtel == 'eye-with-line') {
@@ -178,6 +185,8 @@ function HomePage({ navigation }) {
             console.log('error from handelshow add')
         })
     }
+
+
     const handelshowmail = async () => {
         bodyswitch.email = email.email
         if (switchmai == 'eye-with-line') {
@@ -365,22 +374,25 @@ function HomePage({ navigation }) {
                 </View>
                 <View style={{ padding: 10 }}>
                     <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ marginRight: 10, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Followers:</Text>
-                        <Text style={{ marginRight: 70, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>{data.nb_followers}</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ marginRight: 10, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Following:</Text>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic' }}>{data.nb_following}</Text>
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
                         <Text style={{ marginRight: 20, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Albums:</Text>
                         <Text style={{ marginRight: 70, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>{data.nb_classe}</Text>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ marginRight: 20, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Pictures:</Text>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic' }}>{data.nb_img}</Text>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginRight: 100, }}>{data.nb_following}</Text>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic' }}>{data.nb_followers}</Text>
+
                         </View>
                     </View>
-                    <Pressable onPress={() => refRBSheet.current.open()}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ marginRight: 29, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Posts:</Text>
+                        <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginRight: 50, }}>{data.nb_img}</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ marginRight: 50, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Following</Text>
+                            <Text style={{ marginRight: 10, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Followers</Text>
+
+                        </View>
+                    </View>
+
+                    <Pressable onPress={handelseemore}>
                         <Text style={{ fontSize: 13, color: '#8e8e8f' }}>see more...</Text>
                     </Pressable>
                 </View>
@@ -408,34 +420,47 @@ function HomePage({ navigation }) {
                 }}
             >
                 <View style={{ padding: 20 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <FontAwesome name='mobile-phone' size={27} color={maincolor} style={{ marginRight: 20 }} />
-                        <Text style={{ marginRight: 135, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.tel}</Text>
-                        <TouchableOpacity onPress={handelshowtel}>
+                    <View style={{ flexDirection: 'row' }} >
+                        <TouchableOpacity onPress={handelshowtel} style={{ left: 280 }}>
                             <Entypo name={switchtel} size={20} color={maincolor} />
                         </TouchableOpacity>
+                        <View style={{ flexDirection: 'row' }}>
+                            <FontAwesome name='mobile-phone' size={27} color={maincolor} style={{ marginRight: 20 }} />
+                            <Text style={{ marginRight: 135, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.tel}</Text>
+
+
+                        </View>
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity onPress={handelshowbirth} style={{ left: 280 }}>
+                            <Entypo name={switchbirth} size={20} color={maincolor} />
+                        </TouchableOpacity>
+                        <View style={{ flexDirection: 'row' }}>
+                            <FontAwesome name='birthday-cake' size={20} color={maincolor} style={{ marginRight: 10 }} />
+                            <Text style={{ fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.birthday}</Text>
+
+                        </View>
 
                     </View>
                     <View style={{ flexDirection: 'row' }}>
-                        <FontAwesome name='birthday-cake' size={20} color={maincolor} style={{ marginRight: 10 }} />
-                        <Text style={{ marginRight: 100, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.birthday}</Text>
-                        <TouchableOpacity onPress={handelshowbirth}>
-                            <Entypo name={switchbirth} size={20} color={maincolor} />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                        <FontAwesome name='map-marker' size={27} color={maincolor} style={{ marginRight: 15 }} />
-                        <Text style={{ marginRight: 125, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.adress}</Text>
-                        <TouchableOpacity onPress={handelshowadd}>
+                        <TouchableOpacity onPress={handelshowadd} style={{ left: 280 }}>
                             <Entypo name={switchadd} size={20} color={maincolor} />
                         </TouchableOpacity>
+                        <View style={{ flexDirection: 'row' }}>
+                            <FontAwesome name='map-marker' size={27} color={maincolor} style={{ marginRight: 15 }} />
+                            <Text style={{ marginRight: 125, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.adress}</Text>
+
+                        </View>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
-                        <MaterialCommunityIcons name='email' size={23} color={maincolor} style={{ marginRight: 10 }} />
-                        <Text style={{ marginRight: 25, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{datauser.email}</Text>
-                        <TouchableOpacity onPress={handelshowmail}>
+                        <TouchableOpacity onPress={handelshowmail} style={{ left: 280 }}>
                             <Entypo name={switchmai} size={20} color={maincolor} />
                         </TouchableOpacity>
+                        <View style={{ flexDirection: 'row' }}>
+                            <MaterialCommunityIcons name='email' size={23} color={maincolor} style={{ marginRight: 10 }} />
+                            <Text style={{ marginRight: 25, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{datauser.email}</Text>
+
+                        </View>
                     </View>
                     <View style={{ flexDirection: 'row', marginHorizontal: 90, marginVertical: 50, }}>
                         <TouchableOpacity onPress={handellinkfacebook}>

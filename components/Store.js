@@ -7,7 +7,7 @@ store.setState("inputS", "#f2f2f2");
 store.setState("maincolor", "#4169e1");
 store.setState("img", "");
 store.setState("email", { email: "" });
-
+store.setState("albumS", "#DEDEDE")
 
 
 

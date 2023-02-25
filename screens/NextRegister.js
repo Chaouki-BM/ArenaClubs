@@ -33,6 +33,7 @@ const NextRegister = ({ navigation }) => {
     const [inputS, setinputS] = store.useState("inputS");
     const [modalVisible, setModalVisible] = useState(false);
     const [maincolor, setmaincolor] = store.useState("maincolor");
+    const [albumS, setalbumS] = store.useState("albumS")
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -46,6 +47,7 @@ const NextRegister = ({ navigation }) => {
         settextcoler(textcoler == "#242526" ? "#ffffff" : "#242526");
         setSun(Moons == 'brightness-high' ? 'brightness-2' : 'brightness-high');
         setinputS(inputS == '#f2f2f2' ? '#343434' : '#f2f2f2');
+        setalbumS(albumS == '#DEDEDE' ? '#6B6B6B' : '#DEDEDE')
     };
     const handelMaincolor = (main) => {
         setmaincolor(main)

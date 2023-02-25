@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Pressable, Alert, Modal, TextInput } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import store from '../components/Store';
 import RBSheet from "react-native-raw-bottom-sheet";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -12,7 +12,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Client from '../api/Client';
 import { launchImageLibrary } from 'react-native-image-picker';
-const SettingPage = () => {
+const SettingPage = ({ navigation }) => {
     const refRBSheet = useRef();
     const [mode, setmode] = store.useState("mode");
     const [Moons, setSun] = store.useState("Moons");
@@ -24,6 +24,7 @@ const SettingPage = () => {
     const [isFocusM, setisFocusM] = useState(false);
     const [email, setemail] = store.useState("email");
 
+
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -32,6 +33,7 @@ const SettingPage = () => {
         }
 
     };
+
     const handleThemeChange = () => {
         setmode(mode == "#ffffff" ? "#242526" : "#ffffff");
         settextcoler(textcoler == "#242526" ? "#ffffff" : "#242526");
@@ -85,6 +87,7 @@ const SettingPage = () => {
         await Client.post("/Upimage", imageup)
             .then(function (res) {
                 Alert.alert('success')
+
             }).catch(function (e) {
                 console.log('error postimg', e)
             })
@@ -120,15 +123,16 @@ const SettingPage = () => {
     }
     const handelAddAlbum = () => {
         refRBSheet.current.open()
-        setvisible('')
+        setvisible('addalbum')
     }
     const handelContactUs = () => {
         refRBSheet.current.open()
         setvisible('')
     }
     const handelLogOut = () => {
-        refRBSheet.current.open()
-        setvisible('')
+        navigation.navigate('Login');
+        email.email = ''
+        console.log('good by')
     }
     const handelchangeBio = () => {
         refRBSheet.current.open()
@@ -137,6 +141,34 @@ const SettingPage = () => {
     const handelchangedata = () => {
         refRBSheet.current.open()
         setvisible('changedata')
+    }
+    useEffect(() => {
+        loadData();
+        loadDataUser();
+    }, []);
+    const loadData = async () => {
+        await Client.post('/getprofil', email).then(function (res) {
+            changeBio.bio = res.data.bio
+            changeData.adress = res.data.adress
+            changeData.birthday = res.data.birthday
+            changeData.tel = res.data.tel
+            changelink.facebook = res.data.facebook
+            changelink.instagram = res.data.instagram
+            changelink.snapchat = res.data.snapchat
+            changelink.tiktok = res.data.tiktok
+            changelink.twitter = res.data.twitter
+
+        }).catch(function (e) {
+            console.log('error from loaddata', e)
+        })
+    }
+    const loadDataUser = async () => {
+        await Client.post('/getuser', email).then(function (res) {
+            changename.name = res.data.name
+            changename.tag = res.data.tag
+        }).catch(function (e) {
+            console.log('error data from laoddatauser', e)
+        })
     }
     const [changepassword, setchangepassword] = useState({
         password: '',
@@ -155,6 +187,7 @@ const SettingPage = () => {
             .then(function (res) {
                 if (res.data.msg == 'suuu') {
                     Alert.alert('success')
+
                 }
             }).catch(function (e) {
                 console.log('error from delete  cover', e)
@@ -192,6 +225,7 @@ const SettingPage = () => {
             if (res.data.type == 'success') {
                 Alert.alert('success', res.data.msg)
                 setchangename(initialState)
+
             } else if (res.data.type == 'info') {
                 Alert.alert('info', res.data.msg)
             } else {
@@ -211,6 +245,7 @@ const SettingPage = () => {
             if (res.data.type == 'success') {
                 Alert.alert('success', res.data.msg)
                 setchangename(initialState)
+
             } else {
                 Alert.alert('error', res.data.msg)
                 setchangename(initialState)
@@ -247,6 +282,8 @@ const SettingPage = () => {
         tiktok: '',
         email: '',
     })
+
+
     const handelsavechangelinks = async () => {
         changelink.email = email.email
         await Client.post("/changelinks", changelink).then(function (res) {
@@ -259,6 +296,24 @@ const SettingPage = () => {
             }
         }).catch(function (e) {
             console.log("error from change links", e)
+        })
+    }
+    const [AlbumName, setAlbumName] = useState({
+        group_name: '',
+        email: '',
+    })
+    const handelsaveAlbum = async () => {
+        AlbumName.email = email.email
+        await Client.post("/creategroup", AlbumName).then(function (res) {
+            if (res.data.type == 'error') {
+                Alert.alert('error', res.data.msg)
+                setAlbumName(initialState)
+            } else {
+                Alert.alert('success', res.data.msg)
+                setAlbumName(initialState)
+            }
+        }).catch(function (e) {
+            console.log("error from save album", e)
         })
     }
 
@@ -475,7 +530,7 @@ const SettingPage = () => {
 
                         }}
                     />
-                    <TouchableOpacity style={{ marginBottom: 10, }} onPress={() => handelLogOut}>
+                    <TouchableOpacity style={{ marginBottom: 10, }} onPress={handelLogOut}>
                         <View style={{ flexDirection: 'row' }}>
 
                             <Entypo name='log-out' size={25} color={maincolor} style={{ marginRight: 20 }} />
@@ -894,6 +949,39 @@ const SettingPage = () => {
                             value={changelink.tiktok}
                         />
                         <TouchableOpacity onPress={handelsavechangelinks} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
+                            <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
+                        </TouchableOpacity>
+                    </View>}
+                {/* -------------------addalbum----------------------- */}
+                {visible == 'addalbum' &&
+                    <View style={{ padding: 10 }}>
+                        <Text style={{ marginHorizontal: 100, color: maincolor, fontSize: 18, marginVertical: 50 }}>Create New Album</Text>
+                        <TextInput
+                            style={[{ borderColor: isFocusM ? maincolor : inputS },
+                            {
+                                backgroundColor: inputS,
+                                color: textcoler,
+                                borderRadius: 20,
+                                width: 300,
+                                //height: 100,
+                                marginHorizontal: 30,
+                                marginBottom: 40,
+
+                            }]}
+
+                            onFocus={() => {
+                                setisFocusM(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusM(false)
+                            }}
+                            placeholder="Name of album"
+                            onChangeText={val => {
+                                setAlbumName({ ...AlbumName, group_name: val });
+                            }}
+                            value={AlbumName.group_name}
+                        />
+                        <TouchableOpacity onPress={handelsaveAlbum} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
                             <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
                         </TouchableOpacity>
                     </View>}
