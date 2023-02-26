@@ -23,8 +23,9 @@ const SettingPage = ({ navigation }) => {
     const [inputS, setinputS] = store.useState("inputS");
     const [isFocusM, setisFocusM] = useState(false);
     const [email, setemail] = store.useState("email");
-
-
+    const [data, setdata] = store.useState("data");
+    const [datauser, setdatauser] = store.useState("datauser");
+    const [albumS, setalbumS] = store.useState("albumS")
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -33,6 +34,8 @@ const SettingPage = ({ navigation }) => {
         }
 
     };
+
+
 
     const handleThemeChange = () => {
         setmode(mode == "#ffffff" ? "#242526" : "#ffffff");
@@ -87,7 +90,7 @@ const SettingPage = ({ navigation }) => {
         await Client.post("/Upimage", imageup)
             .then(function (res) {
                 Alert.alert('success')
-
+                loadDataUser()
             }).catch(function (e) {
                 console.log('error postimg', e)
             })
@@ -157,7 +160,6 @@ const SettingPage = ({ navigation }) => {
             changelink.snapchat = res.data.snapchat
             changelink.tiktok = res.data.tiktok
             changelink.twitter = res.data.twitter
-
         }).catch(function (e) {
             console.log('error from loaddata', e)
         })
@@ -168,6 +170,20 @@ const SettingPage = ({ navigation }) => {
             changename.tag = res.data.tag
         }).catch(function (e) {
             console.log('error data from laoddatauser', e)
+        })
+    }
+    const refreshuser = async () => {
+        await Client.post('/getuser', email).then(function (res) {
+            setdatauser(res.data)
+        }).catch(function (e) {
+            console.log('error data from laoddatauser', e)
+        })
+    }
+    const refreshdata = async () => {
+        await Client.post('/getprofil', email).then(function (res) {
+            setdata(res.data);
+        }).catch(function (e) {
+            console.log('error from loaddata', e)
         })
     }
     const [changepassword, setchangepassword] = useState({
@@ -187,7 +203,7 @@ const SettingPage = ({ navigation }) => {
             .then(function (res) {
                 if (res.data.msg == 'suuu') {
                     Alert.alert('success')
-
+                    refreshuser();
                 }
             }).catch(function (e) {
                 console.log('error from delete  cover', e)
@@ -224,8 +240,7 @@ const SettingPage = ({ navigation }) => {
         await Client.post("/changename", changename).then(function (res) {
             if (res.data.type == 'success') {
                 Alert.alert('success', res.data.msg)
-                setchangename(initialState)
-
+                refreshuser()
             } else if (res.data.type == 'info') {
                 Alert.alert('info', res.data.msg)
             } else {
@@ -244,11 +259,11 @@ const SettingPage = ({ navigation }) => {
         await Client.post("/modify_bio", changeBio).then(function (res) {
             if (res.data.type == 'success') {
                 Alert.alert('success', res.data.msg)
-                setchangename(initialState)
+                refreshdata()
 
             } else {
                 Alert.alert('error', res.data.msg)
-                setchangename(initialState)
+
             }
         }).catch(function (e) {
             console.log("error from change Bio", e)
@@ -265,10 +280,9 @@ const SettingPage = ({ navigation }) => {
         await Client.post("/modify", changeData).then(function (res) {
             if (res.data.type == 'success') {
                 Alert.alert('success', res.data.msg)
-                setchangeData(initialState)
             } else {
                 Alert.alert('error', res.data.msg)
-                setchangeData(initialState)
+
             }
         }).catch(function (e) {
             console.log("error from save data (tel,add,birth)", e)
@@ -289,10 +303,8 @@ const SettingPage = ({ navigation }) => {
         await Client.post("/changelinks", changelink).then(function (res) {
             if (res.data.type == 'success') {
                 Alert.alert('success', res.data.msg)
-                setchangelink(initialState)
             } else {
                 Alert.alert('error', res.data.msg)
-                setchangelink(initialState)
             }
         }).catch(function (e) {
             console.log("error from change links", e)
@@ -308,9 +320,11 @@ const SettingPage = ({ navigation }) => {
             if (res.data.type == 'error') {
                 Alert.alert('error', res.data.msg)
                 setAlbumName(initialState)
+
             } else {
                 Alert.alert('success', res.data.msg)
                 setAlbumName(initialState)
+
             }
         }).catch(function (e) {
             console.log("error from save album", e)

@@ -18,6 +18,7 @@ const AlbumPage = () => {
     const [chivron, setchivron] = useState('chevron-right')
     const [isFocusM, setisFocusM] = useState(false);
     const [email, setemail] = store.useState("email");
+    const [data, setdata] = store.useState("data");
     const [AlbumName, setAlbumName] = useState({
         group_name2: '',
     })
@@ -33,8 +34,13 @@ const AlbumPage = () => {
     const handelthreedots = (Album) => {
         refRBSheet.current.open()
         settingalbum.group_name = Album.group_name
-
-        console.log('dots', settingalbum)
+    }
+    const refreshdata = async () => {
+        await Client.post('/getprofil', email).then(function (res) {
+            setdata(res.data);
+        }).catch(function (e) {
+            console.log('error from loaddata', e)
+        })
     }
     const handelDeleteAlbum = async () => {
         settingalbum.email = email.email
@@ -43,6 +49,7 @@ const AlbumPage = () => {
                 if (res.data.type == "success") {
                     Alert.alert('success', 'Album Deteted')
                     loadData();
+                    refreshdata();
                 }
 
             }).catch(function (e) {
@@ -66,17 +73,16 @@ const AlbumPage = () => {
             console.log("error from change album name", e)
         })
     }
-    const [data, setdata] = useState({ email: '' })
+    const [dataemail, setdataemail] = useState({ email: '' })
     const [Albums, setAlbums] = useState([])
     useEffect(() => {
         loadData();
     }, []);
     const loadData = async () => {
-        data.email = email.email
-        await Client.post("/getallgroup", data)
+        dataemail.email = email.email
+        await Client.post("/getallgroup", dataemail)
             .then(function (res) {
                 setAlbums(res.data)
-
             }).catch(function (e) {
                 console.log("error from load data ", e)
             })

@@ -12,7 +12,7 @@ import { Avatar } from 'react-native-elements';
 import TabBarProfil from '../Navigations/TabBarProfil';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Client from '../api/Client';
-import { Linking, RefreshControl } from 'react-native';
+import { Linking, } from 'react-native';
 import Ip from '../api/Ip';
 
 function HomePage({ navigation }) {
@@ -35,8 +35,8 @@ function HomePage({ navigation }) {
 
     };
     // -----------------------------------------------
-    const [data, setdata] = useState([]);
-    const [datauser, setdatauser] = useState([]);
+    const [data, setdata] = store.useState("data");
+    const [datauser, setdatauser] = store.useState("datauser");
     useEffect(() => {
         loadDataUser();
         loadData();
@@ -205,29 +205,9 @@ function HomePage({ navigation }) {
 
     let image = { uri: `${Ip}${datauser.image}` };
     let couverture = { uri: `${Ip}${datauser.couverture}` };
-    const [pic, setpic] = useState({ pic: '' })
-    const handelchnagecover = () => {
-        let options = {
-            mediaType: 'photo',
-            quality: 1,
-
-
-            // includeBase64: true,
-        };
-
-        launchImageLibrary(options, res => {
-            if (!res.didCancel) {
-                pic.pic = res.assets[0].uri
-                console.log("img ok", res.assets[0].uri)
-                upload()
-            }
-
-        })
-    }
-
     const [cover, setcover] = useState({
         path: '',
-        email: ''
+        email: '',
     })
     const upload = async () => {
         const formData = new FormData()
@@ -257,6 +237,25 @@ function HomePage({ navigation }) {
                 console.log('error from post cover', e)
 
             })
+    }
+    const [pic, setpic] = useState({ pic: '' })
+    const handelchnagecover = () => {
+        let options = {
+            mediaType: 'photo',
+            quality: 1,
+
+
+            // includeBase64: true,
+        };
+
+        launchImageLibrary(options, res => {
+            if (!res.didCancel) {
+                pic.pic = res.assets[0].uri
+                console.log("img ok", res.assets[0].uri)
+                upload()
+            }
+
+        })
     }
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>

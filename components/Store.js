@@ -8,7 +8,7 @@ store.setState("maincolor", "#4169e1");
 store.setState("img", "");
 store.setState("email", { email: "" });
 store.setState("albumS", "#DEDEDE")
-
-
+store.setState("datauser", [])
+store.setState("data", [])
 
 export default store;
