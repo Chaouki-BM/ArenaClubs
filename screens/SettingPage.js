@@ -335,6 +335,7 @@ const SettingPage = ({ navigation }) => {
                 Alert.alert('success', res.data.msg)
                 setAlbumName(initialState)
                 refreshalbum()
+                refreshdata()
 
             }
         }).catch(function (e) {

@@ -93,7 +93,7 @@ const AlbumPage = ({ navigation }) => {
             <ScrollView
                 nestedScrollEnabled={true}
                 showsVerticalScrollIndicator={false}>
-                {Albums.map((Album, index) => {
+                {Albums.slice(0).reverse().map((Album, index) => {
                     return (
                         <View key={index} style={{ alignItems: 'center', marginLeft: 9, marginTop: 10, backgroundColor: albumS, width: '95%', height: 55, borderRadius: 10, flexDirection: 'row' }}>
                             <TouchableOpacity onPress={() => handelopenalbum(Album)} style={{ alignItems: 'center', backgroundColor: albumS, width: '95%', height: 55, borderRadius: 10, flexDirection: 'row' }}>
