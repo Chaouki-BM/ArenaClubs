@@ -15,7 +15,7 @@ import Client from '../api/Client';
 import { Linking, } from 'react-native';
 import Ip from '../api/Ip';
 
-function HomePage({ navigation }) {
+function HomePage() {
     const refRBSheet = useRef();
     const [img, setimg] = store.useState("img");
     const [mode, setmode] = store.useState("mode");

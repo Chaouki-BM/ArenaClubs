@@ -24,19 +24,20 @@ const TabBarProfil = () => {
                     tabBarStyle: { backgroundColor: mode, height: 50 }
                 }}
             >
-                <Tab.Screen name='Profile' component={Profile}
-                    options={{
-                        title: '',
-                        tabBarIcon: ({ focused, color, size }) => (
-                            <FontAwesome5 name="user-alt" color={color} size={20} />
-                        ),
-                    }}
-                />
                 <Tab.Screen name='AlbumPage' component={AlbumPage}
                     options={{
                         title: '',
                         tabBarIcon: ({ focused, color, size }) => (
                             <Ionicons name="md-albums" color={color} size={20} />
+                        ),
+                    }}
+                />
+                <Tab.Screen name='Profile' component={Profile}
+                    options={{
+                        title: '',
+                        tabBarIcon: ({ focused, color, size }) => (
+
+                            <FontAwesome5 name="user-alt" color={color} size={20} />
                         ),
                     }}
                 />

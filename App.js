@@ -9,7 +9,7 @@ import SignUp from './screens/RegisterScreen'
 //import home from './screens/HomePage';
 import NextRegister from './screens/NextRegister';
 import TabNavigation from './Navigations/TabNavigation'
-
+import PostsAlbum from './screens/PostsAlbum'
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
           <Stack.Screen name="Sign-Up" component={SignUp} />
           <Stack.Screen name="Sign Up" component={NextRegister} />
           <Stack.Screen name="TabNavigation" component={TabNavigation} />
-
+          <Stack.Screen name="PostsAlbum" component={PostsAlbum} />
 
         </Stack.Navigator>
 

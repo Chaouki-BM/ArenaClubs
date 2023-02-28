@@ -7,8 +7,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Client from '../api/Client';
-import PostsAlbum from './PostsAlbum';
-const AlbumPage = () => {
+const AlbumPage = ({ navigation }) => {
     const refRBSheet = useRef();
     const [mode, setmode] = store.useState("mode");
     const [inputS, setinputS] = store.useState("inputS");
@@ -22,10 +21,7 @@ const AlbumPage = () => {
     const [AlbumName, setAlbumName] = useState({
         group_name2: '',
     })
-    const [settingalbum, setsettingalbum] = useState({
-        group_name: '',
-        email: '',
-    })
+    const [settingalbum, setsettingalbum] = store.useState("settingalbum")
     const [editalbum, seteditalbum] = useState({
         group_name: '',
         group_name2: '',
@@ -74,7 +70,7 @@ const AlbumPage = () => {
         })
     }
     const [dataemail, setdataemail] = useState({ email: '' })
-    const [Albums, setAlbums] = useState([])
+    const [Albums, setAlbums] = store.useState("Albums")
     useEffect(() => {
         loadData();
     }, []);
@@ -87,6 +83,10 @@ const AlbumPage = () => {
                 console.log("error from load data ", e)
             })
     }
+    const handelopenalbum = (Album) => {
+        settingalbum.group_name = Album.group_name
+        navigation.navigate('PostsAlbum');
+    }
 
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
@@ -96,7 +96,7 @@ const AlbumPage = () => {
                 {Albums.map((Album, index) => {
                     return (
                         <View key={index} style={{ alignItems: 'center', marginLeft: 9, marginTop: 10, backgroundColor: albumS, width: '95%', height: 55, borderRadius: 10, flexDirection: 'row' }}>
-                            <TouchableOpacity style={{ alignItems: 'center', backgroundColor: albumS, width: '95%', height: 55, borderRadius: 10, flexDirection: 'row' }}>
+                            <TouchableOpacity onPress={() => handelopenalbum(Album)} style={{ alignItems: 'center', backgroundColor: albumS, width: '95%', height: 55, borderRadius: 10, flexDirection: 'row' }}>
                                 <MaterialIcons name='photo-album' color={maincolor} size={30} style={{ alignSelf: 'flex-start', marginTop: 10 }} />
                                 <Text style={{ flex: 1, textAlign: 'center', fontSize: 18, fontStyle: 'bold', color: textcoler }}>{Album.group_name}</Text>
                             </TouchableOpacity>

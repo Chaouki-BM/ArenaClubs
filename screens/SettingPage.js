@@ -26,6 +26,7 @@ const SettingPage = ({ navigation }) => {
     const [data, setdata] = store.useState("data");
     const [datauser, setdatauser] = store.useState("datauser");
     const [albumS, setalbumS] = store.useState("albumS")
+    const [Albums, setAlbums] = store.useState("Albums")
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -89,8 +90,8 @@ const SettingPage = ({ navigation }) => {
     const postimg = async () => {
         await Client.post("/Upimage", imageup)
             .then(function (res) {
-                Alert.alert('success')
-                loadDataUser()
+                Alert.alert('success');
+                refreshuser();
             }).catch(function (e) {
                 console.log('error postimg', e)
             })
@@ -185,6 +186,14 @@ const SettingPage = ({ navigation }) => {
         }).catch(function (e) {
             console.log('error from loaddata', e)
         })
+    }
+    const refreshalbum = async () => {
+        await Client.post("/getallgroup", email)
+            .then(function (res) {
+                setAlbums(res.data)
+            }).catch(function (e) {
+                console.log("error from load data ", e)
+            })
     }
     const [changepassword, setchangepassword] = useState({
         password: '',
@@ -321,9 +330,11 @@ const SettingPage = ({ navigation }) => {
                 Alert.alert('error', res.data.msg)
                 setAlbumName(initialState)
 
+
             } else {
                 Alert.alert('success', res.data.msg)
                 setAlbumName(initialState)
+                refreshalbum()
 
             }
         }).catch(function (e) {

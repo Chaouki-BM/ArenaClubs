@@ -10,5 +10,9 @@ store.setState("email", { email: "" });
 store.setState("albumS", "#DEDEDE")
 store.setState("datauser", [])
 store.setState("data", [])
-
+store.setState("settingalbum", {
+    group_name: '',
+    email: '',
+})
+store.setState("Albums", [])
 export default store;
