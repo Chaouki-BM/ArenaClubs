@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, Pressable, Alert, Modal, TextInput } from 'react-native'
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import RBSheet from "react-native-raw-bottom-sheet";
 import store from '../components/Store';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -11,9 +11,11 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import { Avatar } from 'react-native-elements';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { launchImageLibrary } from 'react-native-image-picker';
+import Client from '../api/Client';
+import Ip from '../api/Ip';
 const PostsAlbum = ({ navigation }) => {
     const refRBSheet = useRef();
-    const [settingalbum, setsettingalbum] = store.useState("settingalbum");
     const [mode, setmode] = store.useState("mode");
     const [Moons, setSun] = store.useState("Moons");
     const [textcoler, settextcoler] = store.useState("textcoler");
@@ -24,9 +26,10 @@ const PostsAlbum = ({ navigation }) => {
     const [albumS, setalbumS] = store.useState("albumS")
     const [heart, setheart] = useState('heart-o')
     const [modal, setModal] = useState(false);
-    const [status, setstatus] = useState({ statu: '' })
     const [chivron, setchivron] = useState('chevron-right')
-    const [editstatus, seteditstatus] = useState({ statu: '' })
+    const [email, setemail] = store.useState("email");
+    const [posts, setposts] = useState([])
+    const [datauser, setdatauser] = store.useState("datauser");
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -35,6 +38,9 @@ const PostsAlbum = ({ navigation }) => {
         }
 
     };
+    const refreshdata = async () => {
+
+    }
     const initialState = {
 
     };
@@ -49,14 +55,26 @@ const PostsAlbum = ({ navigation }) => {
         setmaincolor(main)
         setModalVisible(false)
     }
+    useEffect(() => {
+        loadPosts()
+    }, []);
+    const loadPosts = async () => {
+        await Client.post("/getallimages", email)
+            .then(function (res) {
+                setposts(res.data)
+
+            }).catch(function (e) {
+                console.log("error from load data post album", e)
+            })
+    }
     const handelheart = () => {
         setheart(heart == 'heart-o' ? 'heart' : 'heart-o')
-        var today = new Date();
-        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-        console.log(time)
+
     }
-    const handelthreedots = () => {
+    const [clicked, setclicked] = useState()
+    const handelthreedots = (post) => {
         refRBSheet.current.open()
+        setclicked(post)
     }
     const handeladdpost = () => {
         setModal(modal == false ? true : false)
@@ -64,16 +82,131 @@ const PostsAlbum = ({ navigation }) => {
     const hanselsave = () => {
         setModal(!modal)
         setstatus(initialState)
+        upload();
+        setdatapict(initialState)
+
     }
     const handelimportpicture = () => {
+        let options = {
+            mediaType: "mixed",
+            quality: 1,
+            // includeBase64: true,
+        };
+
+        launchImageLibrary(options, res => {
+            if (!res.didCancel) {
+                datapict.datapict = res.assets[0].uri
+                console.log("img ok", res.assets[0].uri)
+            }
+
+        })
+    }
+    const [datapict, setdatapict] = useState({ datapict: '' })
+    const [settingalbum, setsettingalbum] = store.useState("settingalbum");
+    const upload = async () => {
+        const formData = new FormData()
+        formData.append('file', { uri: datapict.datapict, type: 'image/jpeg', name: 'image.jpg' })
+        await Client.post('/upload', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(function (res) {
+            let image = res.data.file.path
+            imageup.image = image
+            date();
+            postimg();
+        }).catch(function (e) {
+            console.log('err bcz add post', e)
+            Alert.alert('Import your image again')
+        })
+    }
+    const [status, setstatus] = useState({ statu: '' })
+    const date = () => {
+        console.log(status)
+        imageup.email = email.email
+        imageup.group_name = settingalbum.group_name
+        imageup.name = datauser.name
+        imageup.tag = datauser.tag
+        imageup.statu = status.statu
+        imageup.img_p = datauser.image
+        var today = new Date();
+        var time = today.getHours() + ":" + today.getMinutes();
+        imageup.time = time
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        var date = mm + '/' + dd + '/' + yyyy;
+        imageup.date = date
+    }
+    const [imageup, setimageup] = useState({
+        image: '',
+        email: '',
+        group_name: '',
+        time: '',
+        statu: '',
+        date: '',
+        nb_like: 0,
+        name: '',
+        tag: '',
+        img_p: '',
+    })
+
+    const postimg = async () => {
+        await Client.post("/addimage", imageup)
+            .then(function (res) {
+                if (res.data.type == 'success') {
+                    Alert.alert('success', res.data.msg);
+                    loadPosts();
+                } else {
+                    Alert.alert(res.data.type, res.data.msg);
+                }
+
+            }).catch(function (e) {
+                console.log('error postimg', e)
+            })
+    }
+
+
+    const [deletepost, setdeletepost] = useState({
+        email: '',
+        group_name: '',
+        image: '',
+        email_img: '',
+    })
+    const handelDeletePost = async () => {
+        deletepost.email = clicked.email
+        deletepost.group_name = clicked.group_name
+        deletepost.image = clicked.image
+        deletepost.email_img = clicked.email
+        await Client.post("/deleteimage", deletepost).then(function (res) {
+            Alert.alert(res.data.msg);
+            loadPosts();
+        }).catch(function (e) {
+            console.log("error from delete post", e)
+        })
+    }
+    const [editstatus, seteditstatus] = useState({
+        statu: '',
+        email: '',
+        group_name: '',
+        image: '',
+    })
+    const handelsavechangeStatus = async () => {
+        editstatus.email = clicked.email
+        editstatus.group_name = clicked.group_name
+        editstatus.image = clicked.image
+        await Client.post("/editstatu", editstatus)
+            .then(function (res) {
+                Alert.alert(res.data.msg)
+                loadPosts();
+                seteditstatus(initialState)
+            }).catch(function (e) {
+                console.log("error from ")
+            })
 
     }
-    const handelDeletePost = () => {
 
-    }
-    const handelsavechangeStatus = () => {
-        seteditstatus(initialState)
-    }
+
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
             <TouchableOpacity onPress={handelModal}>
@@ -158,40 +291,50 @@ const PostsAlbum = ({ navigation }) => {
                     </View>
                 </TouchableOpacity>
             </View>
-            <ScrollView nestedScrollEnabled={true}
+
+            <ScrollView style={{ marginBottom: 100 }}
+                nestedScrollEnabled={true}
                 showsVerticalScrollIndicator={false}>
-                <View style={{ alignItems: 'center', width: 373, backgroundColor: albumS, borderRadius: 10, }}>
-                    <TouchableOpacity onPress={handelthreedots} style={{ alignSelf: 'flex-end', marginRight: 10 }}>
-                        <Entypo name='dots-three-horizontal' size={20} color={maincolor} />
-                    </TouchableOpacity>
-                    <View style={{ alignSelf: 'flex-start', flexDirection: 'row' }}>
-                        <Avatar
-                            //rounded
-                            size={100}
-                            //icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
-                            overlayContainerStyle={{ backgroundColor: 'gray' }}
-                            //onPress={() => console.log("Works!")}
-                            containerStyle={{ marginBottom: 20, marginTop: 10, marginLeft: 20 }}
-                        // source={image}
-                        />
-                        <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
-                            <View style={{ width: 220, height: 60 }}>
-                                <Text style={{ color: textcoler }}>statussssssssssssssssssssssssssssss
-                                    sssssssssssssssssssssssssssssssssssssss
-                                </Text>
-                            </View >
-                            <Text style={{ color: textcoler }}>Date</Text>
+                {posts.slice(0).reverse().map((post, index) => {
+                    if (post.group_name == settingalbum.group_name) {
+                        return (
 
-                            <TouchableOpacity onPress={handelheart}>
-                                <FontAwesome name={heart} color={maincolor} size={20} style={{ marginHorizontal: 154 }} />
-                            </TouchableOpacity>
+                            <View key={index} style={{ alignItems: 'center', width: 373, backgroundColor: albumS, borderRadius: 10, marginBottom: 8 }}>
+                                <TouchableOpacity onPress={() => handelthreedots(post)} style={{ alignSelf: 'flex-end', marginRight: 10 }}>
+                                    <Entypo name='dots-three-horizontal' size={20} color={maincolor} />
+                                </TouchableOpacity>
+                                <View style={{ alignSelf: 'flex-start', flexDirection: 'row' }}>
+                                    <Avatar
+                                        //rounded
+                                        size={100}
+                                        //icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
+                                        overlayContainerStyle={{ backgroundColor: 'gray' }}
+                                        //onPress={() => console.log("Works!")}
+                                        containerStyle={{ marginBottom: 20, marginTop: 10, marginLeft: 20 }}
+                                        source={{ uri: `${Ip}${post.image}` }}
+                                    />
+                                    <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
+                                        <View style={{ width: 220, height: 60 }}>
+                                            <Text style={{ color: textcoler }}>{post.statu}</Text>
+                                        </View >
+                                        <Text style={{ color: textcoler }}>{post.date}</Text>
+                                        <Text style={{ color: textcoler }}>{post.time}</Text>
+
+                                        <TouchableOpacity onPress={handelheart}>
+                                            <FontAwesome name={heart} color={maincolor} size={20} style={{ marginHorizontal: 154 }} />
+                                        </TouchableOpacity>
 
 
-                        </View>
+                                    </View>
 
-                    </View>
-                </View>
+                                </View>
+                            </View>
+
+                        )
+                    }
+                })}
             </ScrollView>
+
             <Modal
                 animationType="fade"
                 transparent={true}
@@ -201,14 +344,7 @@ const PostsAlbum = ({ navigation }) => {
                 }}>
                 <View style={styles.centeredViewModal}>
                     <View style={[styles.modalViewModal, { backgroundColor: mode }]}>
-                        <TouchableOpacity onPress={handelimportpicture}>
-                            <View style={{ flexDirection: 'row' }}>
 
-                                <Text style={{ fontSize: 18, color: textcoler, marginRight: 10, fontStyle: 'italic' }}>Import picture or video</Text>
-                                <MaterialCommunityIcons name='upload' size={25} color={maincolor} />
-
-                            </View>
-                        </TouchableOpacity>
                         <TextInput
                             style={[{ borderColor: isFocusM ? maincolor : inputS },
                             {
@@ -235,6 +371,14 @@ const PostsAlbum = ({ navigation }) => {
                             }}
                             value={status.statu}
                         />
+                        <TouchableOpacity onPress={handelimportpicture}>
+                            <View style={{ flexDirection: 'row' }}>
+
+                                <Text style={{ fontSize: 18, color: textcoler, marginRight: 10, fontStyle: 'italic' }}>Import picture or video</Text>
+                                <MaterialCommunityIcons name='upload' size={25} color={maincolor} />
+
+                            </View>
+                        </TouchableOpacity>
                         <View style={{ flexDirection: 'row' }}>
                             <Pressable
                                 onPress={hanselsave}
@@ -242,7 +386,7 @@ const PostsAlbum = ({ navigation }) => {
                                 <Text style={{ color: textcoler, textAlign: 'center', fontSize: 16, fontStyle: 'Bold' }}>save </Text>
                             </Pressable>
                             <Pressable
-                                onPress={() => { setModal(!modal); setstatus(initialState) }}
+                                onPress={() => { setModal(!modal); setstatus(initialState); setdatapict(initialState) }}
                                 style={{ backgroundColor: maincolor, borderRadius: 10, width: 56, height: 25, marginHorizontal: 20 }}>
                                 <Text style={{ color: textcoler, textAlign: 'center', fontSize: 16, fontStyle: 'Bold' }}>Cancel</Text>
                             </Pressable>

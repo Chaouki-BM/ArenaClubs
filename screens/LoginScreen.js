@@ -7,7 +7,14 @@ import Fontisto from 'react-native-vector-icons/Fontisto'
 import Entypo from 'react-native-vector-icons/Entypo'
 import store from '../components/Store';
 import Client from '../api/Client';
-function Login({ navigation }, props) {
+import { useEffect } from 'react';
+function Login({ navigation }) {
+
+    useEffect(() => {
+        if (log == true) {
+            navigation.navigate('TabNavigation');
+        }
+    })
     const initialState = {
 
     };
@@ -49,7 +56,7 @@ function Login({ navigation }, props) {
         password: '',
     });
     const [email, setemail] = store.useState("email");
-
+    const [log, setlog] = store.useState("log")
     const handleLogin = async () => {
         await Client.post('/login', loginInfo)
             .then(function (res) {
@@ -64,6 +71,7 @@ function Login({ navigation }, props) {
                     email.email = loginInfo.email
                     setLoginInfo(initialState)
                     navigation.navigate('TabNavigation');
+                    setlog(true)
                 }
             }).catch(function (e) {
                 console.log(e)

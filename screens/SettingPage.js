@@ -133,9 +133,11 @@ const SettingPage = ({ navigation }) => {
         refRBSheet.current.open()
         setvisible('')
     }
+    const [log, setlog] = store.useState("log")
     const handelLogOut = () => {
         navigation.navigate('Login');
         email.email = ''
+        setlog(false)
         console.log('good by')
     }
     const handelchangeBio = () => {

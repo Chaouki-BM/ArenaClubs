@@ -9,6 +9,7 @@ store.setState("img", "");
 store.setState("email", { email: "" });
 store.setState("albumS", "#DEDEDE")
 store.setState("datauser", [])
+store.setState("log", false)
 store.setState("data", [])
 store.setState("settingalbum", {
     group_name: '',
