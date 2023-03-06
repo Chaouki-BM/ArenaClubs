@@ -7,14 +7,8 @@ import Fontisto from 'react-native-vector-icons/Fontisto'
 import Entypo from 'react-native-vector-icons/Entypo'
 import store from '../components/Store';
 import Client from '../api/Client';
-import { useEffect } from 'react';
 function Login({ navigation }) {
 
-    useEffect(() => {
-        if (log == true) {
-            navigation.navigate('TabNavigation');
-        }
-    })
     const initialState = {
 
     };

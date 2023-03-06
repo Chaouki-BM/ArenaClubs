@@ -28,7 +28,7 @@ const PostsAlbum = ({ navigation }) => {
     const [modal, setModal] = useState(false);
     const [chivron, setchivron] = useState('chevron-right')
     const [email, setemail] = store.useState("email");
-    const [posts, setposts] = useState([])
+    const [Modalshow, setModalshow] = useState(false)
     const [datauser, setdatauser] = store.useState("datauser");
     const handelModal = () => {
         if (modalVisible == false) {
@@ -38,9 +38,7 @@ const PostsAlbum = ({ navigation }) => {
         }
 
     };
-    const refreshdata = async () => {
 
-    }
     const initialState = {
 
     };
@@ -57,19 +55,82 @@ const PostsAlbum = ({ navigation }) => {
     }
     useEffect(() => {
         loadPosts()
+
     }, []);
+
+    const [posts, setposts] = useState([])
+    const loadLike = async (element) => {
+        islike.email = email.email;
+        islike.group_name = element.group_name;
+        islike.email_img = email.email;
+        islike.image = element.image;
+        islike.email_like = email.email;
+        await Client.post("/testlike", islike)
+            .then((res) => {
+                if (res.data.test == 0) {
+                    element["heart"] = "heart-o"
+                    //console.log("hhhh", element)
+                    setposts(prevState => [...prevState, element])
+                } else {
+                    element["heart"] = "heart"
+                    //console.log("hhhh", element)
+                    setposts(prevState => [...prevState, element])
+                }
+            }).catch(function (e) {
+                console.log("error from loadLike post", e)
+            })
+    }
+
     const loadPosts = async () => {
         await Client.post("/getallimages", email)
             .then(function (res) {
-                setposts(res.data)
-
+                res.data.forEach(async element => {
+                    loadLike(element)
+                    setposts([])
+                })
             }).catch(function (e) {
                 console.log("error from load data post album", e)
             })
     }
-    const handelheart = () => {
-        setheart(heart == 'heart-o' ? 'heart' : 'heart-o')
+    const [islike, setislike] = useState({
+        email: '',
+        group_name: '',
+        email_img: '',
+        image: '',
+        email_like: '',
+    })
 
+    const handelheart = async (post, index) => {
+        islike.email = email.email;
+        islike.group_name = post.group_name;
+        islike.email_img = email.email;
+        islike.image = post.image;
+        islike.email_like = email.email;
+        await Client.post("/addlike", islike)
+            .then(function (res) {
+                if (res.data.msg == 'yep') {
+                    loadPosts()
+
+                }
+            }).catch(function (e) {
+                console.log("error from handel heart ", e)
+            })
+    }
+    const handelunheart = async (post, index) => {
+        islike.email = email.email;
+        islike.group_name = post.group_name;
+        islike.email_img = email.email;
+        islike.image = post.image;
+        islike.email_like = email.email;
+        await Client.post("/deletelike", islike).then(function (res) {
+            if (res.data.msg == 'yep') {
+                loadPosts()
+
+
+            }
+        }).catch(function (e) {
+            console.log("error from unheart post", e)
+        })
     }
     const [clicked, setclicked] = useState()
     const handelthreedots = (post) => {
@@ -133,7 +194,7 @@ const PostsAlbum = ({ navigation }) => {
         var time = today.getHours() + ":" + today.getMinutes();
         imageup.time = time
         var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
         var yyyy = today.getFullYear();
         var date = mm + '/' + dd + '/' + yyyy;
         imageup.date = date
@@ -165,7 +226,6 @@ const PostsAlbum = ({ navigation }) => {
                 console.log('error postimg', e)
             })
     }
-
 
     const [deletepost, setdeletepost] = useState({
         email: '',
@@ -205,8 +265,42 @@ const PostsAlbum = ({ navigation }) => {
             })
 
     }
+    const [liker, setliker] = useState([])
+    const handelallliker = async (post) => {
+        if (Modalshow == false) {
+            setModalshow(true)
+        }
+        await Client.post("/getall_like", email)
+            .then(function (res) {
+                setliker(res.data)
+                tree(post)
+            }).catch(function (e) {
+                console.log("error from handel all liker", e)
+            })
 
+    }
+    const tree = (post) => {
+        setuserlike([])
+        for (let index = 0; index < liker.length; index++) {
+            if (post.group_name == liker[index].group_name && post.image == liker[index].image) {
+                // console.log("hhhhhhhh", liker[index])
+                getuser(liker[index].email_like)
+            }
 
+        }
+    }
+    const [userlike, setuserlike] = useState([])
+    const getuser = async (email) => {
+        let eemail = { email }
+        await Client.post("/getuser", eemail)
+            .then(function (res) {
+                console.log("herer")
+                setuserlike(prev => [...prev, res.data])
+                console.log('herer', res.data)
+            }).catch(function (e) {
+                console.log("error from get user ", e)
+            })
+    }
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
             <TouchableOpacity onPress={handelModal}>
@@ -297,6 +391,7 @@ const PostsAlbum = ({ navigation }) => {
                 showsVerticalScrollIndicator={false}>
                 {posts.slice(0).reverse().map((post, index) => {
                     if (post.group_name == settingalbum.group_name) {
+
                         return (
 
                             <View key={index} style={{ alignItems: 'center', width: 373, backgroundColor: albumS, borderRadius: 10, marginBottom: 8 }}>
@@ -319,11 +414,12 @@ const PostsAlbum = ({ navigation }) => {
                                         </View >
                                         <Text style={{ color: textcoler }}>{post.date}</Text>
                                         <Text style={{ color: textcoler }}>{post.time}</Text>
-
-                                        <TouchableOpacity onPress={handelheart}>
-                                            <FontAwesome name={heart} color={maincolor} size={20} style={{ marginHorizontal: 154 }} />
+                                        <TouchableOpacity onPress={() => post.heart == "heart" ? handelunheart(post, index) : handelheart(post, index)}>
+                                            <FontAwesome name={post.heart == "heart" ? "heart" : "heart-o"} color={maincolor} size={20} style={{ marginHorizontal: 154 }} />
                                         </TouchableOpacity>
-
+                                        <TouchableOpacity onPress={() => handelallliker(post)}>
+                                            <Text style={{ left: 150, marginTop: 10 }}>{post.nb_like} Likes</Text>
+                                        </TouchableOpacity>
 
                                     </View>
 
@@ -331,8 +427,11 @@ const PostsAlbum = ({ navigation }) => {
                             </View>
 
                         )
+
+
                     }
                 })}
+
             </ScrollView>
 
             <Modal
@@ -495,7 +594,68 @@ const PostsAlbum = ({ navigation }) => {
                 />
                 {/* -------------------------------- */}
             </RBSheet >
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={Modalshow}
+                onRequestClose={() => {
+                    setModalshow(!Modalshow);
+                }}>
+                <View style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    //marginTop: 22,
+                }}>
+                    <View style={{
+                        // margin: 20,
+                        backgroundColor: mode,
+                        borderRadius: 10,
+                        padding: 35,
+                        width: 300,
+                        height: 300,
+                        alignItems: 'center',
+                        shadowColor: '#000',
+                        shadowOffset: {
+                            width: 0,
+                            height: 2,
+                        },
+                        shadowOpacity: 0.25,
+                        shadowRadius: 4,
+                        elevation: 5,
+                    }}>
+                        <ScrollView
+                            nestedScrollEnabled={true}
+                            showsVerticalScrollIndicator={false}>
+                            {userlike.map((ulike, index) => {
+                                return (
+                                    <View key={index} style={{ flexDirection: 'row', alignContent: 'center', width: 250 }}>
+                                        <Avatar rounded
+                                            size={55}
+                                            //icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
+                                            overlayContainerStyle={{ backgroundColor: 'gray' }}
+                                            //onPress={() => console.log("Works!")}
+                                            containerStyle={{ marginBottom: 20, marginTop: 10, marginLeft: 5 }}
+                                            source={{ uri: `${Ip}${ulike.image}` }}
+                                        />
+                                        <View style={{ flexDirection: 'row', marginVertical: 25, marginLeft: 10 }}>
+                                            <Text style={{ marginRight: 10, fontSize: 20, color: textcoler }}>{ulike.name}</Text>
+                                            <Text style={{ fontSize: 20, color: textcoler }}>{ulike.tag}</Text>
+                                        </View>
+                                    </View>
+                                )
+                            })}
+                        </ScrollView>
+                        <TouchableOpacity
+                            style={{ backgroundColor: maincolor, width: 90, height: 25, borderRadius: 10, marginTop: 10 }}
+                            onPress={() => setModalshow(!Modalshow)}>
+                            <Text style={{ marginVertical: -3, marginHorizontal: 20, color: textcoler, fontSize: 20 }}>close</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </View>
+        // -------------------------------
     )
 }
 const styles = StyleSheet.create({
