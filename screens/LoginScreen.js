@@ -8,6 +8,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import store from '../components/Store';
 import Client from '../api/Client';
 function Login({ navigation }) {
+    const [log, setlog] = store.useState("log")
 
     const initialState = {
 
@@ -50,7 +51,7 @@ function Login({ navigation }) {
         password: '',
     });
     const [email, setemail] = store.useState("email");
-    const [log, setlog] = store.useState("log")
+
     const handleLogin = async () => {
         await Client.post('/login', loginInfo)
             .then(function (res) {

@@ -55,9 +55,28 @@ const PostsAlbum = ({ navigation }) => {
     }
     useEffect(() => {
         loadPosts()
-
+        getusers()
+        getlikes()
     }, []);
+    const [allUser, setallUser] = useState([])
+    const getusers = async () => {
+        await Client.get("/getall").then(function (res) {
+            setallUser(res.data)
 
+        }).catch(function (e) {
+            console.log("error from get users", e)
+        })
+    }
+    const [likes, setlikes] = useState([])
+    const getlikes = async () => {
+        await Client.post("/getall_like", email)
+            .then(function (res) {
+                setlikes(res.data)
+            }).catch(function (e) {
+                console.log("error from get likes", e)
+            })
+
+    }
     const [posts, setposts] = useState([])
     const loadLike = async (element) => {
         islike.email = email.email;
@@ -110,7 +129,7 @@ const PostsAlbum = ({ navigation }) => {
             .then(function (res) {
                 if (res.data.msg == 'yep') {
                     loadPosts()
-
+                    getlikes()
                 }
             }).catch(function (e) {
                 console.log("error from handel heart ", e)
@@ -125,7 +144,7 @@ const PostsAlbum = ({ navigation }) => {
         await Client.post("/deletelike", islike).then(function (res) {
             if (res.data.msg == 'yep') {
                 loadPosts()
-
+                getlikes()
 
             }
         }).catch(function (e) {
@@ -265,42 +284,25 @@ const PostsAlbum = ({ navigation }) => {
             })
 
     }
-    const [liker, setliker] = useState([])
+    const [userlike, setuserlike] = useState([])
     const handelallliker = async (post) => {
         if (Modalshow == false) {
             setModalshow(true)
         }
-        await Client.post("/getall_like", email)
-            .then(function (res) {
-                setliker(res.data)
-                tree(post)
-            }).catch(function (e) {
-                console.log("error from handel all liker", e)
-            })
-
-    }
-    const tree = (post) => {
         setuserlike([])
-        for (let index = 0; index < liker.length; index++) {
-            if (post.group_name == liker[index].group_name && post.image == liker[index].image) {
-                // console.log("hhhhhhhh", liker[index])
-                getuser(liker[index].email_like)
+        for (let i = 0; i < likes.length; i++) {
+            for (let j = 0; j < allUser.length; j++) {
+                if (likes[i].email_like == allUser[j].email && likes[i].image == post.image && likes[i].group_name == post.group_name) {
+                    setuserlike(prevState => [...prevState, allUser[j]])
+
+                }
             }
 
         }
     }
-    const [userlike, setuserlike] = useState([])
-    const getuser = async (email) => {
-        let eemail = { email }
-        await Client.post("/getuser", eemail)
-            .then(function (res) {
-                console.log("herer")
-                setuserlike(prev => [...prev, res.data])
-                console.log('herer', res.data)
-            }).catch(function (e) {
-                console.log("error from get user ", e)
-            })
-    }
+
+
+
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
             <TouchableOpacity onPress={handelModal}>

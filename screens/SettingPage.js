@@ -27,6 +27,7 @@ const SettingPage = ({ navigation }) => {
     const [datauser, setdatauser] = store.useState("datauser");
     const [albumS, setalbumS] = store.useState("albumS")
     const [Albums, setAlbums] = store.useState("Albums")
+
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -137,7 +138,9 @@ const SettingPage = ({ navigation }) => {
     const handelLogOut = () => {
         navigation.navigate('Login');
         email.email = ''
+
         setlog(false)
+
         console.log('good by')
     }
     const handelchangeBio = () => {

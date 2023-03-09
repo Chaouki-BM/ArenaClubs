@@ -11,13 +11,14 @@ import NextRegister from './screens/NextRegister';
 import TabNavigation from './Navigations/TabNavigation'
 import PostsAlbum from './screens/PostsAlbum'
 const Stack = createNativeStackNavigator();
-
+import store from './components/Store';
 function App() {
+  const [log, setlog] = store.useState("log")
   return (
     <View style={styles.container}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Login"
+          initialRouteName={log == true ? "TabNavigation" : "Login"}
           screenOptions={{
             headerShown: false,
             animationEnabled: false,
@@ -25,7 +26,7 @@ function App() {
           }}
         >
 
-          <Stack.Screen name="Login" component={LoginScreen} />
+          < Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Reset" component={Reset} />
           <Stack.Screen name="Sign-Up" component={SignUp} />
           <Stack.Screen name="Sign Up" component={NextRegister} />
