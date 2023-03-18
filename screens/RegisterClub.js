@@ -1,79 +1,93 @@
+import store from '../components/Store';
 import React, { useState, useRef } from 'react'
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, Pressable, Alert, Modal } from 'react-native'
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, Pressable, Button, Alert, Modal, ImagePickerIOS } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import RBSheet from "react-native-raw-bottom-sheet";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import Entypo from 'react-native-vector-icons/Entypo'
-import store from '../components/Store';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { launchImageLibrary } from 'react-native-image-picker';
 import Client from '../api/Client';
-import RBSheet from "react-native-raw-bottom-sheet";
-function Login({ navigation }) {
+
+
+function RegisterScreen({ navigation }) {
     const refRBSheet = useRef();
-    const [log, setlog] = store.useState("log")
-
-    const initialState = {
-
-    };
+    const handleBack = () => {
+        navigation.navigate('Login');
+    }
+    const [RegisterInfo, setRegisterInfo] = useState({
+        email: '',
+        phone: '',
+        University: '',
+        sign: '',
+        city: '',
+        clubName: '',
+        password: '',
+    });
+    const [email, setemail] = store.useState("email");
     const alertmsg = (msg) => {
         Alert.alert('error', msg)
 
     }
-    const sendcode = async (msgg) => {
-        let email = loginInfo.email
-        let body = { email, msgg }
-        console.log(body)
-        await Client.post('/sendCode', body).then(function (res) {
 
-        }).catch(function (e) {
-            console.log('sendcode error', e)
-        })
-
-    }
-    const handlereset = async () => {
-        await Client.post('/emailexist', loginInfo)
+    const [gender, setgender] = useState('')
+    const resgister = async () => {
+        await Client.post('/inscription', RegisterInfo)
             .then(function (res) {
                 if (res.data.type == 'error') {
                     alertmsg(res.data.msg)
-                } else if (res.data.type == 'info') {
-                    email.email = loginInfo.email
-                    sendcode('Reset password')
-                    navigation.navigate('Reset');
-                }
-            }).catch(function (e) {
-                console.log('emailexiste error', e)
-            })
-    }
-    const handlergister = () => {
-
-        navigation.navigate('Sign-Up');
-    }
-    const [loginInfo, setLoginInfo] = useState({
-        email: '',
-        password: '',
-    });
-    const [email, setemail] = store.useState("email");
-
-    const handleLogin = async () => {
-        await Client.post('/login', loginInfo)
-            .then(function (res) {
-                if (res.data.type == 'error') {
-                    alertmsg(res.data.msg)
-                } else if (res.data.type == 'info') {
-                    email.email = loginInfo.email
-                    console.log('ee', email.email)
-                    alertmsg(res.data.msg)
+                } else {
                     navigation.navigate('Sign Up');
-                } else if (res.data.type == 'success') {
-                    email.email = loginInfo.email
-                    setLoginInfo(initialState)
-                    navigation.navigate('TabNavigation');
-                    setlog(true)
                 }
-            }).catch(function (e) {
-                console.log(e)
-            })
 
+            })
+    }
+
+
+
+    const validate = () => {
+        if (RegisterInfo.name.length == 0) {
+            alertmsg('check your name')
+            return false
+        } else if (RegisterInfo.tag.length <= 3 || RegisterInfo.tag.length > 5 || RegisterInfo.tag[0] != '#') {
+            alertmsg('Check your tag')
+            return false
+        } else if (RegisterInfo.email.length < 12 || RegisterInfo.email.search('@') == -1) {
+            alertmsg('Check your email')
+            return false
+        } else if (RegisterInfo.password.length == 0) {
+            alertmsg('Check your Password')
+            return false
+
+        } else if (img.length == 0) {
+            alertmsg('Import profile picture')
+            return false
+        } else {
+            return true
+        }
+    }
+
+
+    const handleNext = async () => {
+        const formData = new FormData()
+        formData.append('file', { uri: img, type: 'image/jpeg', name: 'image.jpg' })
+        valid = validate()
+        if (valid == true) {
+            await Client.post('/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(function (res) {
+                let path = res.data.file.path
+                RegisterInfo.image = path
+                email.email = RegisterInfo.email
+                resgister()
+            }).catch(function (e) {
+                console.log('err bcz prfl img', e)
+            })
+        }
     }
     const [mode, setmode] = store.useState("mode");
     const [Moons, setSun] = store.useState("Moons");
@@ -81,8 +95,12 @@ function Login({ navigation }) {
     const [inputS, setinputS] = store.useState("inputS");
     const [modalVisible, setModalVisible] = useState(false);
     const [maincolor, setmaincolor] = store.useState("maincolor");
+    const [img, setimg] = store.useState("img");
     const [albumS, setalbumS] = store.useState("albumS")
     const [language, setlanguage] = store.useState("language")
+    const [open, setOpen] = useState(false)
+    const [date, setDate] = useState(new Date())
+    console.log(RegisterInfo.birth)
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -91,6 +109,21 @@ function Login({ navigation }) {
         }
 
     };
+    const handelUploadImg = () => {
+        let options = {
+            mediaType: 'photo',
+            quality: 1,
+            // includeBase64: true,
+        };
+
+        launchImageLibrary(options, res => {
+            if (!res.didCancel) {
+                setimg(res.assets[0].uri)
+                console.log("img ok", res.assets[0].uri)
+            }
+
+        })
+    }
     const handleThemeChange = () => {
         setmode(mode == "#ffffff" ? "#242526" : "#ffffff");
         settextcoler(textcoler == "#242526" ? "#ffffff" : "#242526");
@@ -103,8 +136,15 @@ function Login({ navigation }) {
         setModalVisible(false)
     }
     const [isFocus, setisFocus] = useState(false);
-    const [isFocusM, setisFocusM] = useState(false);
-
+    const [isFocusT, setisFocusT] = useState(false);
+    const [isFocusN, setisFocusN] = useState(false);
+    const [isFocusE, setisFocusE] = useState(false);
+    const [isFocusU, setisFocusU] = useState(false);
+    const [isFocusS, setisFocusS] = useState(false);
+    const [isFocusName, setisFocusName] = useState(false)
+    const handleregisteruser = () => {
+        navigation.navigate('Sign-Up');
+    }
     return (
 
         <SafeAreaView style={[styles.container, { backgroundColor: mode }]}>
@@ -185,30 +225,112 @@ function Login({ navigation }) {
                 </View>
             </TouchableOpacity>
 
-            <View style={{ paddingTop: 80, paddingHorizontal: 20 }}>
+
+
+
+            <View style={{ paddingTop: 10, paddingHorizontal: 20 }}>
                 <View style={{ flexDirection: 'row' }}>
-                    <Text style={[styles.textLoginStyle, { color: maincolor }]}>Arean Clubs {"\n"}</Text>
+                    <Text style={[styles.textLoginStyle, { color: maincolor }]}>Sign-Up{"\n"}</Text>
                     <Text style={{
                         fontSize: 20,
                         fontWeight: 'bold',
                         color: textcoler
-                    }}>Login</Text>
+                    }}>Club</Text>
                 </View>
+                <View style={{ marginVertical: 0 }}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <TextInput
+                            style={[styles.inputName, { borderColor: isFocusN ? maincolor : inputS }, { backgroundColor: inputS }, { color: textcoler }]}
+                            onFocus={() => {
+                                setisFocusN(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusN(false)
+                            }}
+                            placeholder="Email"
+                            value={RegisterInfo.email}
+                            onChangeText={val => {
+                                setRegisterInfo({ ...RegisterInfo, email: val });
+                            }}
+                        />
+                        <TextInput
+                            style={[styles.inputTag, { borderColor: isFocusT ? maincolor : inputS }, { backgroundColor: inputS }, { color: textcoler }]}
+                            onFocus={() => {
+                                setisFocusT(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusT(false)
+                            }}
+                            placeholder="Phone"
+                            value={RegisterInfo.phone}
+                            onChangeText={val => {
+                                setRegisterInfo({ ...RegisterInfo, phone: val });
+                            }}
+                        />
+                    </View>
 
-                <View style={{ marginVertical: 20 }}>
+                    <View style={{ flexDirection: 'row' }}>
+
+                        <TextInput
+                            style={[styles.inputName, { borderColor: isFocusU ? maincolor : inputS }, { backgroundColor: inputS }, { color: textcoler }]}
+                            onFocus={() => {
+                                setisFocusU(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusU(false)
+                            }}
+                            placeholder="University Name"
+                            value={RegisterInfo.University}
+                            onChangeText={val => {
+                                setRegisterInfo({ ...RegisterInfo, University: val });
+                            }}
+                        />
+                        <TextInput
+                            style={[styles.inputTag, { borderColor: isFocusS ? maincolor : inputS }, { backgroundColor: inputS }, { color: textcoler }]}
+                            onFocus={() => {
+                                setisFocusS(true)
+                            }}
+                            onBlur={() => {
+                                setisFocusS(false)
+                            }}
+                            placeholder="Sign"
+                            value={RegisterInfo.sign}
+                            onChangeText={val => {
+                                setRegisterInfo({ ...RegisterInfo, sign: val });
+                            }}
+                        />
+
+
+
+
+                    </View>
                     <TextInput
-                        style={[styles.input, { borderColor: isFocusM ? maincolor : inputS }, { backgroundColor: inputS }, { color: textcoler }]}
+                        style={[styles.input, { borderColor: isFocusE ? maincolor : inputS }, { backgroundColor: inputS }, { color: textcoler }]}
                         onFocus={() => {
-                            setisFocusM(true)
+                            setisFocusE(true)
                         }}
                         onBlur={() => {
-                            setisFocusM(false)
+                            setisFocusE(false)
                         }}
-                        placeholder="Email"
+                        placeholder="City"
+                        value={RegisterInfo.city}
                         onChangeText={val => {
-                            setLoginInfo({ ...loginInfo, email: val });
+                            setRegisterInfo({ ...RegisterInfo, city: val });
                         }}
-                        value={loginInfo.email}
+                    />
+                    <TextInput
+                        style={[styles.input, { borderColor: isFocusName ? maincolor : inputS }, { backgroundColor: inputS }, { color: textcoler }]}
+                        onFocus={() => {
+                            setisFocusName(true)
+                        }}
+                        onBlur={() => {
+                            setisFocusName(false)
+                        }}
+                        placeholder="Club Name"
+                        value={RegisterInfo.name}
+                        onChangeText={val => {
+                            setRegisterInfo({ ...RegisterInfo, name: val });
+                        }}
                     />
                     <TextInput
                         style={[styles.input, { borderColor: isFocus ? maincolor : inputS }, { backgroundColor: inputS }, { color: textcoler }]}
@@ -218,50 +340,49 @@ function Login({ navigation }) {
                         onBlur={() => {
                             setisFocus(false)
                         }}
-                        placeholder="password"
-                        value={loginInfo.password}
+                        placeholder="Password"
+                        value={RegisterInfo.password}
                         onChangeText={val => {
-                            setLoginInfo({ ...loginInfo, password: val });
+                            setRegisterInfo({ ...RegisterInfo, password: val });
                         }}
                     />
-                    <TouchableOpacity style={[styles.button, { backgroundColor: maincolor }]} onPress={handleLogin}>
-                        <Text style={[styles.buttontext, { color: mode }]}>login</Text>
+                    <Text style={{ color: textcoler, left: 20 }}>import profile picture :
+                        {"\t"}
+                        <TouchableOpacity onPress={handelUploadImg}>
+                            <FontAwesome name='upload' size={20} color={textcoler} />
+                        </TouchableOpacity>
+                    </Text>
+
+                    <TouchableOpacity style={[styles.button, { backgroundColor: maincolor }]} onPress={handleNext}>
+                        <Text style={[styles.buttontext, { color: mode }]}>Next</Text>
                         <View style={styles.iconContainer}>
-                            <Ionicons name='enter-outline'
+                            <Entypo name='controller-play'
                                 color={mode}
-                                size={22}
+                                size={21}
                                 style={
                                     styles.logoStyleEnter
 
                                 }
                             />
-                            {/* <Image
-                                style={styles.logoStyleEnter}
-                                source={require('../assets/Enter_52px.png')}
-
-
-                            /> */}
                         </View>
                     </TouchableOpacity>
 
 
 
                 </View>
-                <View style={{ marginTop: 35 }}>
-                    <Text style={{ color: textcoler }}>Forget password?
-                        <Pressable onPress={handlereset}>
-                            <Text style={{ color: maincolor, left: 8, top: 4 }}>Reset</Text>
-                        </Pressable>
-                        {"\n"}
-                    </Text>
-
-                    <Text style={{ color: textcoler }}>Don't have an account?
-                        <Pressable onPress={handlergister}>
-                            <Text style={{ color: maincolor, left: 10, top: 4 }}>Register now</Text>
+                <View style={{ marginTop: 0, flexDirection: 'row' }}>
+                    <Text style={{ color: textcoler }}>Have an account?
+                        <Pressable onPress={handleBack}>
+                            <Text style={{ color: maincolor, marginLeft: 10, top: 4 }}>Back</Text>
                         </Pressable>
                     </Text>
                 </View>
-
+                <View style={{ marginTop: 20, flexDirection: 'row' }}>
+                    <Text style={{ color: textcoler }}>Register as user?</Text>
+                    <Pressable onPress={handleregisteruser}>
+                        <Text style={{ color: maincolor, marginLeft: 10 }}>Register now</Text>
+                    </Pressable>
+                </View>
             </View>
             <RBSheet
                 ref={refRBSheet}
@@ -297,7 +418,6 @@ function Login({ navigation }) {
             </RBSheet >
 
         </SafeAreaView >
-
 
 
     )
@@ -358,6 +478,23 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 10,
     },
+    inputName: {
+        height: 40,
+        width: 220,
+        margin: 12,
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 10,
+    },
+    inputTag: {
+        right: 12,
+        height: 40,
+        width: 100,
+        margin: 12,
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 10,
+    },
     button: {
         width: 135,
         height: 40,
@@ -369,7 +506,7 @@ const styles = StyleSheet.create({
         padding: 18,
         marginLeft: 108,
         marginVertical: 20,
-        marginBottom: 80,
+        marginBottom: 50,
         alignContent: 'center'
 
     },
@@ -385,8 +522,8 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         resizeMode: 'contain',
-        right: 15,
-        top: -4
+        right: 10,
+        top: -2
 
 
 
@@ -423,4 +560,4 @@ const styles = StyleSheet.create({
 
     },
 });
-export default Login
+export default RegisterScreen

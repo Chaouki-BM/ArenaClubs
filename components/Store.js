@@ -3,6 +3,7 @@ const store = createStore();
 store.setState("mode", "#ffffff");
 store.setState("Moons", "brightness-high");
 store.setState("textcoler", "#242526");
+store.setState("language", "English")
 store.setState("inputS", "#f2f2f2");
 store.setState("maincolor", "#4169e1");
 store.setState("img", "");
@@ -15,6 +16,5 @@ store.setState("settingalbum", {
     group_name: '',
     email: '',
 })
-
 store.setState("Albums", [])
 export default store;

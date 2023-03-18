@@ -1,8 +1,8 @@
 import store from '../components/Store';
-import React, { useState } from 'react'
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, Pressable, Alert, Modal, ImagePickerIOS } from 'react-native'
+import React, { useState, useRef } from 'react'
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, Pressable, Button, Alert, Modal, ImagePickerIOS } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import RBSheet from "react-native-raw-bottom-sheet";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
@@ -10,16 +10,24 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { launchImageLibrary } from 'react-native-image-picker';
 import Client from '../api/Client';
+import DatePicker from 'react-native-date-picker'
+import { RadioButton } from 'react-native-paper';
 function RegisterScreen({ navigation }) {
+    const refRBSheet = useRef();
     const handleBack = () => {
         navigation.navigate('Login');
     }
+    const handleregisterclub = () => {
+        navigation.navigate('RegisterClub');
+    }
+
     const [RegisterInfo, setRegisterInfo] = useState({
-        name: '',
-        tag: '',
         email: '',
+        phone: '',
+        birth: 'dd-mm-yyyy',
+        city: '',
+        name: '',
         password: '',
-        image: '',
     });
     const [email, setemail] = store.useState("email");
     const alertmsg = (msg) => {
@@ -27,7 +35,7 @@ function RegisterScreen({ navigation }) {
 
     }
 
-
+    const [gender, setgender] = useState('')
     const resgister = async () => {
         await Client.post('/inscription', RegisterInfo)
             .then(function (res) {
@@ -92,6 +100,10 @@ function RegisterScreen({ navigation }) {
     const [maincolor, setmaincolor] = store.useState("maincolor");
     const [img, setimg] = store.useState("img");
     const [albumS, setalbumS] = store.useState("albumS")
+    const [language, setlanguage] = store.useState("language")
+    const [open, setOpen] = useState(false)
+    const [date, setDate] = useState(new Date())
+    console.log(RegisterInfo.birth)
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -130,6 +142,7 @@ function RegisterScreen({ navigation }) {
     const [isFocusT, setisFocusT] = useState(false);
     const [isFocusN, setisFocusN] = useState(false);
     const [isFocusE, setisFocusE] = useState(false);
+    const [isFocusName, setisFocusName] = useState(false)
 
     return (
 
@@ -197,11 +210,14 @@ function RegisterScreen({ navigation }) {
 
                 </View>
             </Modal >
+            <TouchableOpacity onPress={() => refRBSheet.current.open()}>
+                <MaterialIcons name='language' size={25} color='#8e8e8f' style={{ top: -28, left: 90 }} />
+            </TouchableOpacity>
             <TouchableOpacity onPress={handleThemeChange}>
                 <View style={styles.iconMContainer}>
                     <MaterialIcons name={Moons} size={26} color='#8e8e8f'
                         style={{
-                            top: -30
+                            top: -55
 
                         }}
                     />
@@ -211,9 +227,15 @@ function RegisterScreen({ navigation }) {
 
 
 
-            <View style={{ paddingTop: 80, paddingHorizontal: 20 }}>
-                <Text style={[styles.textLoginStyle, { color: maincolor }]}>MYGCORD {"\n"}</Text>
-
+            <View style={{ paddingTop: 10, paddingHorizontal: 20 }}>
+                <View style={{ flexDirection: 'row' }}>
+                    <Text style={[styles.textLoginStyle, { color: maincolor }]}>Sign-Up{"\n"}</Text>
+                    <Text style={{
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        color: textcoler
+                    }}>User</Text>
+                </View>
                 <View style={{ marginVertical: 0 }}>
                     <View style={{ flexDirection: 'row' }}>
                         <TextInput
@@ -224,10 +246,10 @@ function RegisterScreen({ navigation }) {
                             onBlur={() => {
                                 setisFocusN(false)
                             }}
-                            placeholder="Name"
-                            value={RegisterInfo.name}
+                            placeholder="Email"
+                            value={RegisterInfo.email}
                             onChangeText={val => {
-                                setRegisterInfo({ ...RegisterInfo, name: val });
+                                setRegisterInfo({ ...RegisterInfo, email: val });
                             }}
                         />
                         <TextInput
@@ -238,12 +260,51 @@ function RegisterScreen({ navigation }) {
                             onBlur={() => {
                                 setisFocusT(false)
                             }}
-                            placeholder="#Tag"
-                            value={RegisterInfo.tag}
+                            placeholder="Phone"
+                            value={RegisterInfo.phone}
                             onChangeText={val => {
-                                setRegisterInfo({ ...RegisterInfo, tag: val });
+                                setRegisterInfo({ ...RegisterInfo, phone: val });
                             }}
                         />
+                    </View>
+                    <DatePicker
+                        modal
+                        open={open}
+                        date={date}
+                        mode="date"
+                        fadeToColor={mode}
+                        textColor={maincolor}
+                        onConfirm={(date) => {
+                            setOpen(false)
+                            let dd = String(date.getDate()).padStart(2, '0');
+                            let mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+                            let yyyy = date.getFullYear();
+                            let d = yyyy + "-" + mm + "-" + dd
+                            setRegisterInfo({ birth: d })
+
+                        }}
+                        onCancel={() => {
+                            setOpen(false)
+                        }}
+                    />
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={{ backgroundColor: inputS, width: 215, height: 39, borderRadius: 10, marginLeft: 13, marginBottom: 10, marginTop: 10 }}>
+                            <Text onPress={() => setOpen(true)}
+                                style={{ marginLeft: 20, marginTop: 8 }}
+                            >{RegisterInfo.birth}
+                            </Text>
+                            <Fontisto name='date' size={20} color={maincolor} style={{ alignSelf: "flex-end", marginVertical: -20, marginRight: 10 }} />
+                        </View>
+
+                        <RadioButton.Group onValueChange={newValue => setgender(newValue)} value={gender} >
+                            <View style={{ flexDirection: 'row', marginHorizontal: -15 }}>
+                                <RadioButton.Item value="man" color={maincolor} />
+                                <Ionicons name='ios-man' size={28} color={textcoler} style={{ top: 10, marginLeft: -20 }} />
+                                <RadioButton.Item value="woman" color={maincolor} style={{ marginLeft: -20 }} />
+                                <Ionicons name='woman' size={28} color={textcoler} style={{ top: 10, marginLeft: -20 }} />
+                            </View>
+                        </RadioButton.Group>
+
                     </View>
                     <TextInput
                         style={[styles.input, { borderColor: isFocusE ? maincolor : inputS }, { backgroundColor: inputS }, { color: textcoler }]}
@@ -253,10 +314,24 @@ function RegisterScreen({ navigation }) {
                         onBlur={() => {
                             setisFocusE(false)
                         }}
-                        placeholder="Email"
-                        value={RegisterInfo.email}
+                        placeholder="City"
+                        value={RegisterInfo.city}
                         onChangeText={val => {
-                            setRegisterInfo({ ...RegisterInfo, email: val });
+                            setRegisterInfo({ ...RegisterInfo, city: val });
+                        }}
+                    />
+                    <TextInput
+                        style={[styles.input, { borderColor: isFocusName ? maincolor : inputS }, { backgroundColor: inputS }, { color: textcoler }]}
+                        onFocus={() => {
+                            setisFocusName(true)
+                        }}
+                        onBlur={() => {
+                            setisFocusName(false)
+                        }}
+                        placeholder="Name"
+                        value={RegisterInfo.name}
+                        onChangeText={val => {
+                            setRegisterInfo({ ...RegisterInfo, name: val });
                         }}
                     />
                     <TextInput
@@ -267,7 +342,7 @@ function RegisterScreen({ navigation }) {
                         onBlur={() => {
                             setisFocus(false)
                         }}
-                        placeholder="password"
+                        placeholder="Password"
                         value={RegisterInfo.password}
                         onChangeText={val => {
                             setRegisterInfo({ ...RegisterInfo, password: val });
@@ -297,15 +372,52 @@ function RegisterScreen({ navigation }) {
 
 
                 </View>
-                <View style={{ marginTop: 35 }}>
+                <View style={{ marginTop: 0, flexDirection: 'row' }}>
                     <Text style={{ color: textcoler }}>Have an account?
                         <Pressable onPress={handleBack}>
-                            <Text style={{ color: maincolor, left: 8, top: 4 }}>Back</Text>
+                            <Text style={{ color: maincolor, marginLeft: 10, top: 4 }}>Back</Text>
                         </Pressable>
                     </Text>
                 </View>
-
+                <View style={{ marginTop: 20, flexDirection: 'row' }}>
+                    <Text style={{ color: textcoler }}>Register as club?</Text>
+                    <Pressable onPress={handleregisterclub}>
+                        <Text style={{ color: maincolor, marginLeft: 10 }}>Register now</Text>
+                    </Pressable>
+                </View>
             </View>
+            <RBSheet
+                ref={refRBSheet}
+                closeOnDragDown={true}
+                closeOnPressMask={true}
+                height={170}
+                openDuration={300}
+                customStyles={{
+                    wrapper: {
+                        backgroundColor: "transparent"
+                    },
+                    draggableIcon: {
+                        backgroundColor: maincolor
+                    },
+                    container: {
+                        backgroundColor: mode
+                    }
+                }}
+            >
+                {/* ----------------------- */}
+                <View style={{ alignItems: 'center' }}>
+                    <TouchableOpacity style={{ marginBottom: 8 }} onPress={() => setlanguage("Français")}>
+                        <Text style={[language == "Français" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>Français</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ marginBottom: 8 }} onPress={() => setlanguage("English")}>
+                        <Text style={[language == "English" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>English</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setlanguage("Arab")}>
+                        <Text style={[language == "Arab" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>العربية</Text>
+                    </TouchableOpacity>
+                </View>
+                {/* -------------------------------- */}
+            </RBSheet >
 
         </SafeAreaView >
 
@@ -396,7 +508,7 @@ const styles = StyleSheet.create({
         padding: 18,
         marginLeft: 108,
         marginVertical: 20,
-        marginBottom: 80,
+        marginBottom: 50,
         alignContent: 'center'
 
     },

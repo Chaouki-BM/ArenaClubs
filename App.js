@@ -10,9 +10,11 @@ import SignUp from './screens/RegisterScreen'
 import NextRegister from './screens/NextRegister';
 import TabNavigation from './Navigations/TabNavigation'
 import PostsAlbum from './screens/PostsAlbum'
+import RegisterClub from './screens/RegisterClub';
 const Stack = createNativeStackNavigator();
 import store from './components/Store';
 function App() {
+
   const [log, setlog] = store.useState("log")
   return (
     <View style={styles.container}>
@@ -30,8 +32,11 @@ function App() {
           <Stack.Screen name="Reset" component={Reset} />
           <Stack.Screen name="Sign-Up" component={SignUp} />
           <Stack.Screen name="Sign Up" component={NextRegister} />
+          <Stack.Screen name="RegisterClub" component={RegisterClub} />
           <Stack.Screen name="TabNavigation" component={TabNavigation} />
           <Stack.Screen name="PostsAlbum" component={PostsAlbum} />
+
+
 
         </Stack.Navigator>
 
