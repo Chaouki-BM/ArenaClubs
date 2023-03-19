@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, Pressable, Image, Modal } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -7,8 +7,36 @@ import Fontisto from 'react-native-vector-icons/Fontisto'
 import Entypo from 'react-native-vector-icons/Entypo'
 import store from '../components/Store';
 import Client from '../api/Client';
+import RBSheet from "react-native-raw-bottom-sheet";
 const NextRegister = ({ navigation }) => {
+    const refRBSheet = useRef();
+    const [lang, setlang] = store.useState("lang")
+    const [language, setlanguage] = store.useState("language")
+    const changelang = async () => {
 
+        await Client.post('/get_language', lang).then(function (res) {
+            setlanguage(res.data.My_language)
+        }).catch(function () {
+            console.log("error from get long login")
+        })
+    }
+
+    const [row, setrow] = store.useState("dir")
+    const handelarbic = () => {
+        lang.lang = "Arabic"
+        changelang()
+        setrow("row-reverse")
+    }
+    const handeleng = () => {
+        lang.lang = "English"
+        changelang()
+        setrow("row")
+    }
+    const handelfr = () => {
+        lang.lang = "Français"
+        changelang()
+        setrow("row")
+    }
     const handleCancel = () => {
         navigation.navigate('Login');
     }
@@ -121,11 +149,14 @@ const NextRegister = ({ navigation }) => {
 
                 </View>
             </Modal >
+            <TouchableOpacity onPress={() => refRBSheet.current.open()}>
+                <MaterialIcons name='language' size={25} color='#8e8e8f' style={{ top: -28, left: 90 }} />
+            </TouchableOpacity>
             <TouchableOpacity onPress={handleThemeChange}>
                 <View style={styles.iconMContainer}>
                     <MaterialIcons name={Moons} size={26} color='#8e8e8f'
                         style={{
-                            top: -30
+                            top: -55
 
                         }}
                     />
@@ -133,7 +164,7 @@ const NextRegister = ({ navigation }) => {
             </TouchableOpacity>
 
             <View style={{ paddingTop: 80, paddingHorizontal: 10 }}>
-                <Text style={[styles.textLoginStyle, { color: maincolor }]}>MYGCORD {"\n"}</Text>
+                <Text style={[styles.textLoginStyle, { color: maincolor }]}>ArenaClubs{"\n"}</Text>
                 {/* <Text style={styles.textStyle}>GREAT TO HAVE YOU BACK!</Text> */}
                 <View style={{ marginVertical: 20 }}>
                     <View style={{ flexDirection: 'row' }}>
@@ -145,17 +176,19 @@ const NextRegister = ({ navigation }) => {
                             onBlur={() => {
                                 setisFocusN(false)
                             }}
-                            placeholder="#Tag"
+                            placeholder={language.enter_code}
                             value={body}
                             onChangeText={val => {
                                 Setbody({ ...body, verif_code: val });
                             }}
                         />
-                        <Text style={{ color: textcoler, top: 15 }}  >Please check your email we sent your{"\n"}
-                            code  ( 6 numbers )</Text>
+                        <View style={{ width: 220 }}>
+                            <Text style={{ color: textcoler, top: 15 }}  >{language.reset_msg}
+                                {language.numbers}</Text>
+                        </View>
                     </View>
                     <TouchableOpacity style={[styles.button, { backgroundColor: maincolor }]} onPress={handleSignUp}>
-                        <Text style={[styles.buttontext, { color: mode }]}>Sign Up</Text>
+                        <Text style={[styles.buttontext, { color: mode }]}>{language.save}</Text>
                         <View style={styles.iconContainer}>
                             <MaterialIcons name='person-add-alt-1'
                                 color={mode}
@@ -172,16 +205,48 @@ const NextRegister = ({ navigation }) => {
 
 
                 </View>
-                <View style={{ marginTop: 100 }}>
-                    <Text style={{ color: textcoler }}>Didn't get a code?
-                        <Pressable onPress={handleCancel}>
-                            <Text style={{ color: maincolor, left: 8, top: 4 }}>Cancel</Text>
-                        </Pressable>
-                    </Text>
+                <View style={{ flexDirection: row, marginTop: 130 }}>
+                    <Text style={{ color: textcoler }}>{language.check_dont}</Text>
+                    <Pressable onPress={handleCancel}>
+                        <Text style={{ color: maincolor, marginHorizontal: 10 }}>{language.back}</Text>
+                    </Pressable>
+
 
                 </View>
 
             </View>
+            <RBSheet
+                ref={refRBSheet}
+                closeOnDragDown={true}
+                closeOnPressMask={true}
+                height={170}
+                openDuration={300}
+                customStyles={{
+                    wrapper: {
+                        backgroundColor: "transparent"
+                    },
+                    draggableIcon: {
+                        backgroundColor: maincolor
+                    },
+                    container: {
+                        backgroundColor: mode
+                    }
+                }}
+            >
+                {/* ----------------------- */}
+                <View style={{ alignItems: 'center' }}>
+                    <TouchableOpacity style={{ marginBottom: 8 }} onPress={() => handelfr()}>
+                        <Text style={[lang.lang == "Français" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>Français</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ marginBottom: 8 }} onPress={() => handeleng()}>
+                        <Text style={[lang.lang == "English" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>English</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handelarbic()}>
+                        <Text style={[lang.lang == "Arabic" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>العربية</Text>
+                    </TouchableOpacity>
+                </View>
+                {/* -------------------------------- */}
+            </RBSheet >
 
         </SafeAreaView >
 
@@ -266,6 +331,7 @@ const styles = StyleSheet.create({
         margin: -5,
         marginTop: -13,
 
+
     },
     logoStyleEnter: {
         width: 20,
@@ -274,6 +340,7 @@ const styles = StyleSheet.create({
         right: 15,
         top: -2,
         left: -9,
+        marginRight: 10
 
 
 

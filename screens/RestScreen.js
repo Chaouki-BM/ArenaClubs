@@ -1,5 +1,5 @@
 import store from '../components/Store';
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, Pressable, Alert, Modal } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -7,8 +7,37 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import Entypo from 'react-native-vector-icons/Entypo'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import RBSheet from "react-native-raw-bottom-sheet";
 import Client from '../api/Client';
 function RestScreen({ navigation }) {
+    const refRBSheet = useRef();
+    const [lang, setlang] = store.useState("lang")
+    const [language, setlanguage] = store.useState("language")
+    const changelang = async () => {
+
+        await Client.post('/get_language', lang).then(function (res) {
+            setlanguage(res.data.My_language)
+        }).catch(function () {
+            console.log("error from get long login")
+        })
+    }
+
+    const [row, setrow] = store.useState("dir")
+    const handelarbic = () => {
+        lang.lang = "Arabic"
+        changelang()
+        setrow("row-reverse")
+    }
+    const handeleng = () => {
+        lang.lang = "English"
+        changelang()
+        setrow("row")
+    }
+    const handelfr = () => {
+        lang.lang = "Français"
+        changelang()
+        setrow("row")
+    }
     const [email, setemail] = store.useState("email");
     const handleBack = () => {
         navigation.navigate('Login');
@@ -138,11 +167,14 @@ function RestScreen({ navigation }) {
 
                 </View>
             </Modal >
+            <TouchableOpacity onPress={() => refRBSheet.current.open()}>
+                <MaterialIcons name='language' size={25} color='#8e8e8f' style={{ top: -28, left: 90 }} />
+            </TouchableOpacity>
             <TouchableOpacity onPress={handleThemeChange}>
                 <View style={styles.iconMContainer}>
                     <MaterialIcons name={Moons} size={26} color='#8e8e8f'
                         style={{
-                            top: -30
+                            top: -55
 
                         }}
                     />
@@ -153,8 +185,14 @@ function RestScreen({ navigation }) {
 
 
             <View style={{ paddingTop: 80, paddingHorizontal: 20 }}>
-                <Text style={[styles.textLoginStyle, { color: maincolor }]}>MYGCORD {"\n"}</Text>
-
+                <View style={{ flexDirection: row }}>
+                    <Text style={[styles.textLoginStyle, { color: maincolor }]}>ArenaClubs {"\n"}</Text>
+                    <Text style={{
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        color: textcoler
+                    }}>{language.login_Reset}</Text>
+                </View>
                 <View style={{ marginVertical: 0 }}>
                     <View style={{ flexDirection: 'row' }}>
                         <TextInput
@@ -165,7 +203,7 @@ function RestScreen({ navigation }) {
                             onBlur={() => {
                                 setisFocusC(false)
                             }}
-                            placeholder="Enter code "
+                            placeholder={language.enter_code}
 
                             onChangeText={val => {
                                 setResetInfo({ ...ResetInfo, verif_code: val });
@@ -173,8 +211,9 @@ function RestScreen({ navigation }) {
                             value={ResetInfo.verif_code}
 
                         />
-                        <Text style={{ color: textcoler, top: 15 }}  >Please check your email we sent{"\n"}your code ( 6 numbers )</Text>
-
+                        <View style={{ width: 200 }}>
+                            <Text style={{ color: textcoler, top: 10 }}  >{language.reset_msg}{language.numbers}</Text>
+                        </View>
                     </View>
                     <TextInput
                         style={[styles.input, { borderColor: isFocusP ? maincolor : inputS }, { backgroundColor: inputS }, { color: textcoler }]}
@@ -184,7 +223,7 @@ function RestScreen({ navigation }) {
                         onBlur={() => {
                             setisFocusP(false)
                         }}
-                        placeholder="Password"
+                        placeholder={language.password}
                         value={ResetInfo.password1}
                         onChangeText={val => {
                             setResetInfo({ ...ResetInfo, password1: val });
@@ -198,7 +237,7 @@ function RestScreen({ navigation }) {
                         onBlur={() => {
                             setisFocusNP(false)
                         }}
-                        placeholder="Confirm password"
+                        placeholder={language.confirm}
                         value={ResetInfo.password2}
                         onChangeText={val => {
                             setResetInfo({ ...ResetInfo, password2: val });
@@ -207,7 +246,7 @@ function RestScreen({ navigation }) {
 
 
                     <TouchableOpacity style={[styles.button, { backgroundColor: maincolor }]} onPress={handleSave}>
-                        <Text style={[styles.buttontext, { color: mode }]}>Save</Text>
+                        <Text style={[styles.buttontext, { color: mode }]}>{language.save}</Text>
                         <View style={styles.iconContainer}>
                             <AntDesign name='checkcircle'
                                 color={mode}
@@ -223,16 +262,47 @@ function RestScreen({ navigation }) {
 
 
                 </View>
-                <View style={{ marginTop: 35 }}>
-                    <Text style={{ color: textcoler }}>Cancel?
-                        <Pressable onPress={handleBack}>
-                            <Text style={{ color: maincolor, right: -5, top: 4 }}>Back</Text>
-                        </Pressable>
-                    </Text>
+                <View style={{ flexDirection: row }}>
+                    <Text style={{ color: textcoler }}>{language.cancel}</Text>
+                    <Pressable onPress={handleBack}>
+                        <Text style={{ color: maincolor, marginHorizontal: 10 }}>{language.back}</Text>
+                    </Pressable>
+
                 </View>
 
             </View>
-
+            <RBSheet
+                ref={refRBSheet}
+                closeOnDragDown={true}
+                closeOnPressMask={true}
+                height={170}
+                openDuration={300}
+                customStyles={{
+                    wrapper: {
+                        backgroundColor: "transparent"
+                    },
+                    draggableIcon: {
+                        backgroundColor: maincolor
+                    },
+                    container: {
+                        backgroundColor: mode
+                    }
+                }}
+            >
+                {/* ----------------------- */}
+                <View style={{ alignItems: 'center' }}>
+                    <TouchableOpacity style={{ marginBottom: 8 }} onPress={() => handelfr()}>
+                        <Text style={[lang.lang == "Français" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>Français</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ marginBottom: 8 }} onPress={() => handeleng()}>
+                        <Text style={[lang.lang == "English" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>English</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handelarbic()}>
+                        <Text style={[lang.lang == "Arabic" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>العربية</Text>
+                    </TouchableOpacity>
+                </View>
+                {/* -------------------------------- */}
+            </RBSheet >
         </SafeAreaView >
 
 
@@ -339,7 +409,8 @@ const styles = StyleSheet.create({
         height: 20,
         resizeMode: 'contain',
         right: 10,
-        top: -2
+        top: -2,
+        marginRight: 10
 
 
 

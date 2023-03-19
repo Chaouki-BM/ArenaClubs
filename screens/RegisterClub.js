@@ -1,5 +1,5 @@
 import store from '../components/Store';
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, Pressable, Button, Alert, Modal, ImagePickerIOS } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -14,6 +14,36 @@ import Client from '../api/Client';
 
 function RegisterScreen({ navigation }) {
     const refRBSheet = useRef();
+    const [lang, setlang] = store.useState("lang")
+    const [language, setlanguage] = store.useState("language")
+    const changelang = async () => {
+
+        await Client.post('/get_language', lang).then(function (res) {
+            setlanguage(res.data.My_language)
+        }).catch(function () {
+            console.log("error from get long login")
+        })
+    }
+
+    const [row, setrow] = store.useState("dir")
+    const handelarbic = () => {
+        lang.lang = "Arabic"
+        changelang()
+        setrow("row-reverse")
+    }
+    const handeleng = () => {
+        lang.lang = "English"
+        changelang()
+        setrow("row")
+    }
+    const handelfr = () => {
+        lang.lang = "Français"
+        changelang()
+        setrow("row")
+    }
+    const handleregisterclub = () => {
+        navigation.navigate('RegisterClub');
+    }
     const handleBack = () => {
         navigation.navigate('Login');
     }
@@ -97,7 +127,6 @@ function RegisterScreen({ navigation }) {
     const [maincolor, setmaincolor] = store.useState("maincolor");
     const [img, setimg] = store.useState("img");
     const [albumS, setalbumS] = store.useState("albumS")
-    const [language, setlanguage] = store.useState("language")
     const [open, setOpen] = useState(false)
     const [date, setDate] = useState(new Date())
     console.log(RegisterInfo.birth)
@@ -229,13 +258,13 @@ function RegisterScreen({ navigation }) {
 
 
             <View style={{ paddingTop: 10, paddingHorizontal: 20 }}>
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={[styles.textLoginStyle, { color: maincolor }]}>Sign-Up{"\n"}</Text>
+                <View style={{ flexDirection: row }}>
+                    <Text style={[styles.textLoginStyle, { color: maincolor }]}>{language.reg_title}{"\n"}</Text>
                     <Text style={{
                         fontSize: 20,
                         fontWeight: 'bold',
                         color: textcoler
-                    }}>Club</Text>
+                    }}>{language.club}</Text>
                 </View>
                 <View style={{ marginVertical: 0 }}>
                     <View style={{ flexDirection: 'row' }}>
@@ -247,7 +276,7 @@ function RegisterScreen({ navigation }) {
                             onBlur={() => {
                                 setisFocusN(false)
                             }}
-                            placeholder="Email"
+                            placeholder={language.email}
                             value={RegisterInfo.email}
                             onChangeText={val => {
                                 setRegisterInfo({ ...RegisterInfo, email: val });
@@ -261,7 +290,7 @@ function RegisterScreen({ navigation }) {
                             onBlur={() => {
                                 setisFocusT(false)
                             }}
-                            placeholder="Phone"
+                            placeholder={language.tlf}
                             value={RegisterInfo.phone}
                             onChangeText={val => {
                                 setRegisterInfo({ ...RegisterInfo, phone: val });
@@ -279,7 +308,7 @@ function RegisterScreen({ navigation }) {
                             onBlur={() => {
                                 setisFocusU(false)
                             }}
-                            placeholder="University Name"
+                            placeholder={language.u_name}
                             value={RegisterInfo.University}
                             onChangeText={val => {
                                 setRegisterInfo({ ...RegisterInfo, University: val });
@@ -293,7 +322,7 @@ function RegisterScreen({ navigation }) {
                             onBlur={() => {
                                 setisFocusS(false)
                             }}
-                            placeholder="Sign"
+                            placeholder={language.sign}
                             value={RegisterInfo.sign}
                             onChangeText={val => {
                                 setRegisterInfo({ ...RegisterInfo, sign: val });
@@ -312,7 +341,7 @@ function RegisterScreen({ navigation }) {
                         onBlur={() => {
                             setisFocusE(false)
                         }}
-                        placeholder="City"
+                        placeholder={language.city}
                         value={RegisterInfo.city}
                         onChangeText={val => {
                             setRegisterInfo({ ...RegisterInfo, city: val });
@@ -326,7 +355,7 @@ function RegisterScreen({ navigation }) {
                         onBlur={() => {
                             setisFocusName(false)
                         }}
-                        placeholder="Club Name"
+                        placeholder={language.c_name}
                         value={RegisterInfo.name}
                         onChangeText={val => {
                             setRegisterInfo({ ...RegisterInfo, name: val });
@@ -340,21 +369,22 @@ function RegisterScreen({ navigation }) {
                         onBlur={() => {
                             setisFocus(false)
                         }}
-                        placeholder="Password"
+                        placeholder={language.password}
                         value={RegisterInfo.password}
                         onChangeText={val => {
                             setRegisterInfo({ ...RegisterInfo, password: val });
                         }}
                     />
-                    <Text style={{ color: textcoler, left: 20 }}>import profile picture :
-                        {"\t"}
-                        <TouchableOpacity onPress={handelUploadImg}>
+                    <View style={{ flexDirection: row }}>
+                        <Text style={{ color: textcoler }}>{language.reg_import}</Text>
+                        {/* {"\t"} */}
+                        <TouchableOpacity onPress={handelUploadImg} style={{ marginHorizontal: 10 }}>
                             <FontAwesome name='upload' size={20} color={textcoler} />
                         </TouchableOpacity>
-                    </Text>
+                    </View>
 
                     <TouchableOpacity style={[styles.button, { backgroundColor: maincolor }]} onPress={handleNext}>
-                        <Text style={[styles.buttontext, { color: mode }]}>Next</Text>
+                        <Text style={[styles.buttontext, { color: mode }]}>{language.next}</Text>
                         <View style={styles.iconContainer}>
                             <Entypo name='controller-play'
                                 color={mode}
@@ -370,17 +400,17 @@ function RegisterScreen({ navigation }) {
 
 
                 </View>
-                <View style={{ marginTop: 0, flexDirection: 'row' }}>
-                    <Text style={{ color: textcoler }}>Have an account?
-                        <Pressable onPress={handleBack}>
-                            <Text style={{ color: maincolor, marginLeft: 10, top: 4 }}>Back</Text>
-                        </Pressable>
-                    </Text>
+                <View style={{ flexDirection: row, marginBottom: 20 }}>
+                    <Text style={{ color: textcoler }}>{language.reg_have}</Text>
+                    <Pressable onPress={handleBack}>
+                        <Text style={{ color: maincolor, marginLeft: 10, marginHorizontal: 10 }}>{language.back}</Text>
+                    </Pressable>
+
                 </View>
-                <View style={{ marginTop: 20, flexDirection: 'row' }}>
-                    <Text style={{ color: textcoler }}>Register as user?</Text>
+                <View style={{ flexDirection: row }}>
+                    <Text style={{ color: textcoler }}>{language.reg_user}</Text>
                     <Pressable onPress={handleregisteruser}>
-                        <Text style={{ color: maincolor, marginLeft: 10 }}>Register now</Text>
+                        <Text style={{ color: maincolor, marginLeft: 10, marginHorizontal: 10 }}>{language.login_Register}</Text>
                     </Pressable>
                 </View>
             </View>
@@ -404,14 +434,14 @@ function RegisterScreen({ navigation }) {
             >
                 {/* ----------------------- */}
                 <View style={{ alignItems: 'center' }}>
-                    <TouchableOpacity style={{ marginBottom: 8 }} onPress={() => setlanguage("Français")}>
-                        <Text style={[language == "Français" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>Français</Text>
+                    <TouchableOpacity style={{ marginBottom: 8 }} onPress={() => handelfr()}>
+                        <Text style={[lang.lang == "Français" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>Français</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ marginBottom: 8 }} onPress={() => setlanguage("English")}>
-                        <Text style={[language == "English" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>English</Text>
+                    <TouchableOpacity style={{ marginBottom: 8 }} onPress={() => handeleng()}>
+                        <Text style={[lang.lang == "English" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>English</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setlanguage("Arab")}>
-                        <Text style={[language == "Arab" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>العربية</Text>
+                    <TouchableOpacity onPress={() => handelarbic()}>
+                        <Text style={[lang.lang == "Arabic" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>العربية</Text>
                     </TouchableOpacity>
                 </View>
                 {/* -------------------------------- */}
