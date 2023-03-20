@@ -47,24 +47,16 @@ function RegisterScreen({ navigation }) {
     const handleBack = () => {
         navigation.navigate('Login');
     }
-    const [RegisterInfo, setRegisterInfo] = useState({
-        email: '',
-        phone: '',
-        University: '',
-        sign: '',
-        city: '',
-        clubName: '',
-        password: '',
-    });
+
     const [email, setemail] = store.useState("email");
     const alertmsg = (msg) => {
         Alert.alert('error', msg)
 
     }
 
-    const [gender, setgender] = useState('')
+
     const resgister = async () => {
-        await Client.post('/inscription', RegisterInfo)
+        await Client.post('/inscription_club', RegisterInfo)
             .then(function (res) {
                 if (res.data.type == 'error') {
                     alertmsg(res.data.msg)
@@ -76,22 +68,42 @@ function RegisterScreen({ navigation }) {
     }
 
 
-
+    const [RegisterInfo, setRegisterInfo] = useState({
+        nom: '',
+        email: '',
+        mot_de_passe: '',
+        email_contact: '',
+        image: '',
+        ville: '',
+        tele: '',
+        signe: '',
+        nom_universite: '',
+    });
+    console.log(RegisterInfo)
     const validate = () => {
-        if (RegisterInfo.name.length == 0) {
+        if (RegisterInfo.nom.length == 0) {
             alertmsg('check your name')
             return false
-        } else if (RegisterInfo.tag.length <= 3 || RegisterInfo.tag.length > 5 || RegisterInfo.tag[0] != '#') {
-            alertmsg('Check your tag')
+        } else if (RegisterInfo.tele.length == 0) {
+            alertmsg('Check your phone')
+            return false
+        } else if (RegisterInfo.ville.length == 0) {
+            alertmsg('Check your ville')
+            return false
+        } else if (RegisterInfo.signe.length == 0) {
+            alertmsg('Check your signe')
+            return false
+        } else if (RegisterInfo.nom_universite.length == 0) {
+            alertmsg('Check your nom_universite')
             return false
         } else if (RegisterInfo.email.length < 12 || RegisterInfo.email.search('@') == -1) {
             alertmsg('Check your email')
             return false
-        } else if (RegisterInfo.password.length == 0) {
+        } else if (RegisterInfo.mot_de_passe.length == 0) {
             alertmsg('Check your Password')
             return false
 
-        } else if (img.length == 0) {
+        } else if (imgg.length == 0) {
             alertmsg('Import profile picture')
             return false
         } else {
@@ -102,7 +114,7 @@ function RegisterScreen({ navigation }) {
 
     const handleNext = async () => {
         const formData = new FormData()
-        formData.append('file', { uri: img, type: 'image/jpeg', name: 'image.jpg' })
+        formData.append('file', { uri: imgg, type: 'image/jpeg', name: 'image.jpg' })
         valid = validate()
         if (valid == true) {
             await Client.post('/upload', formData, {
@@ -113,6 +125,7 @@ function RegisterScreen({ navigation }) {
                 let path = res.data.file.path
                 RegisterInfo.image = path
                 email.email = RegisterInfo.email
+                RegisterInfo.email_contact = RegisterInfo.email
                 resgister()
             }).catch(function (e) {
                 console.log('err bcz prfl img', e)
@@ -126,10 +139,11 @@ function RegisterScreen({ navigation }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [maincolor, setmaincolor] = store.useState("maincolor");
     const [img, setimg] = store.useState("img");
+    const [imgg, setimgg] = useState('')
     const [albumS, setalbumS] = store.useState("albumS")
     const [open, setOpen] = useState(false)
     const [date, setDate] = useState(new Date())
-    console.log(RegisterInfo.birth)
+
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -147,7 +161,7 @@ function RegisterScreen({ navigation }) {
 
         launchImageLibrary(options, res => {
             if (!res.didCancel) {
-                setimg(res.assets[0].uri)
+                setimgg(res.assets[0].uri)
                 console.log("img ok", res.assets[0].uri)
             }
 
@@ -291,9 +305,9 @@ function RegisterScreen({ navigation }) {
                                 setisFocusT(false)
                             }}
                             placeholder={language.tlf}
-                            value={RegisterInfo.phone}
+                            value={RegisterInfo.tele}
                             onChangeText={val => {
-                                setRegisterInfo({ ...RegisterInfo, phone: val });
+                                setRegisterInfo({ ...RegisterInfo, tele: val });
                             }}
                         />
                     </View>
@@ -309,9 +323,9 @@ function RegisterScreen({ navigation }) {
                                 setisFocusU(false)
                             }}
                             placeholder={language.u_name}
-                            value={RegisterInfo.University}
+                            value={RegisterInfo.nom_universite}
                             onChangeText={val => {
-                                setRegisterInfo({ ...RegisterInfo, University: val });
+                                setRegisterInfo({ ...RegisterInfo, nom_universite: val });
                             }}
                         />
                         <TextInput
@@ -323,9 +337,9 @@ function RegisterScreen({ navigation }) {
                                 setisFocusS(false)
                             }}
                             placeholder={language.sign}
-                            value={RegisterInfo.sign}
+                            value={RegisterInfo.signe}
                             onChangeText={val => {
-                                setRegisterInfo({ ...RegisterInfo, sign: val });
+                                setRegisterInfo({ ...RegisterInfo, signe: val });
                             }}
                         />
 
@@ -342,9 +356,9 @@ function RegisterScreen({ navigation }) {
                             setisFocusE(false)
                         }}
                         placeholder={language.city}
-                        value={RegisterInfo.city}
+                        value={RegisterInfo.ville}
                         onChangeText={val => {
-                            setRegisterInfo({ ...RegisterInfo, city: val });
+                            setRegisterInfo({ ...RegisterInfo, ville: val });
                         }}
                     />
                     <TextInput
@@ -356,9 +370,9 @@ function RegisterScreen({ navigation }) {
                             setisFocusName(false)
                         }}
                         placeholder={language.c_name}
-                        value={RegisterInfo.name}
+                        value={RegisterInfo.nom}
                         onChangeText={val => {
-                            setRegisterInfo({ ...RegisterInfo, name: val });
+                            setRegisterInfo({ ...RegisterInfo, nom: val });
                         }}
                     />
                     <TextInput
@@ -370,9 +384,9 @@ function RegisterScreen({ navigation }) {
                             setisFocus(false)
                         }}
                         placeholder={language.password}
-                        value={RegisterInfo.password}
+                        value={RegisterInfo.mot_de_passe}
                         onChangeText={val => {
-                            setRegisterInfo({ ...RegisterInfo, password: val });
+                            setRegisterInfo({ ...RegisterInfo, mot_de_passe: val });
                         }}
                     />
                     <View style={{ flexDirection: row }}>

@@ -48,31 +48,29 @@ function Login({ navigation }) {
         Alert.alert('error', msg)
 
     }
-    const sendcode = async (msgg) => {
-        let email = loginInfo.email
-        let body = { email, msgg }
-        console.log(body)
-        await Client.post('/sendCode', body).then(function (res) {
+    // const sendcode = async (msgg) => {
+    //     let email = loginInfo.email
+    //     let body = { email, msgg }
+    //     console.log(body)
+    //     await Client.post('/sendCode', body).then(function (res) {
 
-        }).catch(function (e) {
-            console.log('sendcode error', e)
-        })
+    //     }).catch(function (e) {
+    //         console.log('sendcode error', e)
+    //     })
 
-    }
+    // }
     const handlereset = async () => {
-        // await Client.post('/emailexist', loginInfo)
-        //     .then(function (res) {
-        //         if (res.data.type == 'error') {
-        //             alertmsg(res.data.msg)
-        //         } else if (res.data.type == 'info') {
-        //             email.email = loginInfo.email
-        //             sendcode('Reset password')
-        //             navigation.navigate('Reset');
-        //         }
-        //     }).catch(function (e) {
-        //         console.log('emailexiste error', e)
-        //     })
-        navigation.navigate('Reset');
+        await Client.post('/emailexist', loginInfo)
+            .then(function (res) {
+                if (res.data.type == 'error') {
+                    alertmsg(res.data.msg)
+                } else if (res.data.type == 'info') {
+                    email.email = loginInfo.email
+                    navigation.navigate('Reset');
+                }
+            }).catch(function (e) {
+                console.log('emailexiste error', e)
+            })
     }
     const handlergister = () => {
 
@@ -85,24 +83,24 @@ function Login({ navigation }) {
     const [email, setemail] = store.useState("email");
 
     const handleLogin = async () => {
-        // await Client.post('/login', loginInfo)
-        //     .then(function (res) {
-        //         if (res.data.type == 'error') {
-        //             alertmsg(res.data.msg)
-        //         } else if (res.data.type == 'info') {
-        //             email.email = loginInfo.email
-        //             console.log('ee', email.email)
-        //             alertmsg(res.data.msg)
-        //             navigation.navigate('Sign Up');
-        //         } else if (res.data.type == 'success') {
-        //             email.email = loginInfo.email
-        //             setLoginInfo(initialState)
-        //             navigation.navigate('TabNavigation');
-        //             setlog(true)
-        //         }
-        //     }).catch(function (e) {
-        //         console.log(e)
-        // })
+        await Client.post('/login', loginInfo)
+            .then(function (res) {
+                if (res.data.type == 'error') {
+                    alertmsg(res.data.msg)
+                } else if (res.data.type == 'info') {
+                    email.email = loginInfo.email
+                    console.log('ee', email.email)
+                    alertmsg(res.data.msg)
+                    navigation.navigate('Sign Up');
+                } else if (res.data.type == 'success') {
+                    email.email = loginInfo.email
+                    setLoginInfo(initialState)
+                    navigation.navigate('TabNavigation');
+                    setlog(true)
+                }
+            }).catch(function (e) {
+                console.log(e)
+            })
 
     }
     const [mode, setmode] = store.useState("mode");

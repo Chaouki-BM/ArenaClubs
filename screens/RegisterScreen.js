@@ -48,23 +48,16 @@ function RegisterScreen({ navigation }) {
         navigation.navigate('RegisterClub');
     }
 
-    const [RegisterInfo, setRegisterInfo] = useState({
-        email: '',
-        phone: '',
-        birth: 'dd-mm-yyyy',
-        city: '',
-        name: '',
-        password: '',
-    });
+
     const [email, setemail] = store.useState("email");
     const alertmsg = (msg) => {
         Alert.alert('error', msg)
 
     }
 
-    const [gender, setgender] = useState('')
+
     const resgister = async () => {
-        await Client.post('/inscription', RegisterInfo)
+        await Client.post('/inscription_utilisateur', RegisterInfo)
             .then(function (res) {
                 if (res.data.type == 'error') {
                     alertmsg(res.data.msg)
@@ -75,19 +68,39 @@ function RegisterScreen({ navigation }) {
             })
     }
 
-
+    const [gender, setgender] = useState('')
+    const [RegisterInfo, setRegisterInfo] = useState({
+        email: '',
+        tele: '',
+        anniversaire: 'dd-mm-yyyy',
+        ville: '',
+        nom: '',
+        mot_de_passe: '',
+        image: '',
+        genre: '',
+        email_contact: '',
+    });
 
     const validate = () => {
-        if (RegisterInfo.name.length == 0) {
+        if (RegisterInfo.nom.length == 0) {
             alertmsg('check your name')
             return false
-        } else if (RegisterInfo.tag.length <= 3 || RegisterInfo.tag.length > 5 || RegisterInfo.tag[0] != '#') {
-            alertmsg('Check your tag')
+        } else if (RegisterInfo.ville.length == 0) {
+            alertmsg('check your ville')
+            return false
+        } else if (RegisterInfo.tele.length = 0) {
+            alertmsg('Check your phone number')
+            return false
+        } else if (RegisterInfo.anniversaire == "dd-mm-yyyy") {
+            alertmsg('Check your anniversaire')
+            return false
+        } else if (RegisterInfo.genre.length == 0) {
+            alertmsg('Check your genre')
             return false
         } else if (RegisterInfo.email.length < 12 || RegisterInfo.email.search('@') == -1) {
             alertmsg('Check your email')
             return false
-        } else if (RegisterInfo.password.length == 0) {
+        } else if (RegisterInfo.mot_de_passe.length == 0) {
             alertmsg('Check your Password')
             return false
 
@@ -101,24 +114,27 @@ function RegisterScreen({ navigation }) {
 
 
     const handleNext = async () => {
-        // const formData = new FormData()
-        // formData.append('file', { uri: img, type: 'image/jpeg', name: 'image.jpg' })
-        // valid = validate()
-        // if (valid == true) {
-        //     await Client.post('/upload', formData, {
-        //         headers: {
-        //             'Content-Type': 'multipart/form-data'
-        //         }
-        //     }).then(function (res) {
-        //         let path = res.data.file.path
-        //         RegisterInfo.image = path
-        //         email.email = RegisterInfo.email
-        //         resgister()
-        //     }).catch(function (e) {
-        //         console.log('err bcz prfl img', e)
-        //     })
-        // }
-        navigation.navigate('Sign Up');
+        const formData = new FormData()
+        formData.append('file', { uri: img, type: 'image/jpeg', name: 'image.jpg' })
+        RegisterInfo.genre = gender
+        valid = validate()
+
+        if (valid == true) {
+            await Client.post('/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(function (res) {
+                let path = res.data.file.path
+                RegisterInfo.image = path
+                email.email = RegisterInfo.email
+                RegisterInfo.email_contact = RegisterInfo.email
+                resgister()
+            }).catch(function (e) {
+                console.log('err bcz prfl img', e)
+            })
+        }
+
     }
     const [mode, setmode] = store.useState("mode");
     const [Moons, setSun] = store.useState("Moons");
@@ -131,7 +147,6 @@ function RegisterScreen({ navigation }) {
 
     const [open, setOpen] = useState(false)
     const [date, setDate] = useState(new Date())
-    console.log(RegisterInfo.birth)
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -289,9 +304,9 @@ function RegisterScreen({ navigation }) {
                                 setisFocusT(false)
                             }}
                             placeholder={language.tlf}
-                            value={RegisterInfo.phone}
+                            value={RegisterInfo.tele}
                             onChangeText={val => {
-                                setRegisterInfo({ ...RegisterInfo, phone: val });
+                                setRegisterInfo({ ...RegisterInfo, tele: val });
                             }}
                         />
                     </View>
@@ -308,7 +323,7 @@ function RegisterScreen({ navigation }) {
                             let mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
                             let yyyy = date.getFullYear();
                             let d = yyyy + "-" + mm + "-" + dd
-                            setRegisterInfo({ birth: d })
+                            setRegisterInfo({ ...RegisterInfo, anniversaire: d })
 
                         }}
                         onCancel={() => {
@@ -319,16 +334,16 @@ function RegisterScreen({ navigation }) {
                         <View style={{ backgroundColor: inputS, width: 215, height: 39, borderRadius: 10, marginLeft: 13, marginBottom: 10, marginTop: 10 }}>
                             <Text onPress={() => setOpen(true)}
                                 style={{ marginLeft: 20, marginTop: 8 }}
-                            >{RegisterInfo.birth}
+                            >{RegisterInfo.anniversaire}
                             </Text>
                             <Fontisto name='date' size={20} color={maincolor} style={{ alignSelf: "flex-end", marginVertical: -20, marginRight: 10 }} />
                         </View>
 
                         <RadioButton.Group onValueChange={newValue => setgender(newValue)} value={gender} >
                             <View style={{ flexDirection: 'row', marginHorizontal: -15 }}>
-                                <RadioButton.Item value="man" color={maincolor} />
+                                <RadioButton.Item value="Male" color={maincolor} />
                                 <Ionicons name='ios-man' size={28} color={textcoler} style={{ top: 10, marginLeft: -20 }} />
-                                <RadioButton.Item value="woman" color={maincolor} style={{ marginLeft: -20 }} />
+                                <RadioButton.Item value="Femelle" color={maincolor} style={{ marginLeft: -20 }} />
                                 <Ionicons name='woman' size={28} color={textcoler} style={{ top: 10, marginLeft: -20 }} />
                             </View>
                         </RadioButton.Group>
@@ -343,9 +358,9 @@ function RegisterScreen({ navigation }) {
                             setisFocusE(false)
                         }}
                         placeholder={language.city}
-                        value={RegisterInfo.city}
+                        value={RegisterInfo.ville}
                         onChangeText={val => {
-                            setRegisterInfo({ ...RegisterInfo, city: val });
+                            setRegisterInfo({ ...RegisterInfo, ville: val });
                         }}
                     />
                     <TextInput
@@ -357,9 +372,9 @@ function RegisterScreen({ navigation }) {
                             setisFocusName(false)
                         }}
                         placeholder={language.name}
-                        value={RegisterInfo.name}
+                        value={RegisterInfo.nom}
                         onChangeText={val => {
-                            setRegisterInfo({ ...RegisterInfo, name: val });
+                            setRegisterInfo({ ...RegisterInfo, nom: val });
                         }}
                     />
                     <TextInput
@@ -371,9 +386,9 @@ function RegisterScreen({ navigation }) {
                             setisFocus(false)
                         }}
                         placeholder={language.password}
-                        value={RegisterInfo.password}
+                        value={RegisterInfo.mot_de_passe}
                         onChangeText={val => {
-                            setRegisterInfo({ ...RegisterInfo, password: val });
+                            setRegisterInfo({ ...RegisterInfo, mot_de_passe: val });
                         }}
                     />
                     <View style={{ flexDirection: row }}>
