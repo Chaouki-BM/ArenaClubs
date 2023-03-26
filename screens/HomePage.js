@@ -5,8 +5,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Avatar } from 'react-native-elements';
 import TabBarProfil from '../Navigations/TabBarProfil';
@@ -42,39 +40,18 @@ function HomePage() {
 
     }, []);
     const loadDataUser = async () => {
-        await Client.post('/getuser', email).then(function (res) {
-            setdatauser(res.data)
+        await Client.post('/getclub', email).then(function (res) {
+            setdatauser(res.data.club)
+
         }).catch(function (e) {
             console.log('error data from laoddatauser')
         })
     }
     const loadData = async () => {
         await Client.post('/getprofil', email).then(function (res) {
-            setdata(res.data)
-            if (res.data.test_tel == '1') {
-                setswitchtel("eye")
-                bodyswitch.test_tel = '1'
-            } else {
-                bodyswitch.test_tel = '0'
-            }
-            if (res.data.test_birthday == '1') {
-                setswitchbirth("eye")
-                bodyswitch.test_birthday = '1'
-            } else {
-                bodyswitch.test_birthday = '0'
-            }
-            if (res.data.test_adress == '1') {
-                setswitchtel("eye")
-                bodyswitch.test_adress = '1'
-            } else {
-                bodyswitch.test_adress = '0'
-            }
-            if (res.data.test_mail == '1') {
-                setswitchbirth("eye")
-                bodyswitch.test_mail = '1'
-            } else {
-                bodyswitch.test_mail = '0'
-            }
+            setdata(res.data.res)
+
+
         }).catch(function (e) {
             console.log('error from loaddata')
         })
@@ -109,103 +86,22 @@ function HomePage() {
             Linking.openURL(data.twitter)
         }
     }
-    const handellinksnapchat = () => {
-        if (data.snapchat != "") {
-            Linking.openURL(data.snapchat)
-        }
-    }
-    const handellinktiktok = () => {
-        if (data.tiktok != "") {
-            Linking.openURL(data.tiktok)
-        }
-    }
+
+
 
     //---------------------------------------------
 
-    const [switchtel, setswitchtel] = useState("eye-with-line")
-    const [switchbirth, setswitchbirth] = useState("eye-with-line")
-    const [switchadd, setswitchadd] = useState("eye-with-line")
-    const [switchmai, setswitchmai] = useState("eye-with-line")
-    const [bodyswitch, setbodyswitch] = useState({
-        test_tel: '',
-        test_birthday: '',
-        test_adress: '',
-        test_mail: '',
-        email: '',
-    })
+
     const handelseemore = () => {
         loadData();
         refRBSheet.current.open()
     }
-    const handelshowtel = async () => {
-        bodyswitch.email = email.email
-        if (switchtel == 'eye-with-line') {
-            setswitchtel("eye")
-            bodyswitch.test_tel = '1'
 
-        } else {
-            setswitchtel("eye-with-line")
-            bodyswitch.test_tel = '0'
-
-        }
-        await Client.post("/changetest", bodyswitch).then(function (res) {
-
-        }).catch(function (e) {
-            console.log('error from handelshow tel')
-        })
-    }
-    const handelshowbirth = async () => {
-        bodyswitch.email = email.email
-        if (switchbirth == 'eye-with-line') {
-            setswitchbirth("eye")
-            bodyswitch.test_birthday = '1'
-        } else {
-            setswitchbirth("eye-with-line")
-            bodyswitch.test_birthday = '0'
-        }
-        await Client.post("/changetest", bodyswitch).then(function (res) {
-
-        }).catch(function (e) {
-            console.log('error from handelshow birthday')
-        })
-    }
-    const handelshowadd = async () => {
-        bodyswitch.email = email.email
-        if (switchadd == 'eye-with-line') {
-            setswitchadd("eye")
-            bodyswitch.test_adress = '1'
-        } else {
-            setswitchadd("eye-with-line")
-            bodyswitch.test_adress = '0'
-        }
-        await Client.post("/changetest", bodyswitch).then(function (res) {
-
-        }).catch(function (e) {
-            console.log('error from handelshow add')
-        })
-    }
-
-
-    const handelshowmail = async () => {
-        bodyswitch.email = email.email
-        if (switchmai == 'eye-with-line') {
-            setswitchmai("eye")
-            bodyswitch.test_mail = '1'
-        } else {
-            setswitchmai("eye-with-line")
-            bodyswitch.test_mail = '0'
-        }
-        await Client.post("/changetest", bodyswitch).then(function (res) {
-
-        }).catch(function (e) {
-            console.log('error from handelshow mail')
-        })
-    }
 
     let image = { uri: `${Ip}${datauser.image}` };
     let couverture = { uri: `${Ip}${datauser.couverture}` };
     const [cover, setcover] = useState({
-        path: '',
+        couverture: '',
         email: '',
     })
     const upload = async () => {
@@ -217,7 +113,7 @@ function HomePage() {
             }
         }).then(function (res) {
             let path = res.data.file.path
-            cover.path = path
+            cover.couverture = path
             cover.email = email.email
             postcover()
         }).catch(function (e) {
@@ -228,7 +124,7 @@ function HomePage() {
     const postcover = async () => {
         await Client.post("/Upcouverture", cover)
             .then(function (res) {
-                if (res.data.msg == 'suuu') {
+                if (res.data.msg == 'success') {
                     Alert.alert('success')
                     loadDataUser();
                 }
@@ -256,6 +152,7 @@ function HomePage() {
 
         })
     }
+    const [Albums, setAlbums] = store.useState("Albums")
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
             {/* --------------------------------- */}
@@ -363,31 +260,31 @@ function HomePage() {
                     source={image}
                 />
                 <View style={{ flexDirection: 'row', padding: 10 }}>
-                    <Text style={{ marginRight: 10, fontSize: 20, fontStyle: 'bold', color: textcoler, }}>{datauser.name}</Text>
-                    <Text style={{ marginRight: 10, fontSize: 20, fontStyle: 'bold', color: textcoler, }}>{datauser.tag}</Text>
+                    <Text style={{ marginRight: 10, fontSize: 20, fontStyle: 'bold', color: textcoler, }}>{datauser.nom}</Text>
+
                 </View>
-                <View style={{ padding: 10 }}>
+                <View style={{ marginLeft: 10 }}>
                     {/* --------------------------------------- */}
                     <Text style={{ width: 300, height: 50, color: textcoler, }}>{data.bio}</Text>
                 </View>
-                <View style={{ padding: 10 }}>
+                <View style={{ marginLeft: 10 }}>
                     <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ marginRight: 20, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Albums:</Text>
-                        <Text style={{ marginRight: 70, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>{data.nb_classe}</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginRight: 100, }}>{data.nb_following}</Text>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic' }}>{data.nb_followers}</Text>
+                        <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginRight: 100, }}>{data.nb_following}</Text>
+                        <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic' }}>{data.nb_followers}</Text>
 
-                        </View>
                     </View>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ marginRight: 29, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Posts:</Text>
-                        <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginRight: 50, }}>{data.nb_img}</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ marginRight: 50, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Following</Text>
-                            <Text style={{ marginRight: 10, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Followers</Text>
 
-                        </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ marginRight: 20, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Abonnes :</Text>
+                        <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginRight: 50, }}>{Albums.length}</Text>
+
+                        <Text style={{ marginRight: 20, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Postes :</Text>
+                        <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginRight: 50, }}>{Albums.length}</Text>
+
+                        <Text style={{ marginRight: 20, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Albums :</Text>
+                        <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginRight: 50, }}>{Albums.length}</Text>
+
+
                     </View>
 
                     <Pressable onPress={handelseemore}>
@@ -418,49 +315,8 @@ function HomePage() {
                 }}
             >
                 <View style={{ padding: 20 }}>
-                    <View style={{ flexDirection: 'row' }} >
-                        <TouchableOpacity onPress={handelshowtel} style={{ left: 280 }}>
-                            <Entypo name={switchtel} size={20} color={maincolor} />
-                        </TouchableOpacity>
-                        <View style={{ flexDirection: 'row' }}>
-                            <FontAwesome name='mobile-phone' size={27} color={maincolor} style={{ marginRight: 20 }} />
-                            <Text style={{ marginRight: 135, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.tel}</Text>
 
-
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity onPress={handelshowbirth} style={{ left: 280 }}>
-                            <Entypo name={switchbirth} size={20} color={maincolor} />
-                        </TouchableOpacity>
-                        <View style={{ flexDirection: 'row' }}>
-                            <FontAwesome name='birthday-cake' size={20} color={maincolor} style={{ marginRight: 10 }} />
-                            <Text style={{ fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.birthday}</Text>
-
-                        </View>
-
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity onPress={handelshowadd} style={{ left: 280 }}>
-                            <Entypo name={switchadd} size={20} color={maincolor} />
-                        </TouchableOpacity>
-                        <View style={{ flexDirection: 'row' }}>
-                            <FontAwesome name='map-marker' size={27} color={maincolor} style={{ marginRight: 15 }} />
-                            <Text style={{ marginRight: 125, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{data.adress}</Text>
-
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity onPress={handelshowmail} style={{ left: 280 }}>
-                            <Entypo name={switchmai} size={20} color={maincolor} />
-                        </TouchableOpacity>
-                        <View style={{ flexDirection: 'row' }}>
-                            <MaterialCommunityIcons name='email' size={23} color={maincolor} style={{ marginRight: 10 }} />
-                            <Text style={{ marginRight: 25, fontSize: 20, color: textcoler, fontStyle: 'italic' }}>{datauser.email}</Text>
-
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: 'row', marginHorizontal: 90, marginVertical: 50, }}>
+                    <View style={{ flexDirection: 'row', marginHorizontal: 120, marginVertical: 50, }}>
                         <TouchableOpacity onPress={handellinkfacebook}>
                             <Entypo name='facebook' size={23} color={maincolor} style={{ marginRight: 20 }} />
                         </TouchableOpacity>
@@ -470,12 +326,7 @@ function HomePage() {
                         <TouchableOpacity onPress={handellinktwitter}>
                             <Entypo name='twitter' size={23} color={maincolor} style={{ marginRight: 20 }} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={handellinksnapchat}>
-                            <FontAwesome name='snapchat' size={23} color={maincolor} style={{ marginRight: 10 }} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={handellinktiktok}>
-                            <Entypo name='tumblr' size={22} color={maincolor} style={{ marginRight: 10 }} />
-                        </TouchableOpacity>
+
                     </View>
 
                 </View>

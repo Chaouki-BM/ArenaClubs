@@ -8,6 +8,8 @@ import store from '../components/Store';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Profile from '../screens/Profile'
+import Informations from '../screens/Informations';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 const Tab = createMaterialTopTabNavigator()
 
 const TabBarProfil = () => {
@@ -32,6 +34,7 @@ const TabBarProfil = () => {
                         ),
                     }}
                 />
+
                 <Tab.Screen name='Profile' component={Profile}
                     options={{
                         title: '',
@@ -41,11 +44,11 @@ const TabBarProfil = () => {
                         ),
                     }}
                 />
-                <Tab.Screen name="FollowersPage" component={FollowersPage}
+                <Tab.Screen name='Informations' component={Informations}
                     options={{
                         title: '',
                         tabBarIcon: ({ focused, color, size }) => (
-                            <FontAwesome5 name="user-friends" color={color} size={20} />
+                            <MaterialCommunityIcons name="book-information-variant" color={color} size={23} />
                         ),
                     }}
                 />
@@ -57,6 +60,15 @@ const TabBarProfil = () => {
                         ),
                     }}
                 />
+                <Tab.Screen name="FollowersPage" component={FollowersPage}
+                    options={{
+                        title: '',
+                        tabBarIcon: ({ focused, color, size }) => (
+                            <FontAwesome5 name="user-friends" color={color} size={20} />
+                        ),
+                    }}
+                />
+
 
             </Tab.Navigator>
 

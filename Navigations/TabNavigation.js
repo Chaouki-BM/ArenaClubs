@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import AccueilPage from '../screens/AccueilPage';
+import RecherchePage from '../screens/RecherchePage';
 import Notification from '../screens/Notification'
 import SettingPage from '../screens/SettingPage';
 import HomePage from '../screens/HomePage';
@@ -8,6 +8,7 @@ import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { SafeAreaView, StyleSheet } from 'react-native';
 import store from '../components/Store';
 //import DrawerTab from './DrawerTab';
@@ -36,23 +37,24 @@ const TabNavigation = () => {
                         ),
                     }}
                 />
-                <Tab.Screen
-                    name="AccueilPage" component={AccueilPage}
-                    options={{
-                        title: 'Home',
-                        tabBarIcon: ({ focused, color, size }) => (
-                            <Entypo name="home" color={color} size={size} />
 
-                        ),
-
-                    }}
-                />
                 <Tab.Screen name='Notification' component={Notification}
                     options={{
                         tabBarBadge: 10, title: 'Notification',
                         tabBarIcon: ({ focused, color, size }) => (
                             <Ionicons name="notifications" color={color} size={size} />
                         ),
+                    }}
+                />
+                <Tab.Screen
+                    name="RecherchePage" component={RecherchePage}
+                    options={{
+                        title: 'Recherche',
+                        tabBarIcon: ({ focused, color, size }) => (
+                            <FontAwesome name="search" color={color} size={size} />
+
+                        ),
+
                     }}
                 />
                 <Tab.Screen name="Messagerie" component={Messagerie}

@@ -6,6 +6,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Entypo from 'react-native-vector-icons/Entypo'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+
 import Client from '../api/Client';
 const AlbumPage = ({ navigation }) => {
     const refRBSheet = useRef();
@@ -21,19 +23,33 @@ const AlbumPage = ({ navigation }) => {
     const [AlbumName, setAlbumName] = useState({
         group_name2: '',
     })
+    useEffect(() => {
+        loadData();
+    }, []);
+    const loadData = async () => {
+        await Client.post("/getallgroup", email)
+            .then(function (res) {
+                setAlbums(res.data)
+
+            }).catch(function (e) {
+                console.log("error from load data ", e)
+            })
+    }
     const [settingalbum, setsettingalbum] = store.useState("settingalbum")
     const [editalbum, seteditalbum] = useState({
         group_name: '',
         group_name2: '',
         email: '',
     })
+
     const handelthreedots = (Album) => {
         refRBSheet.current.open()
         settingalbum.group_name = Album.group_name
+        setvisible('')
     }
     const refreshdata = async () => {
         await Client.post('/getprofil', email).then(function (res) {
-            setdata(res.data);
+            setdata(res.data.res);
         }).catch(function (e) {
             console.log('error from loaddata', e)
         })
@@ -69,28 +85,50 @@ const AlbumPage = ({ navigation }) => {
             console.log("error from change album name", e)
         })
     }
-    const [dataemail, setdataemail] = useState({ email: '' })
     const [Albums, setAlbums] = store.useState("Albums")
-    useEffect(() => {
-        loadData();
-    }, []);
-    const loadData = async () => {
-        dataemail.email = email.email
-        await Client.post("/getallgroup", dataemail)
-            .then(function (res) {
-                setAlbums(res.data)
-            }).catch(function (e) {
-                console.log("error from load data ", e)
-            })
-    }
+
     const handelopenalbum = (Album) => {
         settingalbum.group_name = Album.group_name
         navigation.navigate('PostsAlbum');
     }
+    const [addAlbum, setaddAlbum] = useState({
+        group_name: '',
+        email: '',
+    })
+    const handelsaveAlbum = async () => {
+        addAlbum.email = email.email
+        await Client.post("/creategroup", addAlbum).then(function (res) {
+            if (res.data.type == 'error') {
+                Alert.alert('error', res.data.msg)
+                setaddAlbum(initialState)
 
+
+            } else {
+                Alert.alert('success', res.data.msg)
+                setaddAlbum(initialState)
+                loadData()
+
+
+            }
+        }).catch(function (e) {
+            console.log("error from save album", e)
+        })
+    }
+    const [visible, setvisible] = useState('')
+    const handelAddAlbum = () => {
+        refRBSheet.current.open()
+        setvisible('addalbum')
+    }
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
+            <TouchableOpacity onPress={() => handelAddAlbum()} style={{ marginBottom: 10, marginLeft: 10, marginTop: 10 }}>
+                <View style={{ flexDirection: 'row', width: 100, backgroundColor: maincolor, borderRadius: 5, }}>
+                    <Ionicons name='add' size={25} color={textcoler} style={{ top: -1 }} />
+                    <Text style={{ color: textcoler, top: 2 }}>Add Album</Text>
+                </View>
+            </TouchableOpacity >
             <ScrollView
+
                 nestedScrollEnabled={true}
                 showsVerticalScrollIndicator={false}>
                 {Albums.slice(0).reverse().map((Album, index) => {
@@ -111,7 +149,7 @@ const AlbumPage = ({ navigation }) => {
             <RBSheet
                 ref={refRBSheet}
                 closeOnDragDown={true}
-                closeOnPressMask={false}
+                closeOnPressMask={true}
                 height={300}
                 openDuration={300}
                 customStyles={{
@@ -127,37 +165,22 @@ const AlbumPage = ({ navigation }) => {
 
                 }}
             >
-                <View
-                    style={{
-                        borderBottomColor: maincolor,
-                        borderBottomWidth: StyleSheet.hairlineWidth,
-                        width: 400,
-                        height: 16,
-                        marginBottom: 15,
 
-                    }}
-                />
-                <View >
-                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => chivron == 'chevron-right' ? setchivron('chevron-down') : setchivron('chevron-right')}>
-                        <AntDesign name='edit' size={25} color={maincolor} style={{ marginLeft: 10, marginRight: 10 }} />
-                        <Text style={{ color: textcoler, fontSize: 20, marginRight: 130 }}>Edit Album Name</Text>
 
-                        <Entypo name={chivron} size={25} color={maincolor} />
-                    </TouchableOpacity>
-                </View>
-                {chivron == 'chevron-down' &&
-                    <View>
+                {/* -------------------addalbum----------------------- */}
+                {visible == 'addalbum' &&
+                    <View style={{ padding: 10 }}>
+                        <Text style={{ marginHorizontal: 100, color: maincolor, fontSize: 18, marginVertical: 50 }}>Create New Album</Text>
                         <TextInput
                             style={[{ borderColor: isFocusM ? maincolor : inputS },
                             {
-
                                 backgroundColor: inputS,
                                 color: textcoler,
                                 borderRadius: 20,
-                                width: 350,
-                                marginHorizontal: 10,
-                                marginBottom: 20,
-                                marginTop: 20,
+                                width: 300,
+                                //height: 100,
+                                marginHorizontal: 30,
+                                marginBottom: 40,
 
                             }]}
 
@@ -167,45 +190,103 @@ const AlbumPage = ({ navigation }) => {
                             onBlur={() => {
                                 setisFocusM(false)
                             }}
-                            placeholder="New album name"
+                            placeholder="Name of album"
                             onChangeText={val => {
-                                setAlbumName({ ...AlbumName, group_name2: val });
+                                setaddAlbum({ ...addAlbum, group_name: val });
                             }}
-                            value={AlbumName.group_name2}
+                            value={addAlbum.group_name}
                         />
-                        <TouchableOpacity onPress={handelsavechangename} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
+                        <TouchableOpacity onPress={handelsaveAlbum} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
                             <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
                         </TouchableOpacity>
-                    </View>}
-                <View
-                    style={{
-                        borderBottomColor: maincolor,
-                        borderBottomWidth: StyleSheet.hairlineWidth,
-                        width: 400,
-                        height: 15,
-                        marginBottom: 10,
+                    </View>
+                }
 
-                    }}
+                {visible == '' &&
+                    <View>
+                        <View
+                            style={{
+                                borderBottomColor: maincolor,
+                                borderBottomWidth: StyleSheet.hairlineWidth,
+                                width: 400,
+                                height: 16,
+                                marginBottom: 15,
 
-                />
+                            }}
+                        />
+                        <View >
+                            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => chivron == 'chevron-right' ? setchivron('chevron-down') : setchivron('chevron-right')}>
+                                <AntDesign name='edit' size={25} color={maincolor} style={{ marginLeft: 10, marginRight: 10 }} />
+                                <Text style={{ color: textcoler, fontSize: 20, marginRight: 130 }}>Edit Album Name</Text>
 
-                <TouchableOpacity onPress={handelDeleteAlbum} style={{ flexDirection: 'row' }}>
-                    <EvilIcons name='trash' size={30} color={maincolor} style={{ marginLeft: 10, marginRight: 10 }} />
-                    <Text style={{ color: textcoler, fontSize: 20, }}>Delete Album</Text>
-                </TouchableOpacity>
+                                <Entypo name={chivron} size={25} color={maincolor} />
+                            </TouchableOpacity>
+                        </View>
+                        {chivron == 'chevron-down' &&
+                            <View>
+                                <TextInput
+                                    style={[{ borderColor: isFocusM ? maincolor : inputS },
+                                    {
+
+                                        backgroundColor: inputS,
+                                        color: textcoler,
+                                        borderRadius: 20,
+                                        width: 350,
+                                        marginHorizontal: 10,
+                                        marginBottom: 20,
+                                        marginTop: 20,
+
+                                    }]}
+
+                                    onFocus={() => {
+                                        setisFocusM(true)
+                                    }}
+                                    onBlur={() => {
+                                        setisFocusM(false)
+                                    }}
+                                    placeholder="New album name"
+                                    onChangeText={val => {
+                                        setAlbumName({ ...AlbumName, group_name2: val });
+                                    }}
+                                    value={AlbumName.group_name2}
+                                />
+                                <TouchableOpacity onPress={handelsavechangename} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
+                                    <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
+                                </TouchableOpacity>
+                            </View>
+                        }
+                        <View
+                            style={{
+                                borderBottomColor: maincolor,
+                                borderBottomWidth: StyleSheet.hairlineWidth,
+                                width: 400,
+                                height: 15,
+                                marginBottom: 10,
+
+                            }}
+
+                        />
+
+                        <TouchableOpacity onPress={handelDeleteAlbum} style={{ flexDirection: 'row' }}>
+                            <EvilIcons name='trash' size={30} color={maincolor} style={{ marginLeft: 10, marginRight: 10 }} />
+                            <Text style={{ color: textcoler, fontSize: 20, }}>Delete Album</Text>
+                        </TouchableOpacity>
 
 
-                <View
-                    style={{
-                        borderBottomColor: maincolor,
-                        borderBottomWidth: StyleSheet.hairlineWidth,
-                        width: 400,
-                        height: 15,
-                        marginBottom: 10,
+                        <View
+                            style={{
+                                borderBottomColor: maincolor,
+                                borderBottomWidth: StyleSheet.hairlineWidth,
+                                width: 400,
+                                height: 15,
+                                marginBottom: 10,
 
-                    }}
+                            }}
 
-                />
+                        />
+                    </View>
+                }
+
             </RBSheet >
         </View >
 

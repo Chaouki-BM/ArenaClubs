@@ -126,10 +126,7 @@ const SettingPage = ({ navigation }) => {
         refRBSheet.current.open()
         setvisible('editlikns')
     }
-    const handelAddAlbum = () => {
-        refRBSheet.current.open()
-        setvisible('addalbum')
-    }
+
     const handelContactUs = () => {
         refRBSheet.current.open()
         setvisible('')
@@ -181,6 +178,7 @@ const SettingPage = ({ navigation }) => {
     const refreshuser = async () => {
         await Client.post('/getuser', email).then(function (res) {
             setdatauser(res.data)
+
         }).catch(function (e) {
             console.log('error data from laoddatauser', e)
         })
@@ -192,14 +190,7 @@ const SettingPage = ({ navigation }) => {
             console.log('error from loaddata', e)
         })
     }
-    const refreshalbum = async () => {
-        await Client.post("/getallgroup", email)
-            .then(function (res) {
-                setAlbums(res.data)
-            }).catch(function (e) {
-                console.log("error from load data ", e)
-            })
-    }
+
     const [changepassword, setchangepassword] = useState({
         password: '',
         password1: '',
@@ -324,29 +315,7 @@ const SettingPage = ({ navigation }) => {
             console.log("error from change links", e)
         })
     }
-    const [AlbumName, setAlbumName] = useState({
-        group_name: '',
-        email: '',
-    })
-    const handelsaveAlbum = async () => {
-        AlbumName.email = email.email
-        await Client.post("/creategroup", AlbumName).then(function (res) {
-            if (res.data.type == 'error') {
-                Alert.alert('error', res.data.msg)
-                setAlbumName(initialState)
 
-
-            } else {
-                Alert.alert('success', res.data.msg)
-                setAlbumName(initialState)
-                refreshalbum()
-                refreshdata()
-
-            }
-        }).catch(function (e) {
-            console.log("error from save album", e)
-        })
-    }
 
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
@@ -527,23 +496,7 @@ const SettingPage = ({ navigation }) => {
 
                         }}
                     />
-                    <TouchableOpacity style={{ marginBottom: 10, }} onPress={() => handelAddAlbum()}>
-                        <View style={{ flexDirection: 'row' }}>
 
-                            <Ionicons name='add' size={25} color={maincolor} style={{ marginRight: 20 }} />
-                            <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Add album</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <View
-                        style={{
-                            borderBottomColor: maincolor,
-                            borderBottomWidth: StyleSheet.hairlineWidth,
-                            width: 380,
-                            height: 15,
-                            marginBottom: 10,
-
-                        }}
-                    />
                     <TouchableOpacity style={{ marginBottom: 10, }} onPress={() => handelContactUs()}>
                         <View style={{ flexDirection: 'row' }}>
 
@@ -983,39 +936,7 @@ const SettingPage = ({ navigation }) => {
                             <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
                         </TouchableOpacity>
                     </View>}
-                {/* -------------------addalbum----------------------- */}
-                {visible == 'addalbum' &&
-                    <View style={{ padding: 10 }}>
-                        <Text style={{ marginHorizontal: 100, color: maincolor, fontSize: 18, marginVertical: 50 }}>Create New Album</Text>
-                        <TextInput
-                            style={[{ borderColor: isFocusM ? maincolor : inputS },
-                            {
-                                backgroundColor: inputS,
-                                color: textcoler,
-                                borderRadius: 20,
-                                width: 300,
-                                //height: 100,
-                                marginHorizontal: 30,
-                                marginBottom: 40,
 
-                            }]}
-
-                            onFocus={() => {
-                                setisFocusM(true)
-                            }}
-                            onBlur={() => {
-                                setisFocusM(false)
-                            }}
-                            placeholder="Name of album"
-                            onChangeText={val => {
-                                setAlbumName({ ...AlbumName, group_name: val });
-                            }}
-                            value={AlbumName.group_name}
-                        />
-                        <TouchableOpacity onPress={handelsaveAlbum} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
-                            <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
-                        </TouchableOpacity>
-                    </View>}
             </RBSheet >
             <Modal
                 animationType="fade"
