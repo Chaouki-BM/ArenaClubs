@@ -75,7 +75,7 @@ const SettingPage = ({ navigation }) => {
             }
         }).then(function (res) {
             let path = res.data.file.path
-            imageup.path = path
+            imageup.image = path
             imageup.email = email.email
 
             postimg()
@@ -83,19 +83,6 @@ const SettingPage = ({ navigation }) => {
             console.log('err bcz update prfl img', e)
             Alert.alert('Import your image again')
         })
-    }
-    const [imageup, setimageup] = useState({
-        path: '',
-        email: '',
-    })
-    const postimg = async () => {
-        await Client.post("/Upimage", imageup)
-            .then(function (res) {
-                Alert.alert('success');
-                refreshuser();
-            }).catch(function (e) {
-                console.log('error postimg', e)
-            })
     }
     const handelchangePicture = () => {
 
@@ -116,6 +103,20 @@ const SettingPage = ({ navigation }) => {
 
 
     }
+    const [imageup, setimageup] = useState({
+        image: '',
+        email: '',
+    })
+    const postimg = async () => {
+        await Client.post("/Upimage", imageup)
+            .then(function (res) {
+                Alert.alert('success');
+                refreshuser();
+            }).catch(function (e) {
+                console.log('error postimg', e)
+            })
+    }
+
 
     const [pict, setpict] = useState({ pict: '' });
     const handelDeleteCouverture = () => {
@@ -153,52 +154,45 @@ const SettingPage = ({ navigation }) => {
         loadDataUser();
     }, []);
     const loadData = async () => {
-        await Client.post('/getprofil', email).then(function (res) {
-            changeBio.bio = res.data.bio
-            changeData.adress = res.data.adress
-            changeData.birthday = res.data.birthday
-            changeData.tel = res.data.tel
-            changelink.facebook = res.data.facebook
-            changelink.instagram = res.data.instagram
-            changelink.snapchat = res.data.snapchat
-            changelink.tiktok = res.data.tiktok
-            changelink.twitter = res.data.twitter
-        }).catch(function (e) {
-            console.log('error from loaddata', e)
-        })
+        await Client.post('/getprofil', email)
+            .then(function (res) {
+                changeBio.bio = res.data.res.bio
+                changelink.facebook = res.data.res.facebook
+                changelink.instagram = res.data.res.instagram
+                changelink.twitter = res.data.res.twitter
+            }).catch(function (e) {
+                console.log('error from loaddata', e)
+            })
     }
     const loadDataUser = async () => {
-        await Client.post('/getuser', email).then(function (res) {
-            changename.name = res.data.name
-            changename.tag = res.data.tag
-        }).catch(function (e) {
-            console.log('error data from laoddatauser', e)
-        })
+        await Client.post('/getclub', email)
+            .then(function (res) {
+                changename.name = res.data.club.nom
+            }).catch(function (e) {
+                console.log('error data from laoddatauser', e)
+            })
     }
     const refreshuser = async () => {
-        await Client.post('/getuser', email).then(function (res) {
-            setdatauser(res.data)
+        await Client.post('/getclub', email).then(function (res) {
+            setdatauser(res.data.club)
 
         }).catch(function (e) {
             console.log('error data from laoddatauser', e)
         })
     }
+
     const refreshdata = async () => {
-        await Client.post('/getprofil', email).then(function (res) {
-            setdata(res.data);
-        }).catch(function (e) {
-            console.log('error from loaddata', e)
-        })
+        await Client.post('/getprofil', email)
+            .then(function (res) {
+                setdata(res.data.res);
+            }).catch(function (e) {
+                console.log('error from loaddata', e)
+            })
     }
 
-    const [changepassword, setchangepassword] = useState({
-        password: '',
-        password1: '',
-        password2: '',
-        email: '',
-    });
+
     const [deletevar, setdeletevar] = useState({
-        path: '',
+        couverture: '',
         email: '',
     })
     const handelyesdelete = async () => {
@@ -206,7 +200,7 @@ const SettingPage = ({ navigation }) => {
         deletevar.email = email.email
         await Client.post("/Upcouverture", deletevar)
             .then(function (res) {
-                if (res.data.msg == 'suuu') {
+                if (res.data.msg == 'success') {
                     Alert.alert('success')
                     refreshuser();
                 }
@@ -218,6 +212,12 @@ const SettingPage = ({ navigation }) => {
     const initialState = {
 
     };
+    const [changepassword, setchangepassword] = useState({
+        password: '',
+        password1: '',
+        password2: '',
+        email: '',
+    });
     const handelsavechange = async () => {
         changepassword.email = email.email
         console.log(changepassword)
@@ -236,24 +236,22 @@ const SettingPage = ({ navigation }) => {
     }
     const [changename, setchangename] = useState({
         name: '',
-        tag: '',
         email: '',
 
     })
     const handelsavechangename = async () => {
         changename.email = email.email
-        await Client.post("/changename", changename).then(function (res) {
-            if (res.data.type == 'success') {
-                Alert.alert('success', res.data.msg)
-                refreshuser()
-            } else if (res.data.type == 'info') {
-                Alert.alert('info', res.data.msg)
-            } else {
-                Alert.alert('error', res.data.msg)
-            }
-        }).catch(function (e) {
-            console.log('error from change name ande tag ', e)
-        })
+        await Client.post("/changename", changename)
+            .then(function (res) {
+                if (res.data.type == 'success') {
+                    Alert.alert('success', res.data.type)
+                    refreshuser()
+                } else {
+                    Alert.alert('error', res.data.type)
+                }
+            }).catch(function (e) {
+                console.log('error from change name ande tag ', e)
+            })
     }
     const [changeBio, setchangeBio] = useState({
         bio: '',
@@ -261,44 +259,38 @@ const SettingPage = ({ navigation }) => {
     })
     const handelsaveBio = async () => {
         changeBio.email = email.email
-        await Client.post("/modify_bio", changeBio).then(function (res) {
-            if (res.data.type == 'success') {
-                Alert.alert('success', res.data.msg)
-                refreshdata()
+        await Client.post("/modify_bio", changeBio)
+            .then(function (res) {
+                if (res.data.type == 'success') {
+                    Alert.alert('success', "success")
+                    refreshdata()
 
-            } else {
-                Alert.alert('error', res.data.msg)
+                } else {
+                    Alert.alert('error', 'error')
 
-            }
-        }).catch(function (e) {
-            console.log("error from change Bio", e)
-        })
+                }
+            }).catch(function (e) {
+                console.log("error from change Bio", e)
+            })
     }
-    const [changeData, setchangeData] = useState({
-        tel: '',
-        birthday: '',
-        adress: '',
-        email: '',
-    })
-    const handelsaveData = async () => {
-        changeData.email = email.email
-        await Client.post("/modify", changeData).then(function (res) {
-            if (res.data.type == 'success') {
-                Alert.alert('success', res.data.msg)
-            } else {
-                Alert.alert('error', res.data.msg)
 
-            }
-        }).catch(function (e) {
-            console.log("error from save data (tel,add,birth)", e)
-        })
-    }
+    // const handelsaveData = async () => {
+    //     changeData.email = email.email
+    //     await Client.post("/modify", changeData).then(function (res) {
+    //         if (res.data.type == 'success') {
+    //             Alert.alert('success', res.data.msg)
+    //         } else {
+    //             Alert.alert('error', res.data.msg)
+
+    //         }
+    //     }).catch(function (e) {
+    //         console.log("error from save data (tel,add,birth)", e)
+    //     })
+    // }
     const [changelink, setchangelink] = useState({
         facebook: '',
         instagram: '',
         twitter: '',
-        snapchat: '',
-        tiktok: '',
         email: '',
     })
 
@@ -438,7 +430,7 @@ const SettingPage = ({ navigation }) => {
                                 <View style={{ flexDirection: 'row' }}>
 
                                     <FontAwesome name='user' size={25} color={maincolor} style={{ marginRight: 20 }} />
-                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Change Name & Tag</Text>
+                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Change Name</Text>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangeBio()}>
@@ -447,12 +439,12 @@ const SettingPage = ({ navigation }) => {
                                     <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Update Bio</Text>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangedata()}>
+                            {/* <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangedata()}>
                                 <View style={{ flexDirection: 'row' }}>
                                     < FontAwesome name='pencil' size={23} color={maincolor} style={{ marginRight: 20 }} />
                                     <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Update cobbler profile</Text>
                                 </View>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                             <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangePicture()}>
                                 <View style={{ flexDirection: 'row' }}>
 
@@ -497,7 +489,7 @@ const SettingPage = ({ navigation }) => {
                         }}
                     />
 
-                    <TouchableOpacity style={{ marginBottom: 10, }} onPress={() => handelContactUs()}>
+                    {/* <TouchableOpacity style={{ marginBottom: 10, }} onPress={() => handelContactUs()}>
                         <View style={{ flexDirection: 'row' }}>
 
                             <AntDesign name='google' size={25} color={maincolor} style={{ marginRight: 20 }} />
@@ -513,7 +505,7 @@ const SettingPage = ({ navigation }) => {
                             marginBottom: 10,
 
                         }}
-                    />
+                    /> */}
                     <TouchableOpacity style={{ marginBottom: 10, }} onPress={handelLogOut}>
                         <View style={{ flexDirection: 'row' }}>
 
@@ -660,30 +652,7 @@ const SettingPage = ({ navigation }) => {
                             }}
                             value={changename.name}
                         />
-                        <TextInput
-                            style={[{ borderColor: isFocusM ? maincolor : inputS },
-                            {
-                                backgroundColor: inputS,
-                                color: textcoler,
-                                borderRadius: 20,
-                                width: 350,
-                                marginHorizontal: 10,
-                                marginBottom: 40,
 
-                            }]}
-
-                            onFocus={() => {
-                                setisFocusM(true)
-                            }}
-                            onBlur={() => {
-                                setisFocusM(false)
-                            }}
-                            placeholder="#Tag"
-                            onChangeText={val => {
-                                setchangename({ ...changename, tag: val });
-                            }}
-                            value={changename.tag}
-                        />
 
                         <TouchableOpacity onPress={handelsavechangename} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
                             <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
@@ -725,7 +694,7 @@ const SettingPage = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>}
                 {/* -------------------change-Data----------------- */}
-                {visible == 'changedata' &&
+                {/* {visible == 'changedata' &&
                     <View style={{ padding: 10 }}>
                         <Text style={{ marginHorizontal: 90, color: maincolor, fontSize: 18, marginVertical: 50 }}>Change cobbler profile</Text>
                         <TextInput
@@ -806,7 +775,7 @@ const SettingPage = ({ navigation }) => {
                         <TouchableOpacity onPress={handelsaveData} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
                             <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
                         </TouchableOpacity>
-                    </View>}
+                    </View>} */}
 
                 {/* ----------------------links------------------------ */}
                 {visible == 'editlikns' &&
@@ -884,31 +853,8 @@ const SettingPage = ({ navigation }) => {
                             }}
                             value={changelink.twitter}
                         />
-                        <TextInput
-                            style={[{ borderColor: isFocusM ? maincolor : inputS },
-                            {
-                                backgroundColor: inputS,
-                                color: textcoler,
-                                borderRadius: 20,
-                                width: 350,
-                                marginHorizontal: 10,
-                                marginBottom: 20,
 
-                            }]}
-
-                            onFocus={() => {
-                                setisFocusM(true)
-                            }}
-                            onBlur={() => {
-                                setisFocusM(false)
-                            }}
-                            placeholder="Snapchat link"
-                            onChangeText={val => {
-                                setchangelink({ ...changelink, snapchat: val });
-                            }}
-                            value={changelink.snapchat}
-                        />
-                        <TextInput
+                        {/* <TextInput
                             style={[{ borderColor: isFocusM ? maincolor : inputS },
                             {
                                 backgroundColor: inputS,
@@ -931,11 +877,12 @@ const SettingPage = ({ navigation }) => {
                                 setchangelink({ ...changelink, tiktok: val });
                             }}
                             value={changelink.tiktok}
-                        />
+                        /> */}
                         <TouchableOpacity onPress={handelsavechangelinks} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
                             <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
                         </TouchableOpacity>
-                    </View>}
+                    </View>
+                }
 
             </RBSheet >
             <Modal

@@ -78,35 +78,37 @@ const PostsAlbum = ({ navigation }) => {
 
     }
     const [posts, setposts] = useState([])
-    const loadLike = async (element) => {
-        islike.email = email.email;
-        islike.group_name = element.group_name;
-        islike.email_img = email.email;
-        islike.image = element.image;
-        islike.email_like = email.email;
-        await Client.post("/testlike", islike)
-            .then((res) => {
-                if (res.data.test == 0) {
-                    element["heart"] = "heart-o"
-                    //console.log("hhhh", element)
-                    setposts(prevState => [...prevState, element])
-                } else {
-                    element["heart"] = "heart"
-                    //console.log("hhhh", element)
-                    setposts(prevState => [...prevState, element])
-                }
-            }).catch(function (e) {
-                console.log("error from loadLike post", e)
-            })
-    }
+    // const loadLike = async (element) => {
+    //     islike.email = email.email;
+    //     islike.group_name = element.group_name;
+    //     islike.email_img = email.email;
+    //     islike.image = element.image;
+    //     islike.email_like = email.email;
+    //     await Client.post("/testlike", islike)
+    //         .then((res) => {
+    //             if (res.data.test == 0) {
+    //                 element["heart"] = "heart-o"
+    //                 //console.log("hhhh", element)
+    //                 setposts(prevState => [...prevState, element])
+    //             } else {
+    //                 element["heart"] = "heart"
+    //                 //console.log("hhhh", element)
+    //                 setposts(prevState => [...prevState, element])
+    //             }
+    //         }).catch(function (e) {
+    //             console.log("error from loadLike post", e)
+    //         })
+    // }
 
     const loadPosts = async () => {
         await Client.post("/getallimages", email)
             .then(function (res) {
-                res.data.forEach(async element => {
-                    loadLike(element)
-                    setposts([])
-                })
+                console.log(res.data)
+                setposts(res.data)
+                // res.data.forEach(async element => {
+                //     loadLike(element)
+                //     setposts([])
+                // })
             }).catch(function (e) {
                 console.log("error from load data post album", e)
             })
@@ -155,6 +157,7 @@ const PostsAlbum = ({ navigation }) => {
     const handelthreedots = (post) => {
         refRBSheet.current.open()
         setclicked(post)
+        console.log(post)
     }
     const handeladdpost = () => {
         setModal(modal == false ? true : false)
@@ -205,8 +208,7 @@ const PostsAlbum = ({ navigation }) => {
         console.log(status)
         imageup.email = email.email
         imageup.group_name = settingalbum.group_name
-        imageup.name = datauser.name
-        imageup.tag = datauser.tag
+        imageup.nom = datauser.nom
         imageup.statu = status.statu
         imageup.img_p = datauser.image
         var today = new Date();
@@ -226,8 +228,7 @@ const PostsAlbum = ({ navigation }) => {
         statu: '',
         date: '',
         nb_like: 0,
-        name: '',
-        tag: '',
+        nom: '',
         img_p: '',
     })
 
@@ -299,6 +300,7 @@ const PostsAlbum = ({ navigation }) => {
             }
 
         }
+        console.log(userlike)
     }
 
 
@@ -416,9 +418,9 @@ const PostsAlbum = ({ navigation }) => {
                                         </View >
                                         <Text style={{ color: textcoler }}>{post.date}</Text>
                                         <Text style={{ color: textcoler }}>{post.time}</Text>
-                                        <TouchableOpacity onPress={() => post.heart == "heart" ? handelunheart(post, index) : handelheart(post, index)}>
+                                        {/* <TouchableOpacity onPress={() => post.heart == "heart" ? handelunheart(post, index) : handelheart(post, index)}>
                                             <FontAwesome name={post.heart == "heart" ? "heart" : "heart-o"} color={maincolor} size={20} style={{ marginHorizontal: 154 }} />
-                                        </TouchableOpacity>
+                                        </TouchableOpacity> */}
                                         <TouchableOpacity onPress={() => handelallliker(post)}>
                                             <Text style={{ left: 150, marginTop: 10 }}>{post.nb_like} Likes</Text>
                                         </TouchableOpacity>

@@ -19,4 +19,5 @@ store.setState("settingalbum", {
 })
 store.setState("dir", "row")
 store.setState("Albums", [])
+store.setState("whoareyou", "")
 export default store;

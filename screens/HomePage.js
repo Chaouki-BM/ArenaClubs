@@ -48,13 +48,14 @@ function HomePage() {
         })
     }
     const loadData = async () => {
-        await Client.post('/getprofil', email).then(function (res) {
-            setdata(res.data.res)
+        await Client.post('/getprofil', email)
+            .then(function (res) {
+                setdata(res.data.res)
 
 
-        }).catch(function (e) {
-            console.log('error from loaddata')
-        })
+            }).catch(function (e) {
+                console.log('error from loaddata')
+            })
     }
     // ----------------------------------------------------
     const handleThemeChange = () => {
@@ -121,19 +122,6 @@ function HomePage() {
             Alert.alert('Import your image again')
         })
     }
-    const postcover = async () => {
-        await Client.post("/Upcouverture", cover)
-            .then(function (res) {
-                if (res.data.msg == 'success') {
-                    Alert.alert('success')
-                    loadDataUser();
-                }
-            }).catch(function (e) {
-                console.log('error from post cover', e)
-
-            })
-    }
-    const [pic, setpic] = useState({ pic: '' })
     const handelchnagecover = () => {
         let options = {
             mediaType: 'photo',
@@ -152,6 +140,20 @@ function HomePage() {
 
         })
     }
+    const postcover = async () => {
+        await Client.post("/Upcouverture", cover)
+            .then(function (res) {
+                if (res.data.msg == 'success') {
+                    Alert.alert('success')
+                    loadDataUser();
+                }
+            }).catch(function (e) {
+                console.log('error from post cover', e)
+
+            })
+    }
+    const [pic, setpic] = useState({ pic: '' })
+
     const [Albums, setAlbums] = store.useState("Albums")
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
@@ -298,7 +300,7 @@ function HomePage() {
             <RBSheet
                 ref={refRBSheet}
                 closeOnDragDown={true}
-                closeOnPressMask={false}
+                closeOnPressMask={true}
                 height={330}
                 openDuration={300}
                 customStyles={{

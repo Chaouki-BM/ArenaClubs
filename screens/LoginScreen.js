@@ -81,7 +81,7 @@ function Login({ navigation }) {
         password: '',
     });
     const [email, setemail] = store.useState("email");
-
+    const [whoareyou, setwhoareyou] = store.useState("whoareyou")
     const handleLogin = async () => {
         await Client.post('/login', loginInfo)
             .then(function (res) {
@@ -95,8 +95,14 @@ function Login({ navigation }) {
                 } else if (res.data.type == 'success') {
                     email.email = loginInfo.email
                     setLoginInfo(initialState)
-                    navigation.navigate('TabNavigation');
                     setlog(true)
+                    if (res.data.login == 'club') {
+                        navigation.navigate('TabNavigation');
+                        setwhoareyou("club")
+                    } else {
+                        console.log('user')
+                        setwhoareyou("user")
+                    }
                 }
             }).catch(function (e) {
                 console.log(e)
