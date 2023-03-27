@@ -53,33 +53,35 @@ const Profile = () => {
         email_like: '',
     })
     const [posts, setposts] = useState([])
-    const loadLike = async (element) => {
-        islike.email = email.email;
-        islike.group_name = element.group_name;
-        islike.email_img = email.email;
-        islike.image = element.image;
-        islike.email_like = email.email;
-        await Client.post("/testlike", islike)
-            .then((res) => {
-                if (res.data.test == 0) {
-                    element["heart"] = "heart-o"
-                    //console.log("hhhh", element)
-                    setposts(prevState => [...prevState, element])
-                } else {
-                    element["heart"] = "heart"
-                    //console.log("hhhh", element)
-                    setposts(prevState => [...prevState, element])
-                }
-            }).catch(function (e) {
-                console.log("error from loadLike post", e)
-            })
-    }
+    // const loadLike = async (element) => {
+    //     islike.email = email.email;
+    //     islike.group_name = element.group_name;
+    //     islike.email_img = email.email;
+    //     islike.image = element.image;
+    //     islike.email_like = email.email;
+    //     await Client.post("/testlike", islike)
+    //         .then((res) => {
+    //             if (res.data.test == 0) {
+    //                 element["heart"] = "heart-o"
+    //                 //console.log("hhhh", element)
+    //                 setposts(prevState => [...prevState, element])
+    //             } else {
+    //                 element["heart"] = "heart"
+    //                 //console.log("hhhh", element)
+    //                 setposts(prevState => [...prevState, element])
+    //             }
+    //         }).catch(function (e) {
+    //             console.log("error from loadLike post", e)
+    //         })
+    // }
     const loadPostsProfil = async () => {
         await Client.post("/getallimages", email).then(function (res) {
-            res.data.forEach(async element => {
-                loadLike(element)
-                setposts([])
-            })
+            console.log(res.data)
+            setposts(res.data)
+            // res.data.forEach(async element => {
+            //     loadLike(element)
+            //     setposts([])
+            // })
         }).catch(function (e) {
             console.log("error from load post profile", e)
         })
@@ -100,38 +102,38 @@ const Profile = () => {
 
         }
     }
-    const handelunheart = async (post, index) => {
-        islike.email = email.email;
-        islike.group_name = post.group_name;
-        islike.email_img = email.email;
-        islike.image = post.image;
-        islike.email_like = email.email;
-        await Client.post("/deletelike", islike).then(function (res) {
-            if (res.data.msg == 'yep') {
-                loadPostsProfil()
-                getlikes()
+    // const handelunheart = async (post, index) => {
+    //     islike.email = email.email;
+    //     islike.group_name = post.group_name;
+    //     islike.email_img = email.email;
+    //     islike.image = post.image;
+    //     islike.email_like = email.email;
+    //     await Client.post("/deletelike", islike).then(function (res) {
+    //         if (res.data.msg == 'yep') {
+    //             loadPostsProfil()
+    //             getlikes()
 
-            }
-        }).catch(function (e) {
-            console.log("error from unheart post", e)
-        })
-    }
-    const handelheart = async (post, index) => {
-        islike.email = email.email;
-        islike.group_name = post.group_name;
-        islike.email_img = email.email;
-        islike.image = post.image;
-        islike.email_like = email.email;
-        await Client.post("/addlike", islike)
-            .then(function (res) {
-                if (res.data.msg == 'yep') {
-                    loadPostsProfil()
-                    getlikes()
-                }
-            }).catch(function (e) {
-                console.log("error from handel heart ", e)
-            })
-    }
+    //         }
+    //     }).catch(function (e) {
+    //         console.log("error from unheart post", e)
+    //     })
+    // }
+    // const handelheart = async (post, index) => {
+    //     islike.email = email.email;
+    //     islike.group_name = post.group_name;
+    //     islike.email_img = email.email;
+    //     islike.image = post.image;
+    //     islike.email_like = email.email;
+    //     await Client.post("/addlike", islike)
+    //         .then(function (res) {
+    //             if (res.data.msg == 'yep') {
+    //                 loadPostsProfil()
+    //                 getlikes()
+    //             }
+    //         }).catch(function (e) {
+    //             console.log("error from handel heart ", e)
+    //         })
+    // }
     const initialState = {
 
     }
@@ -147,30 +149,30 @@ const Profile = () => {
         comment: '',
         time: '',
     })
-    const handelSendComment = async (post) => {
-        if (comments.comment != '') {
-            com.email_img = post.email
-            com.group_name = post.group_name
-            com.image = post.image
-            com.email_comment = email.email
-            com.name_comment = post.name
-            com.tag_comment = post.tag
-            com.img_comment = post.img_p
-            com.comment = comments.comment
-            var today = new Date();
-            var time = today.getHours() + ":" + today.getMinutes();
-            com.time = time
-            console.log(com)
-            await Client.post("/add_commenter", com).then(function (res) {
-                if (res.data.msg == 'yes') {
-                    Alert.alert("Comment send")
-                    setcomment(initialState)
-                }
-            }).catch(function (e) {
-                console.log("error from handel comment", e)
-            })
-        }
-    }
+    // const handelSendComment = async (post) => {
+    //     if (comments.comment != '') {
+    //         com.email_img = post.email
+    //         com.group_name = post.group_name
+    //         com.image = post.image
+    //         com.email_comment = email.email
+    //         com.name_comment = post.name
+    //         com.tag_comment = post.tag
+    //         com.img_comment = post.img_p
+    //         com.comment = comments.comment
+    //         var today = new Date();
+    //         var time = today.getHours() + ":" + today.getMinutes();
+    //         com.time = time
+    //         console.log(com)
+    //         await Client.post("/add_commenter", com).then(function (res) {
+    //             if (res.data.msg == 'yes') {
+    //                 Alert.alert("Comment send")
+    //                 setcomment(initialState)
+    //             }
+    //         }).catch(function (e) {
+    //             console.log("error from handel comment", e)
+    //         })
+    //     }
+    // }
     const [showcomment, setshowcomment] = useState({
         email_img: '',
         image: '',
@@ -213,16 +215,16 @@ const Profile = () => {
         setcolse(close == true ? false : true)
         setchivron(chevron == 'chevron-right' ? 'chevron-down' : 'chevron-right')
     }
-    const handelSaveEdit = async () => {
-        setModall(!Modall)
-        await Client.post("edit_comment", editcomments).then(function (res) {
-            if (res.data.msg == "yes") {
-                handelshowComment(commentpost)
-            }
-        }).catch(function (e) {
-            console.log("error from handel save edite", e)
-        })
-    }
+    // const handelSaveEdit = async () => {
+    //     setModall(!Modall)
+    //     await Client.post("edit_comment", editcomments).then(function (res) {
+    //         if (res.data.msg == "yes") {
+    //             handelshowComment(commentpost)
+    //         }
+    //     }).catch(function (e) {
+    //         console.log("error from handel save edite", e)
+    //     })
+    // }
     const [id, setid] = useState({ id: '' })
     const handelDeleteComment = async () => {
         await Client.post("/del_commenter", id).then(function (res) {
@@ -243,35 +245,36 @@ const Profile = () => {
             >
                 {posts.slice(0).reverse().map((post, index) => {
                     return (
-                        <View key={index} style={{ marginTop: 15, marginHorizontal: 35, backgroundColor: albumS, width: 300, height: 450, borderRadius: 10 }}>
-
+                        <View key={index} style={{ marginTop: 15, marginHorizontal: 35, backgroundColor: albumS, width: 300, borderRadius: 10 }}>
+                            <Text style={{ color: textcoler, marginLeft: 10, marginBottom: 10 }}>Album:  {post.group_name}</Text>
+                            <Text style={{ color: textcoler, marginLeft: 10, width: 275, }}>{post.statu}</Text>
                             <ImageBackground
                                 //imageStyle={{}}
-                                style={{ width: 250, height: 230, marginLeft: 25, marginTop: 10 }}
+                                style={{ width: 250, height: 230, marginLeft: 25, }}
                                 source={{ uri: `${Ip}${post.image}` }}
                                 resizeMode="contain"
 
                             >
                             </ImageBackground>
                             <View style={{ flexDirection: 'row' }}>
-                                <TouchableOpacity onPress={() => post.heart == "heart" ? handelunheart(post, index) : handelheart(post, index)}>
+                                {/* <TouchableOpacity onPress={() => post.heart == "heart" ? handelunheart(post, index) : handelheart(post, index)}>
                                     <FontAwesome name={post.heart} color={maincolor} size={20} style={{ marginTop: 10, marginLeft: 20 }} />
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                                 <TouchableOpacity onPress={() => handelshowComment(post)}>
-                                    <FontAwesome name='comment-o' size={21} color={maincolor} style={{ marginTop: 8, marginLeft: 20 }} />
+                                    <FontAwesome name='comment-o' size={21} color={maincolor} style={{ marginTop: 1, marginLeft: 20 }} />
                                 </TouchableOpacity>
                             </View>
                             <TouchableOpacity onPress={() => handelallliker(post)}>
-                                <Text style={{ marginTop: 10, marginLeft: 10, color: textcoler, marginBottom: 5 }}>{post.nb_like}Likes</Text>
+                                <Text style={{ marginTop: 10, marginLeft: 10, color: textcoler, marginBottom: 5 }}>{post.nb_like} Likes</Text>
                             </TouchableOpacity>
-                            <Text style={{ color: textcoler, height: 55, marginLeft: 10 }}>{post.statu}</Text>
-                            <View style={{ flexDirection: 'row' }}>
+
+                            <View style={{ flexDirection: 'row', marginBottom: 20 }}>
                                 <Text style={{ marginLeft: 10, color: textcoler }}>{post.date} </Text>
                                 <Text style={{ marginLeft: 10, color: textcoler, }}>{post.time} </Text>
 
                             </View>
-                            <Text style={{ color: textcoler, marginLeft: 10, marginBottom: 5 }}>Album:  {post.group_name}</Text>
-                            <View style={{ flexDirection: 'row' }}>
+
+                            {/* <View style={{ flexDirection: 'row' }}>
                                 <TextInput
                                     style={[{ borderColor: isFocusM ? maincolor : inputS },
                                     {
@@ -301,7 +304,7 @@ const Profile = () => {
                                 <TouchableOpacity onPress={() => handelSendComment(post)}>
                                     <Feather name='send' size={23} color={maincolor} style={{ marginLeft: 5, marginTop: 6 }} />
                                 </TouchableOpacity>
-                            </View>
+                            </View> */}
                         </View>
                     )
                 })}
@@ -351,8 +354,8 @@ const Profile = () => {
                                             source={{ uri: `${Ip}${ulike.image}` }}
                                         />
                                         <View style={{ flexDirection: 'row', marginVertical: 25, marginLeft: 10 }}>
-                                            <Text style={{ marginRight: 10, fontSize: 20, color: textcoler }}>{ulike.name}</Text>
-                                            <Text style={{ fontSize: 20, color: textcoler }}>{ulike.tag}</Text>
+                                            <Text style={{ marginRight: 10, fontSize: 20, color: textcoler }}>{ulike.nom}</Text>
+                                            {/* <Text style={{ fontSize: 20, color: textcoler }}>{ulike.tag}</Text> */}
                                         </View>
                                     </View>
                                 )
@@ -404,14 +407,14 @@ const Profile = () => {
                                     <Text style={{ color: textcoler, fontSize: 17, marginBottom: 15 }}>Delete comment</Text>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={handelEditComment}>
+                            {/* <TouchableOpacity onPress={handelEditComment}>
                                 <View style={{ flexDirection: 'row' }}>
                                     <AntDesign name='edit' size={18} style={{ marginRight: 10, color: maincolor }} />
                                     <Text style={{ color: textcoler, fontSize: 17, marginRight: 40 }}>Edit comment</Text>
                                     <Entypo name={chevron} size={18} color={maincolor} style={{ marginTop: 5 }} />
                                 </View>
-                            </TouchableOpacity>
-                            {close == false &&
+                            </TouchableOpacity> */}
+                            {/* {close == false &&
                                 <View>
                                     <TextInput
                                         multiline
@@ -448,7 +451,7 @@ const Profile = () => {
                                         <Text style={{ color: textcoler, fontSize: 20, marginHorizontal: 6 }}>Save</Text>
                                     </TouchableOpacity>
                                 </View>
-                            }
+                            } */}
                         </View>
 
                         <TouchableOpacity
@@ -510,7 +513,7 @@ const Profile = () => {
                                     <Text style={{ marginLeft: 10, color: textcoler, fontSize: 18, marginTop: 5 }}>{element.tag_comment}</Text>
                                 </View>
                                 <View style={{ flexDirection: 'row' }}>
-                                    <View style={{ backgroundColor: 'red', width: 350, }}>
+                                    <View style={{ width: 350, }}>
                                         <Text style={{ marginLeft: 60, color: textcoler, fontSize: 14 }}>{element.comment}</Text>
                                     </View>
                                     <TouchableOpacity onPress={() => handelThreeDots(element)}>

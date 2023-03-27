@@ -62,7 +62,7 @@ const PostsAlbum = ({ navigation }) => {
     const getusers = async () => {
         await Client.get("/getall").then(function (res) {
             setallUser(res.data)
-
+            console.log("here", res.data)
         }).catch(function (e) {
             console.log("error from get users", e)
         })
@@ -72,6 +72,7 @@ const PostsAlbum = ({ navigation }) => {
         await Client.post("/getall_like", email)
             .then(function (res) {
                 setlikes(res.data)
+                console.log("like", res.data)
             }).catch(function (e) {
                 console.log("error from get likes", e)
             })
@@ -103,7 +104,6 @@ const PostsAlbum = ({ navigation }) => {
     const loadPosts = async () => {
         await Client.post("/getallimages", email)
             .then(function (res) {
-                console.log(res.data)
                 setposts(res.data)
                 // res.data.forEach(async element => {
                 //     loadLike(element)
@@ -121,38 +121,38 @@ const PostsAlbum = ({ navigation }) => {
         email_like: '',
     })
 
-    const handelheart = async (post, index) => {
-        islike.email = email.email;
-        islike.group_name = post.group_name;
-        islike.email_img = email.email;
-        islike.image = post.image;
-        islike.email_like = email.email;
-        await Client.post("/addlike", islike)
-            .then(function (res) {
-                if (res.data.msg == 'yep') {
-                    loadPosts()
-                    getlikes()
-                }
-            }).catch(function (e) {
-                console.log("error from handel heart ", e)
-            })
-    }
-    const handelunheart = async (post, index) => {
-        islike.email = email.email;
-        islike.group_name = post.group_name;
-        islike.email_img = email.email;
-        islike.image = post.image;
-        islike.email_like = email.email;
-        await Client.post("/deletelike", islike).then(function (res) {
-            if (res.data.msg == 'yep') {
-                loadPosts()
-                getlikes()
+    // const handelheart = async (post, index) => {
+    //     islike.email = email.email;
+    //     islike.group_name = post.group_name;
+    //     islike.email_img = email.email;
+    //     islike.image = post.image;
+    //     islike.email_like = email.email;
+    //     await Client.post("/addlike", islike)
+    //         .then(function (res) {
+    //             if (res.data.msg == 'yep') {
+    //                 loadPosts()
+    //                 getlikes()
+    //             }
+    //         }).catch(function (e) {
+    //             console.log("error from handel heart ", e)
+    //         })
+    // }
+    // const handelunheart = async (post, index) => {
+    //     islike.email = email.email;
+    //     islike.group_name = post.group_name;
+    //     islike.email_img = email.email;
+    //     islike.image = post.image;
+    //     islike.email_like = email.email;
+    //     await Client.post("/deletelike", islike).then(function (res) {
+    //         if (res.data.msg == 'yep') {
+    //             loadPosts()
+    //             getlikes()
 
-            }
-        }).catch(function (e) {
-            console.log("error from unheart post", e)
-        })
-    }
+    //         }
+    //     }).catch(function (e) {
+    //         console.log("error from unheart post", e)
+    //     })
+    // }
     const [clicked, setclicked] = useState()
     const handelthreedots = (post) => {
         refRBSheet.current.open()
@@ -643,8 +643,8 @@ const PostsAlbum = ({ navigation }) => {
                                             source={{ uri: `${Ip}${ulike.image}` }}
                                         />
                                         <View style={{ flexDirection: 'row', marginVertical: 25, marginLeft: 10 }}>
-                                            <Text style={{ marginRight: 10, fontSize: 20, color: textcoler }}>{ulike.name}</Text>
-                                            <Text style={{ fontSize: 20, color: textcoler }}>{ulike.tag}</Text>
+                                            <Text style={{ marginRight: 10, fontSize: 20, color: textcoler }}>{ulike.nom}</Text>
+                                            {/* <Text style={{ fontSize: 20, color: textcoler }}>{ulike.tag}</Text> */}
                                         </View>
                                     </View>
                                 )
