@@ -119,14 +119,21 @@ const AlbumPage = ({ navigation }) => {
         refRBSheet.current.open()
         setvisible('addalbum')
     }
+    const [language, setlanguage] = store.useState("language")
+    const [row, setrow] = store.useState("dir")
+
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
-            <TouchableOpacity onPress={() => handelAddAlbum()} style={{ marginBottom: 10, marginLeft: 10, marginTop: 10 }}>
-                <View style={{ flexDirection: 'row', width: 100, backgroundColor: maincolor, borderRadius: 5, }}>
-                    <Ionicons name='add' size={25} color={textcoler} style={{ top: -1 }} />
-                    <Text style={{ color: textcoler, top: 2 }}>Add Album</Text>
+
+            <TouchableOpacity onPress={() => handelAddAlbum()} >
+                <View style={[{ width: 100, backgroundColor: maincolor, borderRadius: 5, marginBottom: 10, marginLeft: 10, marginTop: 10 }]}>
+                    <View style={{ flexDirection: row, }}>
+                        <Ionicons name='add' size={25} color={textcoler} style={{ alignSelf: "center", }} />
+                        <Text style={{ color: textcoler, alignSelf: "center", }}>{language.add_album}</Text>
+                    </View>
                 </View>
             </TouchableOpacity >
+
             <ScrollView
 
                 nestedScrollEnabled={true}
@@ -170,7 +177,7 @@ const AlbumPage = ({ navigation }) => {
                 {/* -------------------addalbum----------------------- */}
                 {visible == 'addalbum' &&
                     <View style={{ padding: 10 }}>
-                        <Text style={{ marginHorizontal: 100, color: maincolor, fontSize: 18, marginVertical: 50 }}>Create New Album</Text>
+                        <Text style={{ color: maincolor, fontSize: 18, alignSelf: 'center', marginBottom: 40 }}>{language.add_album}</Text>
                         <TextInput
                             style={[{ borderColor: isFocusM ? maincolor : inputS },
                             {
@@ -190,14 +197,14 @@ const AlbumPage = ({ navigation }) => {
                             onBlur={() => {
                                 setisFocusM(false)
                             }}
-                            placeholder="Name of album"
+                            placeholder={language.name}
                             onChangeText={val => {
                                 setaddAlbum({ ...addAlbum, group_name: val });
                             }}
                             value={addAlbum.group_name}
                         />
-                        <TouchableOpacity onPress={handelsaveAlbum} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
-                            <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
+                        <TouchableOpacity onPress={handelsaveAlbum} style={{ marginHorizontal: 130, backgroundColor: maincolor, height: 40, borderRadius: 20 }}>
+                            <Text style={{ color: mode, fontWeight: "bold", alignSelf: 'center', top: 8 }}>{language.save}</Text>
                         </TouchableOpacity>
                     </View>
                 }
@@ -215,9 +222,9 @@ const AlbumPage = ({ navigation }) => {
                             }}
                         />
                         <View >
-                            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => chivron == 'chevron-right' ? setchivron('chevron-down') : setchivron('chevron-right')}>
+                            <TouchableOpacity style={{ flexDirection: row }} onPress={() => chivron == 'chevron-right' ? setchivron('chevron-down') : setchivron('chevron-right')}>
                                 <AntDesign name='edit' size={25} color={maincolor} style={{ marginLeft: 10, marginRight: 10 }} />
-                                <Text style={{ color: textcoler, fontSize: 20, marginRight: 130 }}>Edit Album Name</Text>
+                                <Text style={{ color: textcoler, fontSize: 20, }}>{language.editname}</Text>
 
                                 <Entypo name={chivron} size={25} color={maincolor} />
                             </TouchableOpacity>
@@ -244,14 +251,14 @@ const AlbumPage = ({ navigation }) => {
                                     onBlur={() => {
                                         setisFocusM(false)
                                     }}
-                                    placeholder="New album name"
+                                    placeholder={language.name}
                                     onChangeText={val => {
                                         setAlbumName({ ...AlbumName, group_name2: val });
                                     }}
                                     value={AlbumName.group_name2}
                                 />
-                                <TouchableOpacity onPress={handelsavechangename} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
-                                    <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
+                                <TouchableOpacity onPress={handelsavechangename} style={{ marginHorizontal: 130, backgroundColor: maincolor, height: 40, borderRadius: 20 }}>
+                                    <Text style={{ color: mode, fontWeight: "bold", alignSelf: "center", top: 8 }}>{language.save}</Text>
                                 </TouchableOpacity>
                             </View>
                         }
@@ -267,9 +274,9 @@ const AlbumPage = ({ navigation }) => {
 
                         />
 
-                        <TouchableOpacity onPress={handelDeleteAlbum} style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity onPress={handelDeleteAlbum} style={{ flexDirection: row }}>
                             <EvilIcons name='trash' size={30} color={maincolor} style={{ marginLeft: 10, marginRight: 10 }} />
-                            <Text style={{ color: textcoler, fontSize: 20, }}>Delete Album</Text>
+                            <Text style={{ color: textcoler, fontSize: 20, }}>{language.deletealbum}</Text>
                         </TouchableOpacity>
 
 

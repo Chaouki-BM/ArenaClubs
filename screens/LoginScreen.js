@@ -89,19 +89,20 @@ function Login({ navigation }) {
                     alertmsg(res.data.msg)
                 } else if (res.data.type == 'info') {
                     email.email = loginInfo.email
-                    console.log('ee', email.email)
                     alertmsg(res.data.msg)
                     navigation.navigate('Sign Up');
                 } else if (res.data.type == 'success') {
+                    setlog(true)
                     email.email = loginInfo.email
                     setLoginInfo(initialState)
-                    setlog(true)
                     if (res.data.login == 'club') {
                         navigation.navigate('TabNavigation');
                         setwhoareyou("club")
+
                     } else {
                         console.log('user')
                         setwhoareyou("user")
+
                     }
                 }
             }).catch(function (e) {

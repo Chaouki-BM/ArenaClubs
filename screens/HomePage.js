@@ -155,6 +155,8 @@ function HomePage() {
     const [pic, setpic] = useState({ pic: '' })
 
     const [Albums, setAlbums] = store.useState("Albums")
+    const [language, setlanguage] = store.useState("language")
+    const [row, setrow] = store.useState("dir")
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
             {/* --------------------------------- */}
@@ -276,16 +278,19 @@ function HomePage() {
 
                     </View>
 
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ marginRight: 20, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Abonnes :</Text>
-                        <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginRight: 50, }}>{Albums.length}</Text>
-
-                        <Text style={{ marginRight: 20, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Postes :</Text>
-                        <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginRight: 50, }}>{Albums.length}</Text>
-
-                        <Text style={{ marginRight: 20, fontSize: 13, color: textcoler, fontStyle: 'italic' }}>Albums :</Text>
-                        <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginRight: 50, }}>{Albums.length}</Text>
-
+                    <View style={{ flexDirection: row }}>
+                        <View style={{ flexDirection: row }}>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>{language.followers} :</Text>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{Albums.length}</Text>
+                        </View>
+                        <View style={{ flexDirection: row }}>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>{language.posts} :</Text>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{Albums.length}</Text>
+                        </View>
+                        <View style={{ flexDirection: row }}>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>{language.albums} :</Text>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{Albums.length}</Text>
+                        </View>
 
                     </View>
 
@@ -295,7 +300,7 @@ function HomePage() {
                 </View>
                 <TabBarProfil />
 
-            </ScrollView>
+            </ScrollView >
 
             <RBSheet
                 ref={refRBSheet}

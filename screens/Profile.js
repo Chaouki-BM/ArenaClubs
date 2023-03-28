@@ -76,7 +76,7 @@ const Profile = () => {
     // }
     const loadPostsProfil = async () => {
         await Client.post("/getallimages", email).then(function (res) {
-            console.log(res.data)
+
             setposts(res.data)
             // res.data.forEach(async element => {
             //     loadLike(element)
@@ -236,6 +236,9 @@ const Profile = () => {
             console.log("error from handel daelete comment ", e)
         })
     }
+    const [language, setlanguage] = store.useState("language")
+    const [row, setrow] = store.useState("dir")
+    console.log(language)
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
             <ScrollView
@@ -246,7 +249,10 @@ const Profile = () => {
                 {posts.slice(0).reverse().map((post, index) => {
                     return (
                         <View key={index} style={{ marginTop: 15, marginHorizontal: 35, backgroundColor: albumS, width: 300, borderRadius: 10 }}>
-                            <Text style={{ color: textcoler, marginLeft: 10, marginBottom: 10 }}>Album:  {post.group_name}</Text>
+                            <View style={{ flexDirection: row }}>
+                                <Text style={{ color: textcoler, alignSelf: "flex-start", marginBottom: 10, marginHorizontal: 10 }}>{language.album} : </Text>
+                                <Text style={{ color: textcoler, }}> {post.group_name}</Text>
+                            </View>
                             <Text style={{ color: textcoler, marginLeft: 10, width: 275, }}>{post.statu}</Text>
                             <ImageBackground
                                 //imageStyle={{}}

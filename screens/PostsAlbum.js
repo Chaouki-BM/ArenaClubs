@@ -303,7 +303,8 @@ const PostsAlbum = ({ navigation }) => {
         console.log(userlike)
     }
 
-
+    const [language, setlanguage] = store.useState("language")
+    const [row, setrow] = store.useState("dir")
 
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
@@ -383,8 +384,8 @@ const PostsAlbum = ({ navigation }) => {
             <View style={{ alignItems: 'center', backgroundColor: albumS, marginBottom: 5, flexDirection: 'row', borderRadius: 10 }}>
                 <Text style={{ alignSelf: 'flex-start', flex: 1, marginBottom: 10, marginLeft: 10, fontSize: 20, color: maincolor }}>{settingalbum.group_name}</Text>
                 <TouchableOpacity onPress={handeladdpost}>
-                    <View style={{ marginRight: 10, backgroundColor: maincolor, borderRadius: 10, width: 90, height: 25, flexDirection: 'row' }}>
-                        <Text style={{ alignSelf: 'center', color: textcoler, marginLeft: 10 }}>Add post</Text>
+                    <View style={{ marginRight: 10, backgroundColor: maincolor, borderRadius: 10, height: 25, flexDirection: 'row' }}>
+                        <Text style={{ alignSelf: 'center', color: textcoler, marginLeft: 10 }}>{language.addpost}</Text>
                         <MaterialIcons name='add-circle' color={textcoler} size={20} style={{ marginHorizontal: 2, marginVertical: 3 }} />
                     </View>
                 </TouchableOpacity>
@@ -477,7 +478,7 @@ const PostsAlbum = ({ navigation }) => {
                         <TouchableOpacity onPress={handelimportpicture}>
                             <View style={{ flexDirection: 'row' }}>
 
-                                <Text style={{ fontSize: 18, color: textcoler, marginRight: 10, fontStyle: 'italic' }}>Import picture or video</Text>
+                                <Text style={{ fontSize: 18, color: textcoler, marginRight: 10, fontStyle: 'italic', marginBottom: 30 }}>{language.addpost}</Text>
                                 <MaterialCommunityIcons name='upload' size={25} color={maincolor} />
 
                             </View>
@@ -485,13 +486,13 @@ const PostsAlbum = ({ navigation }) => {
                         <View style={{ flexDirection: 'row' }}>
                             <Pressable
                                 onPress={hanselsave}
-                                style={{ backgroundColor: maincolor, borderRadius: 10, width: 56, height: 25, marginHorizontal: 20 }}>
-                                <Text style={{ color: textcoler, textAlign: 'center', fontSize: 16, fontStyle: 'Bold' }}>save </Text>
+                                style={{ backgroundColor: maincolor, borderRadius: 10, height: 40, marginHorizontal: 20 }}>
+                                <Text style={{ color: textcoler, textAlign: 'center', fontSize: 16, fontStyle: 'Bold', marginStart: 10, marginEnd: 10, top: 8 }}>{language.save}</Text>
                             </Pressable>
                             <Pressable
                                 onPress={() => { setModal(!modal); setstatus(initialState); setdatapict(initialState) }}
-                                style={{ backgroundColor: maincolor, borderRadius: 10, width: 56, height: 25, marginHorizontal: 20 }}>
-                                <Text style={{ color: textcoler, textAlign: 'center', fontSize: 16, fontStyle: 'Bold' }}>Cancel</Text>
+                                style={{ backgroundColor: maincolor, borderRadius: 10, height: 40, marginHorizontal: 20 }}>
+                                <Text style={{ color: textcoler, textAlign: 'center', fontSize: 16, fontStyle: 'Bold', marginStart: 10, marginEnd: 10, top: 8 }}>{language.close}</Text>
                             </Pressable>
                         </View>
                     </View>
@@ -528,9 +529,9 @@ const PostsAlbum = ({ navigation }) => {
                     }}
                 />
                 <View >
-                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => chivron == 'chevron-right' ? setchivron('chevron-down') : setchivron('chevron-right')}>
+                    <TouchableOpacity style={{ flexDirection: row }} onPress={() => chivron == 'chevron-right' ? setchivron('chevron-down') : setchivron('chevron-right')}>
                         <AntDesign name='edit' size={25} color={maincolor} style={{ marginLeft: 10, marginRight: 10 }} />
-                        <Text style={{ color: textcoler, fontSize: 20, marginRight: 170 }}>Edit Status</Text>
+                        <Text style={{ color: textcoler, fontSize: 20, }}>{language.editstatu}</Text>
 
                         <Entypo name={chivron} size={25} color={maincolor} />
                     </TouchableOpacity>
@@ -557,14 +558,14 @@ const PostsAlbum = ({ navigation }) => {
                             onBlur={() => {
                                 setisFocusM(false)
                             }}
-                            placeholder="New Status"
+                            placeholder={language.editstatu}
                             onChangeText={val => {
                                 seteditstatus({ ...editstatus, statu: val });
                             }}
                             value={editstatus.statu}
                         />
-                        <TouchableOpacity onPress={handelsavechangeStatus} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
-                            <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
+                        <TouchableOpacity onPress={handelsavechangeStatus} style={{ marginHorizontal: 130, backgroundColor: maincolor, height: 40, borderRadius: 20 }}>
+                            <Text style={{ color: mode, fontWeight: "bold", alignSelf: 'center', top: 8 }}>{language.save}</Text>
                         </TouchableOpacity>
                     </View>}
                 <View
@@ -579,9 +580,9 @@ const PostsAlbum = ({ navigation }) => {
 
                 />
 
-                <TouchableOpacity onPress={handelDeletePost} style={{ flexDirection: 'row' }}>
+                <TouchableOpacity onPress={handelDeletePost} style={{ flexDirection: row }}>
                     <EvilIcons name='trash' size={30} color={maincolor} style={{ marginLeft: 10, marginRight: 10 }} />
-                    <Text style={{ color: textcoler, fontSize: 20, }}>Delete Post</Text>
+                    <Text style={{ color: textcoler, fontSize: 20, }}>{language.deletepost}</Text>
                 </TouchableOpacity>
 
 

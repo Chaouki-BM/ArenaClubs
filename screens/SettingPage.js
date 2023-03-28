@@ -14,6 +14,7 @@ import Client from '../api/Client';
 import { launchImageLibrary } from 'react-native-image-picker';
 const SettingPage = ({ navigation }) => {
     const refRBSheet = useRef();
+    const lan = useRef();
     const [mode, setmode] = store.useState("mode");
     const [Moons, setSun] = store.useState("Moons");
     const [textcoler, settextcoler] = store.useState("textcoler");
@@ -128,10 +129,10 @@ const SettingPage = ({ navigation }) => {
         setvisible('editlikns')
     }
 
-    const handelContactUs = () => {
-        refRBSheet.current.open()
-        setvisible('')
-    }
+    // const handelContactUs = () => {
+    //     refRBSheet.current.open()
+    //     setvisible('')
+    // }
     const [log, setlog] = store.useState("log")
     const handelLogOut = () => {
         navigation.navigate('Login');
@@ -145,10 +146,16 @@ const SettingPage = ({ navigation }) => {
         refRBSheet.current.open()
         setvisible('changeBio')
     }
+    const handelchangelang = () => {
+        lan.current.open()
+
+    }
     const handelchangedata = () => {
         refRBSheet.current.open()
         setvisible('changedata')
     }
+
+
     useEffect(() => {
         loadData();
         loadDataUser();
@@ -208,6 +215,37 @@ const SettingPage = ({ navigation }) => {
                 console.log('error from delete  cover', e)
 
             })
+    }
+    const [lang, setlang] = store.useState("lang")
+    const [language, setlanguage] = store.useState("language")
+    const changelang = async () => {
+
+        await Client.post('/get_language', lang).then(function (res) {
+            setlanguage(res.data.My_language)
+            console.log(res.data.My_language)
+        }).catch(function () {
+            console.log("error from get long login")
+        })
+    }
+
+
+
+
+    const [row, setrow] = store.useState("dir")
+    const handelarbic = () => {
+        lang.lang = "Arabic"
+        changelang()
+        setrow("row-reverse")
+    }
+    const handeleng = () => {
+        lang.lang = "English"
+        changelang()
+        setrow("row")
+    }
+    const handelfr = () => {
+        lang.lang = "Français"
+        changelang()
+        setrow("row")
     }
     const initialState = {
 
@@ -401,9 +439,9 @@ const SettingPage = ({ navigation }) => {
                 />
                 <View style={{ margin: 10 }} >
                     <TouchableOpacity style={{ marginBottom: 10, }} onPress={() => handelchevron()}>
-                        <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flexDirection: row }}>
                             <FontAwesome5 name='wrench' size={25} color={maincolor} style={{ marginRight: 20 }} />
-                            <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20, marginRight: 100 }}>General Account</Text>
+                            <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20, marginEnd: 20 }}>{language.g_account}</Text>
                             <FontAwesome5 name={chevron} size={25} color={maincolor} style={{ marginRight: 20 }} />
                         </View>
                     </TouchableOpacity>
@@ -420,17 +458,17 @@ const SettingPage = ({ navigation }) => {
                                 }}
                             />
                             <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangePassword()}>
-                                <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: row }}>
 
                                     <MaterialIcons name='security' size={25} color={maincolor} style={{ marginRight: 20 }} />
-                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Change password</Text>
+                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20, marginEnd: 10 }}>{language.change_p}</Text>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangeName()}>
-                                <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: row }}>
 
                                     <FontAwesome name='user' size={25} color={maincolor} style={{ marginRight: 20 }} />
-                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Change Name</Text>
+                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20, marginEnd: 10 }}>{language.change_nt}</Text>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangeBio()}>
@@ -446,17 +484,17 @@ const SettingPage = ({ navigation }) => {
                                 </View>
                             </TouchableOpacity> */}
                             <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangePicture()}>
-                                <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: row }}>
 
                                     < FontAwesome5 name='images' size={23} color={maincolor} style={{ marginRight: 20 }} />
-                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Update profile picture</Text>
+                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20, marginEnd: 10 }}>{language.u_p}</Text>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelDeleteCouverture()}>
-                                <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: row }}>
 
                                     < FontAwesome5 name='trash' size={25} color={maincolor} style={{ marginRight: 20 }} />
-                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Delete couverture picture</Text>
+                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20, marginEnd: 10 }}>{language.d_c}</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -472,10 +510,10 @@ const SettingPage = ({ navigation }) => {
                         }}
                     />
                     <TouchableOpacity style={{ marginBottom: 10, }} onPress={() => handelEditLinks()}>
-                        <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flexDirection: row }}>
 
                             <Feather name='link' size={25} color={maincolor} style={{ marginRight: 20 }} />
-                            <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Edit my links</Text>
+                            <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20, marginEnd: 20 }}>{language.edit_links}</Text>
                         </View>
                     </TouchableOpacity>
                     <View
@@ -506,11 +544,28 @@ const SettingPage = ({ navigation }) => {
 
                         }}
                     /> */}
+                    <TouchableOpacity style={{ marginBottom: 10, }} onPress={() => handelchangelang()}>
+                        <View style={{ flexDirection: row }}>
+
+                            <MaterialIcons name='language' size={27} color={maincolor} style={{ marginRight: 20 }} />
+                            <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20, marginEnd: 20 }}>{language.select}</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <View
+                        style={{
+                            borderBottomColor: maincolor,
+                            borderBottomWidth: StyleSheet.hairlineWidth,
+                            width: 380,
+                            height: 15,
+                            marginBottom: 10,
+
+                        }}
+                    />
                     <TouchableOpacity style={{ marginBottom: 10, }} onPress={handelLogOut}>
-                        <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flexDirection: row }}>
 
                             <Entypo name='log-out' size={25} color={maincolor} style={{ marginRight: 20 }} />
-                            <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Log-out</Text>
+                            <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20, marginEnd: 20 }}>{language.logout}</Text>
                         </View>
                     </TouchableOpacity>
                     <View
@@ -547,7 +602,7 @@ const SettingPage = ({ navigation }) => {
             >
                 {visible == 'changepassword' &&
                     <View style={{ padding: 10 }}>
-                        <Text style={{ marginHorizontal: 100, color: maincolor, fontSize: 18, marginVertical: 50 }}>Change password</Text>
+                        <Text style={{ color: maincolor, fontSize: 18, alignSelf: "center", marginBottom: 60 }}>{language.change_p}</Text>
                         <TextInput
                             style={[{ borderColor: isFocusM ? maincolor : inputS },
                             {
@@ -566,7 +621,7 @@ const SettingPage = ({ navigation }) => {
                             onBlur={() => {
                                 setisFocusM(false)
                             }}
-                            placeholder="password"
+                            placeholder={language.password}
                             onChangeText={val => {
                                 setchangepassword({ ...changepassword, password: val });
                             }}
@@ -590,7 +645,7 @@ const SettingPage = ({ navigation }) => {
                             onBlur={() => {
                                 setisFocusM(false)
                             }}
-                            placeholder="New password"
+                            placeholder={language.change_p}
                             onChangeText={val => {
                                 setchangepassword({ ...changepassword, password1: val });
                             }}
@@ -614,20 +669,20 @@ const SettingPage = ({ navigation }) => {
                             onBlur={() => {
                                 setisFocusM(false)
                             }}
-                            placeholder="New password"
+                            placeholder={language.confirm}
                             onChangeText={val => {
                                 setchangepassword({ ...changepassword, password2: val });
                             }}
                             value={changepassword.password2}
                         />
-                        <TouchableOpacity onPress={handelsavechange} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
-                            <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
+                        <TouchableOpacity onPress={handelsavechange} style={{ marginHorizontal: 130, backgroundColor: maincolor, height: 40, borderRadius: 20 }}>
+                            <Text style={{ color: mode, fontWeight: "bold", alignSelf: "center", top: 8 }}>{language.save}</Text>
                         </TouchableOpacity>
                     </View>}
                 {/* ------------------------Change-name------------------------------ */}
                 {visible == 'changename' &&
                     <View style={{ padding: 10 }}>
-                        <Text style={{ marginHorizontal: 90, color: maincolor, fontSize: 18, marginVertical: 50 }}>Change Name and Tag</Text>
+                        <Text style={{ marginHorizontal: 90, color: maincolor, fontSize: 18, alignSelf: "center", marginBottom: 60 }}>{language.change_nt}</Text>
                         <TextInput
                             style={[{ borderColor: isFocusM ? maincolor : inputS },
                             {
@@ -646,7 +701,7 @@ const SettingPage = ({ navigation }) => {
                             onBlur={() => {
                                 setisFocusM(false)
                             }}
-                            placeholder="Name"
+                            placeholder={language.name}
                             onChangeText={val => {
                                 setchangename({ ...changename, name: val });
                             }}
@@ -654,8 +709,8 @@ const SettingPage = ({ navigation }) => {
                         />
 
 
-                        <TouchableOpacity onPress={handelsavechangename} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
-                            <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
+                        <TouchableOpacity onPress={handelsavechangename} style={{ marginHorizontal: 130, backgroundColor: maincolor, height: 40, borderRadius: 20 }}>
+                            <Text style={{ color: mode, fontWeight: "bold", alignSelf: 'center', top: 8 }}>{language.save}</Text>
                         </TouchableOpacity>
                     </View>}
                 {/* ----------------------Bio------------------------ */}
@@ -780,7 +835,7 @@ const SettingPage = ({ navigation }) => {
                 {/* ----------------------links------------------------ */}
                 {visible == 'editlikns' &&
                     <View style={{ padding: 10 }}>
-                        <Text style={{ marginHorizontal: 150, color: maincolor, fontSize: 18, marginVertical: 50 }}>Edit likns</Text>
+                        <Text style={{ color: maincolor, fontSize: 18, alignSelf: 'center', marginBottom: 60 }}>{language.edit_links}</Text>
                         <TextInput
                             style={[{ borderColor: isFocusM ? maincolor : inputS },
                             {
@@ -799,7 +854,7 @@ const SettingPage = ({ navigation }) => {
                             onBlur={() => {
                                 setisFocusM(false)
                             }}
-                            placeholder="Facebook link"
+                            placeholder="Facebook "
                             onChangeText={val => {
                                 setchangelink({ ...changelink, facebook: val });
                             }}
@@ -823,7 +878,7 @@ const SettingPage = ({ navigation }) => {
                             onBlur={() => {
                                 setisFocusM(false)
                             }}
-                            placeholder="Instagram link"
+                            placeholder="Instagram"
                             onChangeText={val => {
                                 setchangelink({ ...changelink, instagram: val });
                             }}
@@ -847,7 +902,7 @@ const SettingPage = ({ navigation }) => {
                             onBlur={() => {
                                 setisFocusM(false)
                             }}
-                            placeholder="Twitter link"
+                            placeholder="Twitter"
                             onChangeText={val => {
                                 setchangelink({ ...changelink, twitter: val });
                             }}
@@ -878,12 +933,45 @@ const SettingPage = ({ navigation }) => {
                             }}
                             value={changelink.tiktok}
                         /> */}
-                        <TouchableOpacity onPress={handelsavechangelinks} style={{ marginHorizontal: 130, backgroundColor: maincolor, width: 100, height: 40, borderRadius: 20 }}>
-                            <Text style={{ color: mode, fontWeight: "bold", marginHorizontal: 9, marginVertical: 9 }}>Save change</Text>
+                        <TouchableOpacity onPress={handelsavechangelinks} style={{ marginHorizontal: 130, backgroundColor: maincolor, height: 40, borderRadius: 20 }}>
+                            <Text style={{ color: mode, fontWeight: "bold", alignSelf: 'center', top: 8 }}>{language.save}</Text>
                         </TouchableOpacity>
                     </View>
                 }
 
+            </RBSheet >
+
+            <RBSheet
+                ref={lan}
+                closeOnDragDown={true}
+                closeOnPressMask={true}
+                height={170}
+                openDuration={300}
+                customStyles={{
+                    wrapper: {
+                        backgroundColor: "transparent"
+                    },
+                    draggableIcon: {
+                        backgroundColor: maincolor
+                    },
+                    container: {
+                        backgroundColor: mode
+                    }
+                }}
+            >
+                {/* ----------------------- */}
+                <View style={{ alignItems: 'center' }}>
+                    <TouchableOpacity style={{ marginBottom: 8 }} onPress={() => handelfr()}>
+                        <Text style={[lang.lang == "Français" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>Français</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ marginBottom: 8 }} onPress={() => handeleng()}>
+                        <Text style={[lang.lang == "English" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>English</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handelarbic()}>
+                        <Text style={[lang.lang == "Arabic" ? { color: maincolor } : { color: textcoler }, { fontSize: 20 }]}>العربية</Text>
+                    </TouchableOpacity>
+                </View>
+                {/* -------------------------------- */}
             </RBSheet >
             <Modal
                 animationType="fade"
@@ -895,20 +983,20 @@ const SettingPage = ({ navigation }) => {
                 }}>
                 <View style={styles.centeredViewdelete}>
                     <View style={[styles.modalViewdelete, { backgroundColor: mode }]}>
-                        <Text style={{ fontSize: 25, color: maincolor }}>Are you sure!</Text>
+                        <Text style={{ fontSize: 25, color: maincolor }}>{language.are_u_sure}</Text>
                         <View style={{ flexDirection: 'row', marginVertical: 45 }}>
                             <Pressable
                                 style={[styles.button, styles.buttonClose]}
                                 onPress={handelyesdelete}>
                                 <View style={{ backgroundColor: '#00A300', marginRight: 70, width: 60, height: 40, borderRadius: 10 }}>
-                                    <Text style={{ fontSize: 25, color: 'white', left: 7 }}>Yes</Text>
+                                    <Text style={{ fontSize: 25, color: 'white', alignSelf: "center" }}>{language.yes}</Text>
                                 </View>
                             </Pressable>
                             <Pressable
                                 style={[styles.button, styles.buttonClose]}
                                 onPress={() => setModal(!modal)}>
-                                <View style={{ backgroundColor: '#A30000', width: 60, height: 40, borderRadius: 10 }}>
-                                    <Text style={{ fontSize: 25, color: 'white', left: 13 }}>No</Text>
+                                <View style={{ backgroundColor: '#A30000', height: 40, borderRadius: 10 }}>
+                                    <Text style={{ fontSize: 25, color: 'white', alignSelf: "center" }}>{language.close}</Text>
                                 </View>
                             </Pressable>
                         </View>
