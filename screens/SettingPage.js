@@ -258,9 +258,7 @@ const SettingPage = ({ navigation }) => {
     });
     const handelsavechange = async () => {
         changepassword.email = email.email
-        console.log(changepassword)
         await Client.post("/changepassword", changepassword).then(function (res) {
-            console.log(res.data)
             if (res.data.type == 'success') {
                 Alert.alert('success', res.data.msg)
                 setchangepassword(initialState)
@@ -472,9 +470,9 @@ const SettingPage = ({ navigation }) => {
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangeBio()}>
-                                <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: row }}>
                                     < FontAwesome name='pencil' size={23} color={maincolor} style={{ marginRight: 20 }} />
-                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20 }}>Update Bio</Text>
+                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20, marginEnd: 10 }}>{language.edit_bio}</Text>
                                 </View>
                             </TouchableOpacity>
                             {/* <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelchangedata()}>

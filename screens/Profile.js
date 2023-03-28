@@ -238,7 +238,7 @@ const Profile = () => {
     }
     const [language, setlanguage] = store.useState("language")
     const [row, setrow] = store.useState("dir")
-    console.log(language)
+
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
             <ScrollView
@@ -249,11 +249,13 @@ const Profile = () => {
                 {posts.slice(0).reverse().map((post, index) => {
                     return (
                         <View key={index} style={{ marginTop: 15, marginHorizontal: 35, backgroundColor: albumS, width: 300, borderRadius: 10 }}>
-                            <View style={{ flexDirection: row }}>
-                                <Text style={{ color: textcoler, alignSelf: "flex-start", marginBottom: 10, marginHorizontal: 10 }}>{language.album} : </Text>
+                            <View style={{ flexDirection: row, marginTop: 10 }}>
+                                <Text style={{ color: textcoler, alignSelf: "flex-start", marginBottom: 10, marginHorizontal: 10, }}>{language.album} : </Text>
                                 <Text style={{ color: textcoler, }}> {post.group_name}</Text>
                             </View>
-                            <Text style={{ color: textcoler, marginLeft: 10, width: 275, }}>{post.statu}</Text>
+                            <View style={{ flexDirection: row, marginHorizontal: 10 }}>
+                                <Text style={{ color: textcoler, width: 275, }}>{post.statu}</Text>
+                            </View>
                             <ImageBackground
                                 //imageStyle={{}}
                                 style={{ width: 250, height: 230, marginLeft: 25, }}
@@ -262,21 +264,24 @@ const Profile = () => {
 
                             >
                             </ImageBackground>
-                            <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: row }}>
                                 {/* <TouchableOpacity onPress={() => post.heart == "heart" ? handelunheart(post, index) : handelheart(post, index)}>
                                     <FontAwesome name={post.heart} color={maincolor} size={20} style={{ marginTop: 10, marginLeft: 20 }} />
                                 </TouchableOpacity> */}
                                 <TouchableOpacity onPress={() => handelshowComment(post)}>
-                                    <FontAwesome name='comment-o' size={21} color={maincolor} style={{ marginTop: 1, marginLeft: 20 }} />
+                                    <FontAwesome name='comment-o' size={21} color={maincolor} style={{ marginHorizontal: 15, marginBottom: 10 }} />
                                 </TouchableOpacity>
                             </View>
                             <TouchableOpacity onPress={() => handelallliker(post)}>
-                                <Text style={{ marginTop: 10, marginLeft: 10, color: textcoler, marginBottom: 5 }}>{post.nb_like} Likes</Text>
+                                <View style={{ flexDirection: row, marginBottom: 5, marginHorizontal: 10 }}>
+                                    <Text style={{ color: textcoler, marginEnd: 10 }}>{post.nb_like}</Text>
+                                    <Text style={{ color: textcoler, marginEnd: 10 }}>{language.likes}</Text>
+                                </View>
                             </TouchableOpacity>
 
-                            <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-                                <Text style={{ marginLeft: 10, color: textcoler }}>{post.date} </Text>
-                                <Text style={{ marginLeft: 10, color: textcoler, }}>{post.time} </Text>
+                            <View style={{ flexDirection: row, marginBottom: 20, marginHorizontal: 10 }}>
+                                <Text style={{ color: textcoler, marginEnd: 10 }}>{post.date} </Text>
+                                <Text style={{ color: textcoler, marginEnd: 10 }}>{post.time} </Text>
 
                             </View>
 

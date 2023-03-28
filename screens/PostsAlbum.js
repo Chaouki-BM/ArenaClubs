@@ -157,7 +157,7 @@ const PostsAlbum = ({ navigation }) => {
     const handelthreedots = (post) => {
         refRBSheet.current.open()
         setclicked(post)
-        console.log(post)
+
     }
     const handeladdpost = () => {
         setModal(modal == false ? true : false)
@@ -205,7 +205,7 @@ const PostsAlbum = ({ navigation }) => {
     }
     const [status, setstatus] = useState({ statu: '' })
     const date = () => {
-        console.log(status)
+
         imageup.email = email.email
         imageup.group_name = settingalbum.group_name
         imageup.nom = datauser.nom
@@ -300,7 +300,7 @@ const PostsAlbum = ({ navigation }) => {
             }
 
         }
-        console.log(userlike)
+
     }
 
     const [language, setlanguage] = store.useState("language")
@@ -412,18 +412,27 @@ const PostsAlbum = ({ navigation }) => {
                                         //onPress={() => console.log("Works!")}
                                         containerStyle={{ marginBottom: 20, marginTop: 10, marginLeft: 20 }}
                                         source={{ uri: `${Ip}${post.image}` }}
+
                                     />
                                     <View style={{ marginHorizontal: 20, marginVertical: 10 }}>
-                                        <View style={{ width: 220, height: 60 }}>
+                                        <View style={{ width: 220, height: 60, flexDirection: row }}>
                                             <Text style={{ color: textcoler }}>{post.statu}</Text>
                                         </View >
-                                        <Text style={{ color: textcoler }}>{post.date}</Text>
-                                        <Text style={{ color: textcoler }}>{post.time}</Text>
+                                        <View style={{ flexDirection: row }}>
+                                            <Text style={{ color: textcoler }}>{post.date}</Text>
+                                        </View>
+                                        <View style={{ flexDirection: row }}>
+                                            <Text style={{ color: textcoler }}>{post.time}</Text>
+                                        </View>
                                         {/* <TouchableOpacity onPress={() => post.heart == "heart" ? handelunheart(post, index) : handelheart(post, index)}>
                                             <FontAwesome name={post.heart == "heart" ? "heart" : "heart-o"} color={maincolor} size={20} style={{ marginHorizontal: 154 }} />
                                         </TouchableOpacity> */}
                                         <TouchableOpacity onPress={() => handelallliker(post)}>
-                                            <Text style={{ left: 150, marginTop: 10 }}>{post.nb_like} Likes</Text>
+                                            <View style={{ flexDirection: row }}>
+                                                <Text style={{ marginEnd: 10 }}>{post.nb_like}</Text>
+                                                <Text style={{ marginEnd: 10 }}>{language.likes}</Text>
+                                            </View>
+
                                         </TouchableOpacity>
 
                                     </View>
@@ -469,7 +478,7 @@ const PostsAlbum = ({ navigation }) => {
                             onBlur={() => {
                                 setisFocusM(false)
                             }}
-                            placeholder="Status"
+                            placeholder={language.status}
                             onChangeText={val => {
                                 setstatus({ ...status, statu: val });
                             }}

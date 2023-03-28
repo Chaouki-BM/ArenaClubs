@@ -295,7 +295,7 @@ function HomePage() {
                     </View>
 
                     <Pressable onPress={handelseemore}>
-                        <Text style={{ fontSize: 13, color: '#8e8e8f' }}>see more...</Text>
+                        <Text style={{ fontSize: 13, color: '#8e8e8f', marginEnd: 20 }}>{language.see_more} ...</Text>
                     </Pressable>
                 </View>
                 <TabBarProfil />
