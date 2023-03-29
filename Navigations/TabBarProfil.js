@@ -56,7 +56,7 @@ const TabBarProfil = () => {
                     options={{
                         title: '',
                         tabBarIcon: ({ focused, color, size }) => (
-                            <FontAwesome5 name="user-check" color={color} size={20} />
+                            <FontAwesome5 name="user-friends" color={color} size={20} />
                         ),
                     }}
                 />
@@ -64,7 +64,8 @@ const TabBarProfil = () => {
                     options={{
                         title: '',
                         tabBarIcon: ({ focused, color, size }) => (
-                            <FontAwesome5 name="user-friends" color={color} size={20} />
+
+                            <FontAwesome5 name="user-check" color={color} size={20} />
                         ),
                     }}
                 />

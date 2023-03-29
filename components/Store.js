@@ -20,4 +20,5 @@ store.setState("settingalbum", {
 store.setState("dir", "row")
 store.setState("Albums", [])
 store.setState("whoareyou", "")
+store.setState("membres", [])
 export default store;
