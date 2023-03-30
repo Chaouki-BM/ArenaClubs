@@ -11,7 +11,9 @@ import TabBarProfil from '../Navigations/TabBarProfil';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Client from '../api/Client';
 import { Linking, } from 'react-native';
+import QRCode from 'react-native-qrcode-svg';
 import Ip from '../api/Ip';
+import { Mood } from '@mui/icons-material';
 function HomePage() {
     const refRBSheet = useRef();
     const [img, setimg] = store.useState("img");
@@ -42,7 +44,6 @@ function HomePage() {
     const loadDataUser = async () => {
         await Client.post('/getclub', email).then(function (res) {
             setdatauser(res.data.club)
-
         }).catch(function (e) {
             console.log('error data from laoddatauser')
         })
@@ -153,10 +154,17 @@ function HomePage() {
             })
     }
     const [pic, setpic] = useState({ pic: '' })
-
+    const [followers, setfollowers] = store.useState("followers")
     const [Albums, setAlbums] = store.useState("Albums")
     const [language, setlanguage] = store.useState("language")
     const [row, setrow] = store.useState("dir")
+    const [posts, setposts] = store.useState("posts")
+    var qrcode = `${datauser.nom}` + "\n" + `${datauser.nom_universite}` + " " + `${datauser.ville}`
+        + "\n" + `${datauser.email_contact}` + "\n" + `${datauser.tele}`
+
+
+
+
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
             {/* --------------------------------- */}
@@ -281,11 +289,11 @@ function HomePage() {
                     <View style={{ flexDirection: row }}>
                         <View style={{ flexDirection: row }}>
                             <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>{language.followers} :</Text>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{Albums.length}</Text>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{followers.length}</Text>
                         </View>
                         <View style={{ flexDirection: row }}>
                             <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>{language.posts} :</Text>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{Albums.length}</Text>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{posts.length}</Text>
                         </View>
                         <View style={{ flexDirection: row }}>
                             <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>{language.albums} :</Text>
@@ -321,19 +329,26 @@ function HomePage() {
 
                 }}
             >
-                <View style={{ padding: 20 }}>
-
-                    <View style={{ flexDirection: 'row', marginHorizontal: 120, marginVertical: 50, }}>
+                <View style={{ padding: 20, }}>
+                    <View style={{ alignSelf: 'center' }}>
+                        <QRCode
+                            value={qrcode}
+                            size={150}
+                            color={maincolor}
+                            backgroundColor={mode}
+                            ecl='Q'
+                        />
+                    </View>
+                    <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: 40 }}>
                         <TouchableOpacity onPress={handellinkfacebook}>
-                            <Entypo name='facebook' size={23} color={maincolor} style={{ marginRight: 20 }} />
+                            <Entypo name='facebook' size={23} color={maincolor} style={{ margin: 10 }} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={handellinkinstagram}>
-                            <Entypo name='instagram' size={23} color={maincolor} style={{ marginRight: 20 }} />
+                            <Entypo name='instagram' size={23} color={maincolor} style={{ margin: 10 }} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={handellinktwitter}>
-                            <Entypo name='twitter' size={23} color={maincolor} style={{ marginRight: 20 }} />
+                            <Entypo name='twitter' size={23} color={maincolor} style={{ margin: 10 }} />
                         </TouchableOpacity>
-
                     </View>
 
                 </View>

@@ -20,12 +20,28 @@ const FollowingPage = () => {
     useEffect(() => {
         loadfollwers()
     }, []);
-    const [followers, setfollowers] = useState([])
+    const [followers, setfollowers] = store.useState("followers")
     const loadfollwers = async () => {
-
+        await Client.post("/getallfollowers", email)
+            .then(function (res) {
+                setfollowers(res.data)
+                console.log(res.data)
+            }).catch(function (e) {
+                console.log("error from load followers", e)
+            })
     }
-    const handeldeletefollower = async () => {
-
+    const [deletefollow, setdeletefollow] = useState({ email_followed: '', email_follow: '' })
+    const handeldeletefollower = async (follower) => {
+        deletefollow.email_follow = follower.email_follow
+        deletefollow.email_followed = follower.email_followed
+        await Client.post("/deletefollow", deletefollow)
+            .then(function (res) {
+                if (res.data.msg == 'success') {
+                    loadfollwers()
+                }
+            }).catch(function (e) {
+                console.log("error from detete follow")
+            })
     }
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
@@ -54,13 +70,10 @@ const FollowingPage = () => {
                             value={search.search}
                         />
                         {followers.map((follower, index) => {
-                            for (let index = 0; index < search.search.length; index++) {
-                                if (search.search[index] == follower.name_user[index]) {
-                                    show = true
-                                } else {
-                                    show = false
-                                }
-                            }
+
+                            if (follower.name_follow.indexOf(search.search) != -1) { show = true }
+                            else { show = false }
+
                             if (show) {
                                 return (
                                     <View key={index} style={{ flexDirection: 'row' }}>
@@ -72,9 +85,9 @@ const FollowingPage = () => {
                                             //onPress={() => console.log("Works!")}
                                             containerStyle={{ marginLeft: 20, marginBottom: 20 }}
                                             //source={image}
-                                            source={{ uri: `${Ip}${follower.image_user}` }}
+                                            source={{ uri: `${Ip}${follower.img_follow}` }}
                                         />
-                                        <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{follower.name_user}</Text>
+                                        <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{follower.name_follow}</Text>
                                         <View style={{ flexDirection: 'row' }}>
                                             <TouchableOpacity onPress={() => handeldeletefollower(follower)}>
                                                 <MaterialIcons name='cancel' size={22} color={maincolor} style={{ marginVertical: 15, marginLeft: 20, }} />

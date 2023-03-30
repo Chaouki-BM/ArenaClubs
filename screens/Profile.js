@@ -52,7 +52,7 @@ const Profile = () => {
         image: '',
         email_like: '',
     })
-    const [posts, setposts] = useState([])
+    const [posts, setposts] = store.useState("posts")
     // const loadLike = async (element) => {
     //     islike.email = email.email;
     //     islike.group_name = element.group_name;
@@ -399,7 +399,7 @@ const Profile = () => {
                         backgroundColor: mode,
                         borderRadius: 10,
                         padding: 25,
-                        width: 250,
+
                         // height: 200,
                         //alignItems: 'center',
                         shadowColor: '#000',
@@ -413,9 +413,9 @@ const Profile = () => {
                     }}>
                         <View>
                             <TouchableOpacity onPress={handelDeleteComment}>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Ionicons name='trash' size={17} style={{ marginRight: 10, color: maincolor }} />
-                                    <Text style={{ color: textcoler, fontSize: 17, marginBottom: 15 }}>Delete comment</Text>
+                                <View style={{ flexDirection: row }}>
+                                    <Ionicons name='trash' size={17} style={{ marginHorizontal: 10, color: maincolor }} />
+                                    <Text style={{ color: textcoler, fontSize: 18, marginBottom: 20 }}>{language.deletecom}</Text>
                                 </View>
                             </TouchableOpacity>
                             {/* <TouchableOpacity onPress={handelEditComment}>
@@ -466,9 +466,9 @@ const Profile = () => {
                         </View>
 
                         <TouchableOpacity
-                            style={{ backgroundColor: maincolor, width: 70, height: 25, borderRadius: 10, marginTop: 10, marginHorizontal: 60 }}
+                            style={{ backgroundColor: maincolor, height: 35, borderRadius: 10, marginHorizontal: 60 }}
                             onPress={() => setModall(!Modall)}>
-                            <Text style={{ marginVertical: -3, marginHorizontal: 10, color: textcoler, fontSize: 20 }}>close</Text>
+                            <Text style={{ color: textcoler, fontSize: 20, alignSelf: 'center', top: 3, marginEnd: 10, marginStart: 10 }}>{language.close}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -502,7 +502,7 @@ const Profile = () => {
 
                 />
                 <View style={{ backgroundColor: albumS, width: 380, height: 30, marginTop: 10, marginLeft: 5, borderRadius: 10 }}>
-                    <Text style={{ color: textcoler, fontSize: 20, textAlign: 'center' }}>Comment</Text>
+                    <Text style={{ color: textcoler, fontSize: 20, textAlign: 'center' }}>{language.comment}</Text>
                 </View>
                 <ScrollView>
 
@@ -521,7 +521,7 @@ const Profile = () => {
                                         source={{ uri: `${Ip}${element.img_comment}` }}
                                     />
                                     <Text style={{ color: textcoler, fontSize: 18, marginTop: 5 }}>{element.name_comment}</Text>
-                                    <Text style={{ marginLeft: 10, color: textcoler, fontSize: 18, marginTop: 5 }}>{element.tag_comment}</Text>
+                                    {/* <Text style={{ marginLeft: 10, color: textcoler, fontSize: 18, marginTop: 5 }}>{element.tag_comment}</Text> */}
                                 </View>
                                 <View style={{ flexDirection: 'row' }}>
                                     <View style={{ width: 350, }}>

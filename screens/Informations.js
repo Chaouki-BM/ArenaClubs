@@ -147,13 +147,8 @@ const Informations = () => {
                         value={search.search}
                     />
                     {membres.map((membre, index) => {
-                        for (let index = 0; index < search.search.length; index++) {
-                            if (search.search[index] == membre.name_user[index]) {
-                                show = true
-                            } else {
-                                show = false
-                            }
-                        }
+                        if (membre.name_user.indexOf(search.search) != -1) { show = true }
+                        else { show = false }
                         if (show) {
                             return (
                                 <View key={index} style={{ flexDirection: 'row' }}>

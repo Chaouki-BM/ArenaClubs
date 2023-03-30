@@ -32,7 +32,16 @@ const FollowersPage = () => {
             })
     }
     const handeldeletereq = async (req) => {
-
+        datareq.email_club = req.email_club
+        datareq.email_user = req.email_user
+        await Client.post("/delete_request", datareq)
+            .then(function (res) {
+                if (res.data.msg == "success") {
+                    loadreq()
+                }
+            }).catch(function (e) {
+                console.log("error from handel delte req", e)
+            })
     }
     const [datareq, setdatareq] = useState({
         email_club: '',
@@ -106,13 +115,8 @@ const FollowersPage = () => {
                             value={search.search}
                         />
                         {reqs.map((req, index) => {
-                            for (let index = 0; index < search.search.length; index++) {
-                                if (search.search[index] == req.name_user[index]) {
-                                    show = true
-                                } else {
-                                    show = false
-                                }
-                            }
+                            if (req.name_user.indexOf(search.search) != -1) { show = true }
+                            else { show = false }
                             if (show) {
                                 return (
                                     <View key={index} style={{ flexDirection: 'row' }}>

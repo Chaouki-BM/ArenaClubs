@@ -21,4 +21,6 @@ store.setState("dir", "row")
 store.setState("Albums", [])
 store.setState("whoareyou", "")
 store.setState("membres", [])
+store.setState("followers", [])
+store.setState("posts", [])
 export default store;
