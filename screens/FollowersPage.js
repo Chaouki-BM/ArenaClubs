@@ -26,7 +26,6 @@ const FollowersPage = () => {
         await Client.post("/get_request_club", email)
             .then(function (res) {
                 setreqs(res.data)
-                console.log(reqs)
             }).catch(function (e) {
                 console.log("error from load request club", e)
             })
@@ -98,7 +97,7 @@ const FollowersPage = () => {
                 <View style={{ borderRadius: 7, backgroundColor: albumS, width: 350, alignSelf: "center", marginTop: 30 }}>
                     <View style={{ borderRadius: 7, backgroundColor: albumS, width: 350, alignSelf: "center", marginTop: 20 }}>
                         <View style={{ flexDirection: row }}>
-                            <Text style={{ marginTop: 15, marginHorizontal: 20, marginBottom: 15, color: maincolor, fontSize: 19 }}>req list</Text>
+                            <Text style={{ marginTop: 15, marginHorizontal: 20, marginBottom: 15, color: maincolor, fontSize: 19 }}>{language.req_list}</Text>
                         </View>
                         <TextInput
                             style={[{ width: 250, alignSelf: 'center', height: 40, borderRadius: 15, marginBottom: 30 }, { borderColor: isFocusM ? maincolor : inputS }, { backgroundColor: inputS }, { color: textcoler }]}

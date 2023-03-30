@@ -25,7 +25,6 @@ const FollowingPage = () => {
         await Client.post("/getallfollowers", email)
             .then(function (res) {
                 setfollowers(res.data)
-                console.log(res.data)
             }).catch(function (e) {
                 console.log("error from load followers", e)
             })
@@ -53,7 +52,7 @@ const FollowingPage = () => {
                 <View style={{ borderRadius: 7, backgroundColor: albumS, width: 350, alignSelf: "center", marginTop: 30 }}>
                     <View style={{ borderRadius: 7, backgroundColor: albumS, width: 350, alignSelf: "center", marginTop: 20 }}>
                         <View style={{ flexDirection: row }}>
-                            <Text style={{ marginTop: 15, marginHorizontal: 20, marginBottom: 15, color: maincolor, fontSize: 19 }}>list abonne</Text>
+                            <Text style={{ marginTop: 15, marginHorizontal: 20, marginBottom: 15, color: maincolor, fontSize: 19 }}>{language.follow_list}</Text>
                         </View>
                         <TextInput
                             style={[{ width: 250, alignSelf: 'center', height: 40, borderRadius: 15, marginBottom: 30 }, { borderColor: isFocusM ? maincolor : inputS }, { backgroundColor: inputS }, { color: textcoler }]}
