@@ -26,6 +26,7 @@ const FollowersPage = () => {
         await Client.post("/get_request_club", email)
             .then(function (res) {
                 setreqs(res.data)
+                console.log(res.data)
             }).catch(function (e) {
                 console.log("error from load request club", e)
             })
@@ -123,7 +124,7 @@ const FollowersPage = () => {
                                             rounded
                                             size={50}
                                             //icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
-                                            overlayContainerStyle={{ backgroundColor: 'gray' }}
+
                                             //onPress={() => console.log("Works!")}
                                             containerStyle={{ marginLeft: 20, marginBottom: 20 }}
                                             //source={image}

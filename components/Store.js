@@ -23,4 +23,6 @@ store.setState("whoareyou", "")
 store.setState("membres", [])
 store.setState("followers", [])
 store.setState("posts", [])
+
+
 export default store;

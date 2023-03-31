@@ -4,15 +4,15 @@ import Notification from '../screens/Notification'
 import SettingPage from '../screens/SettingPage';
 import HomePage from '../screens/HomePage';
 import Messagerie from '../screens/Messagerie'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
 import store from '../components/Store';
 //import DrawerTab from './DrawerTab';
-
+import Client from '../api/Client';
 const Tab = createBottomTabNavigator()
 
 const TabNavigation = () => {
@@ -20,6 +20,38 @@ const TabNavigation = () => {
     const [mode, setmode] = store.useState("mode");
     const [language, setlanguage] = store.useState("language")
     const [row, setrow] = store.useState("dir")
+    const [email, setemail] = store.useState("email");
+    const [numbernotif, setnumbernotif] = useState()
+    useEffect(() => {
+        getNumberNotificationsNoVu()
+    }, [])
+    useEffect(() => {
+        return () => {
+            vunotification()
+        }
+    }, [])
+    const getNumberNotificationsNoVu = async () => {
+        await Client.post("/getnotification_vu", email)
+            .then(function (res) {
+                setnumbernotif(res.data.nbr_vu)
+            }).catch(function (e) {
+                console.log("error from get Number Notifications No Vu ", e);
+            })
+    }
+    const vunotification = async () => {
+        console.log("bla bla bla1 ")
+        if (numbernotif != 0) {
+            await Client.post("/vu_notification", email)
+                .then(function (res) {
+                    if (res.data.msg == 'success') {
+                        setnumbernotif(0)
+                        console.log("bla bla bla 222")
+                    }
+                }).catch(function (e) {
+                    console.log("error from vu notification", e)
+                })
+        }
+    }
     return (
         <SafeAreaView style={styles.container}>
             <Tab.Navigator
@@ -41,13 +73,19 @@ const TabNavigation = () => {
                 />
 
                 <Tab.Screen name='Notification' component={Notification}
+
                     options={{
-                        tabBarBadge: 10,
+                        tabBarBadge: numbernotif == 0 ? null : numbernotif,
                         title: `${language.notification}`,
                         tabBarIcon: ({ focused, color, size }) => (
                             <Ionicons name="notifications" color={color} size={size} />
                         ),
                     }}
+                // listeners={({ navigation, route }) => ({
+                //     tabPress: () => {
+                //         vunotification()
+                //     },
+                // })}
                 />
                 <Tab.Screen
                     name="RecherchePage" component={RecherchePage}

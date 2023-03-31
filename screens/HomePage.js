@@ -13,7 +13,7 @@ import Client from '../api/Client';
 import { Linking, } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import Ip from '../api/Ip';
-import { Mood } from '@mui/icons-material';
+
 function HomePage() {
     const refRBSheet = useRef();
     const [img, setimg] = store.useState("img");

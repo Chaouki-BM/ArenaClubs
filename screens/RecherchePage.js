@@ -59,8 +59,8 @@ const RecherchePage = () => {
             {users.map((user, index) => {
 
                 return (
-                    <TouchableOpacity>
-                        <View key={index} style={{ flexDirection: "row", marginBottom: 10, backgroundColor: inputS, borderRadius: 10, width: 350, marginHorizontal: 20 }}>
+                    <TouchableOpacity key={index}>
+                        <View style={{ flexDirection: "row", marginBottom: 10, backgroundColor: inputS, borderRadius: 10, width: 350, marginHorizontal: 20 }}>
                             <Avatar
                                 rounded
                                 size={50}
