@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, } from 'react'
 import { View, Text, StyleSheet, ImageBackground, ScrollView, TouchableOpacity, Modal, Pressable, Alert } from 'react-native'
 import store from '../components/Store';
 import Ip from '../api/Ip';
@@ -6,7 +6,7 @@ import { Avatar } from 'react-native-elements';
 import Client from '../api/Client';
 import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-
+import { useIsFocused } from '@react-navigation/native';
 const Notification = () => {
     const [mode, setmode] = store.useState("mode");
     const [maincolor, setmaincolor] = store.useState("maincolor");
@@ -18,26 +18,48 @@ const Notification = () => {
     const [albumS, setalbumS] = store.useState("albumS")
     const [email, setemail] = store.useState("email");
     const [lang, setlang] = store.useState("lang")
+    const isFocused = useIsFocused();
     useEffect(() => {
         getnotification()
-
     }, [])
 
 
-    // const vunotification = async () => {
-    //     await Client.post("/vu_notification", email)
+    // useEffect(() => {
+    //     if (!isFocused) {
+    //         getnotification()
+    //     }
+    //     getnotification()
+    // }, [isFocused]);
+
+    // const [numbernotif, setnumbernotif] = useState("")
+    // const getNumberNotificationsNoVu = async () => {
+    //     await Client.post("/getnotification_vu", email)
     //         .then(function (res) {
-    //             if (res.data.msg == 'success') {
-    //                 getNumberNotificationsNoVu()
-    //             }
+    //             setnumbernotif(res.data.nbr_vu)
     //         }).catch(function (e) {
-    //             console.log("error from vu notification", e)
+    //             console.log("error from get Number Notifications No Vu ", e);
     //         })
     // }
 
 
-    const [notifications, setnotifications] = useState([])
+
+    // const vunotification = async () => {
+    //     if (numbernotif > 0) {
+    //         await Client.post("/vu_notification", email)
+    //             .then(function (res) {
+    //                 if (res.data.msg == 'success') {
+    //                     // setnumbernotif(0)
+    //                 }
+    //             }).catch(function (e) {
+    //                 console.log("error from vu notification", e)
+    //             })
+    //     }
+    // }
+
+
+    const [notifications, setnotifications] = store.useState("notifications")
     const getnotification = async () => {
+
         await Client.post("/getnotification", email)
             .then(function (res) {
 
@@ -46,6 +68,7 @@ const Notification = () => {
             }).catch(function (e) {
                 console.log("error from get notification", e);
             })
+
     }
     let icon
     let msgg

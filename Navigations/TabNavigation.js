@@ -13,6 +13,7 @@ import { SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
 import store from '../components/Store';
 //import DrawerTab from './DrawerTab';
 import Client from '../api/Client';
+
 const Tab = createBottomTabNavigator()
 
 const TabNavigation = () => {
@@ -21,15 +22,11 @@ const TabNavigation = () => {
     const [language, setlanguage] = store.useState("language")
     const [row, setrow] = store.useState("dir")
     const [email, setemail] = store.useState("email");
-    const [numbernotif, setnumbernotif] = useState()
+    const [numbernotif, setnumbernotif] = useState("")
     useEffect(() => {
         getNumberNotificationsNoVu()
     }, [])
-    useEffect(() => {
-        return () => {
-            vunotification()
-        }
-    }, [])
+
     const getNumberNotificationsNoVu = async () => {
         await Client.post("/getnotification_vu", email)
             .then(function (res) {
@@ -38,19 +35,31 @@ const TabNavigation = () => {
                 console.log("error from get Number Notifications No Vu ", e);
             })
     }
+
     const vunotification = async () => {
-        console.log("bla bla bla1 ")
-        if (numbernotif != 0) {
+        if (numbernotif > 0) {
             await Client.post("/vu_notification", email)
                 .then(function (res) {
                     if (res.data.msg == 'success') {
-                        setnumbernotif(0)
-                        console.log("bla bla bla 222")
+                        getnotification()
                     }
+
                 }).catch(function (e) {
                     console.log("error from vu notification", e)
                 })
         }
+    }
+
+    const [notifications, setnotifications] = store.useState("notifications")
+    const getnotification = async () => {
+
+        await Client.post("/getnotification", email)
+            .then(function (res) {
+                setnotifications(res.data.notification)
+            }).catch(function (e) {
+                console.log("error from get notification", e);
+            })
+
     }
     return (
         <SafeAreaView style={styles.container}>
@@ -70,6 +79,7 @@ const TabNavigation = () => {
 
                         ),
                     }}
+
                 />
 
                 <Tab.Screen name='Notification' component={Notification}
@@ -81,11 +91,17 @@ const TabNavigation = () => {
                             <Ionicons name="notifications" color={color} size={size} />
                         ),
                     }}
-                // listeners={({ navigation, route }) => ({
-                //     tabPress: () => {
-                //         vunotification()
-                //     },
-                // })}
+
+                    listeners={() => ({
+                        blur: () => {
+                            setnumbernotif(0)
+                            vunotification()
+                            // getnotification()
+                            // aux = true
+                        },
+
+
+                    })}
                 />
                 <Tab.Screen
                     name="RecherchePage" component={RecherchePage}
@@ -97,6 +113,7 @@ const TabNavigation = () => {
                         ),
 
                     }}
+
                 />
                 <Tab.Screen name="Messagerie" component={Messagerie}
                     options={{
@@ -106,6 +123,7 @@ const TabNavigation = () => {
                             <Entypo name="message" color={color} size={size} />
                         ),
                     }}
+
                 />
                 <Tab.Screen name="SettingPage" component={SettingPage}
                     options={{
@@ -114,6 +132,7 @@ const TabNavigation = () => {
                             <Ionicons name="settings-sharp" color={color} size={size} />
                         ),
                     }}
+
                 />
             </Tab.Navigator>
         </SafeAreaView>

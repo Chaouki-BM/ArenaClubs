@@ -22,7 +22,6 @@ const RecherchePage = () => {
                 .then(function (res) {
                     if (res.data.res != 'not found') {
                         setusers(res.data.res)
-                        console.log(res.data.res)
                         search.nom = initial
                     }
                 }).catch(function (e) {

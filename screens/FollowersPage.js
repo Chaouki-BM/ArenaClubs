@@ -17,6 +17,7 @@ const FollowersPage = () => {
     const [albumS, setalbumS] = store.useState("albumS")
     const [email, setemail] = store.useState("email");
     const [search, setsearch] = useState({ search: '' })
+    const [datauser, setdatauser] = store.useState("datauser");
     let show = true
     useEffect(() => {
         loadreq()
@@ -26,7 +27,6 @@ const FollowersPage = () => {
         await Client.post("/get_request_club", email)
             .then(function (res) {
                 setreqs(res.data)
-                console.log(res.data)
             }).catch(function (e) {
                 console.log("error from load request club", e)
             })
@@ -52,6 +52,23 @@ const FollowersPage = () => {
         date: '',
 
     })
+    const [sendnotif, setsendnotif] = useState({
+        email_do: '',
+        email_to: '',
+        vu: '',
+        msg: '',
+        img_profil: '',
+        name: '',
+        img_do: '',
+    })
+    const handelsendnotif = async () => {
+        await Client.post("/addnotification", sendnotif).
+            then(function (res) {
+                console.log(res.data.msg);
+            }).catch(function (e) {
+                console.log("error from handel send notification", e);
+            })
+    }
     const handelAcceptReq = async (req) => {
         var today = new Date();
         var y = today.getFullYear();
@@ -61,11 +78,20 @@ const FollowersPage = () => {
         datareq.image_user = req.image_user
         datareq.role = "Membre"
         datareq.name_user = req.name_user
+        // ---------------------
+        sendnotif.email_do = email.email
+        sendnotif.email_to = req.email_user
+        //sendnotif.vu = false
+        sendnotif.img_do = 'null'
+        sendnotif.name = datauser.nom
+        sendnotif.img_profil = datauser.image
+        sendnotif.msg = "ac_request"
         await Client.post("/add_request", datareq)
             .then(function (res) {
                 if (res.data.msg == "success") {
                     loadreq()
                     loadmembres()
+                    handelsendnotif()
                 }
             }).catch(function (e) {
                 console.log("error from handel  accept req", e)

@@ -18,6 +18,7 @@ const Informations = () => {
     const [albumS, setalbumS] = store.useState("albumS")
     const [email, setemail] = store.useState("email");
     const [modalVisible, setModalVisible] = useState(false);
+    const [datauser, setdatauser] = store.useState("datauser");
     useEffect(() => {
         loaddata()
         loadmembres()
@@ -76,9 +77,18 @@ const Informations = () => {
         datamembre.email_club = membre.email_club
         datamembre.email_user = membre.email_user
         datamembre.date = y
-        console.log(membre)
+        // console.log(membre)
         role.role = membre.role
+        // ------------------------
+        sendnotif.email_do = email.email
+        sendnotif.email_to = membre.email_user
+        //sendnotif.vu = false
+        sendnotif.img_do = 'null'
+        sendnotif.name = datauser.nom
+        sendnotif.img_profil = datauser.image
+        sendnotif.msg = "n_role"
     }
+
     const [role, setrole] = useState({ role: '' })
     const handelSaveChangeRole = async () => {
         datamembre.role = role.role
@@ -86,9 +96,28 @@ const Informations = () => {
             .then(function (res) {
                 if (res.data.msg = 'success') {
                     loadmembres()
+                    handelsendnotif()
                 }
             }).catch(function (e) {
                 console.log("error from handel save change role ", e)
+            })
+    }
+    const [sendnotif, setsendnotif] = useState({
+        email_do: '',
+        email_to: '',
+        vu: '',
+        msg: '',
+        img_profil: '',
+        name: '',
+        img_do: '',
+    })
+    console.log(sendnotif)
+    const handelsendnotif = async () => {
+        await Client.post("/addnotification", sendnotif).
+            then(function (res) {
+                console.log(res.data.msg);
+            }).catch(function (e) {
+                console.log("error from handel send notification", e);
             })
     }
     const [search, setsearch] = useState({ search: '' })
