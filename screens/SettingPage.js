@@ -135,7 +135,7 @@ const SettingPage = ({ navigation }) => {
     // }
     const [log, setlog] = store.useState("log")
     const handelLogOut = () => {
-        navigation.navigate('Login');
+        navigation.replace('Login');
         email.email = ''
 
         setlog(false)
@@ -222,7 +222,6 @@ const SettingPage = ({ navigation }) => {
 
         await Client.post('/get_language', lang).then(function (res) {
             setlanguage(res.data.My_language)
-            console.log(res.data.My_language)
         }).catch(function () {
             console.log("error from get long login")
         })

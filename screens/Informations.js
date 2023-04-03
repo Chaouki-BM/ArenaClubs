@@ -111,7 +111,7 @@ const Informations = () => {
         name: '',
         img_do: '',
     })
-    console.log(sendnotif)
+
     const handelsendnotif = async () => {
         await Client.post("/addnotification", sendnotif).
             then(function (res) {

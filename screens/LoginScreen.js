@@ -8,6 +8,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import store from '../components/Store';
 import Client from '../api/Client';
 import RBSheet from "react-native-raw-bottom-sheet";
+
 function Login({ navigation }) {
     const refRBSheet = useRef();
     const [log, setlog] = store.useState("log")
@@ -96,12 +97,14 @@ function Login({ navigation }) {
                     email.email = loginInfo.email
                     setLoginInfo(initialState)
                     if (res.data.login == 'club') {
-                        navigation.navigate('TabNavigation');
                         setwhoareyou("club")
+                        navigation.replace('TabNavigation');
+
 
                     } else {
-                        console.log('user')
                         setwhoareyou("user")
+                        navigation.replace('UserTabBottom')
+
 
                     }
                 }

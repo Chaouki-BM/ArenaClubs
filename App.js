@@ -13,6 +13,7 @@ import PostsAlbum from './screens/PostsAlbum'
 import RegisterClub from './screens/RegisterClub';
 const Stack = createNativeStackNavigator();
 import store from './components/Store';
+import UserTabBottom from './screens/UserScreens/UserTabBottom';
 function App() {
 
   const [log, setlog] = store.useState("log")
@@ -20,7 +21,7 @@ function App() {
     <View style={styles.container}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={log == true ? "TabNavigation" : "Login"}
+          initialRouteName="Login"
           screenOptions={{
             headerShown: false,
             animationEnabled: false,
@@ -33,6 +34,7 @@ function App() {
           <Stack.Screen name="Sign-Up" component={SignUp} />
           <Stack.Screen name="Sign Up" component={NextRegister} />
           <Stack.Screen name="RegisterClub" component={RegisterClub} />
+          <Stack.Screen name="UserTabBottom" component={UserTabBottom} />
           <Stack.Screen name="TabNavigation" component={TabNavigation} />
           <Stack.Screen name="PostsAlbum" component={PostsAlbum} />
 

@@ -1,21 +1,44 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { View, Text, StyleSheet, ImageBackground, ScrollView, TouchableOpacity, Modal, Pressable, Alert } from 'react-native'
-import store from '../components/Store';
+import store from '../../components/Store'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Avatar } from 'react-native-elements';
-import TabBarProfil from '../Navigations/TabBarProfil';
 import RBSheet from "react-native-raw-bottom-sheet";
-import Client from '../api/Client';
+import Client from '../../api/Client'
 import { Linking, } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
-import Ip from '../api/Ip';
+import Ip from '../../api/Ip'
+import UserBarProfil from './UserBarProfil'
+const UserHome = () => {
 
-function HomePage() {
     const refRBSheet = useRef();
+    useEffect(() => {
+        laodData_User()
+        laodDataUser()
+    }, []);
+    const [loaddata, setloaddata] = useState([])
+    const laodData_User = async () => {
+        await Client.post("/getuser", email)
+            .then(function (res) {
+                setloaddata(res.data.user);
+            }).catch(function (e) {
+                console.log("error from load data_user", e);
+            })
+    }
+    const [Data, setData] = useState([])
+    const laodDataUser = async () => {
+        await Client.post("/getprofil", email)
+            .then(function (res) {
+                setData(res.data.res);
+            }).catch(function (e) {
+                console.log("error from load data user", e);
+            })
+    }
     const [img, setimg] = store.useState("img");
     const [mode, setmode] = store.useState("mode");
     const [Moons, setSun] = store.useState("Moons");
@@ -33,33 +56,6 @@ function HomePage() {
         }
 
     };
-    // -----------------------------------------------
-    const [data, setdata] = store.useState("data");
-    const [datauser, setdatauser] = store.useState("datauser");
-    useEffect(() => {
-        loadDataUser();
-        loadData();
-
-    }, []);
-    const loadDataUser = async () => {
-        await Client.post('/getclub', email).then(function (res) {
-            setdatauser(res.data.club)
-
-        }).catch(function (e) {
-            console.log('error data from laoddatauser')
-        })
-    }
-    const loadData = async () => {
-        await Client.post('/getprofil', email)
-            .then(function (res) {
-                setdata(res.data.res)
-
-
-            }).catch(function (e) {
-                console.log('error from loaddata')
-            })
-    }
-    // ----------------------------------------------------
     const handleThemeChange = () => {
         setmode(mode == "#ffffff" ? "#242526" : "#ffffff");
         settextcoler(textcoler == "#242526" ? "#ffffff" : "#242526");
@@ -71,102 +67,38 @@ function HomePage() {
         setmaincolor(main)
         setModalVisible(false)
     }
-
-
+    let image = { uri: `${Ip}${loaddata.image}` };
+    const [row, setrow] = store.useState("dir")
+    const [language, setlanguage] = store.useState("language")
+    const handelseemore = () => {
+        refRBSheet.current.open()
+    }
     const handellinkfacebook = () => {
-        if (data.facebook != "") {
-            Linking.openURL(data.facebook)
+        if (Data.facebook != "") {
+            Linking.openURL(Data.facebook)
         }
 
     }
     const handellinkinstagram = () => {
-        if (data.instagram != "") {
-            Linking.openURL(data.instagram)
+        if (Data.instagram != "") {
+            Linking.openURL(Data.instagram)
         }
     }
     const handellinktwitter = () => {
-        if (data.twitter != "") {
-            Linking.openURL(data.twitter)
+        if (Data.twitter != "") {
+            Linking.openURL(Data.twitter)
         }
     }
-
-
-
-    //---------------------------------------------
-
-
-    const handelseemore = () => {
-        loadData();
-        refRBSheet.current.open()
+    const handellinkLinkedin = () => {
+        if (Data.twitter != "") {
+            Linking.openURL(Data.linkedin)
+        }
     }
-
-
-    let image = { uri: `${Ip}${datauser.image}` };
-    let couverture = { uri: `${Ip}${datauser.couverture}` };
-    const [cover, setcover] = useState({
-        couverture: '',
-        email: '',
-    })
-    const upload = async () => {
-        const formData = new FormData()
-        formData.append('file', { uri: pic.pic, type: 'image/jpeg', name: 'image.jpg' })
-        await Client.post('/upload', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }).then(function (res) {
-            let path = res.data.file.path
-            cover.couverture = path
-            cover.email = email.email
-            postcover()
-        }).catch(function (e) {
-            console.log('err bcz update cover img', e)
-            Alert.alert('Import your image again')
-        })
-    }
-    const handelchnagecover = () => {
-        let options = {
-            mediaType: 'photo',
-            quality: 1,
-
-
-            // includeBase64: true,
-        };
-
-        launchImageLibrary(options, res => {
-            if (!res.didCancel) {
-                pic.pic = res.assets[0].uri
-                console.log("img ok", res.assets[0].uri)
-                upload()
-            }
-
-        })
-    }
-    const postcover = async () => {
-        await Client.post("/Upcouverture", cover)
-            .then(function (res) {
-                if (res.data.msg == 'success') {
-                    Alert.alert('success')
-                    loadDataUser();
-                }
-            }).catch(function (e) {
-                console.log('error from post cover', e)
-
-            })
-    }
-    const [pic, setpic] = useState({ pic: '' })
-    const [followers, setfollowers] = store.useState("followers")
-    const [Albums, setAlbums] = store.useState("Albums")
-    const [language, setlanguage] = store.useState("language")
-    const [row, setrow] = store.useState("dir")
-    const [posts, setposts] = store.useState("posts")
-    var qrcode = `${datauser.nom}` + "\n" + `${datauser.nom_universite}` + " " + `${datauser.ville}`
-        + "\n" + `${datauser.email_contact}` + "\n" + `${datauser.tele}`
-
-
-
+    var qrcode = `${loaddata.nom}` + "\n" + `${loaddata.ville}`
+        + "\n" + `${loaddata.email_contact}` + "\n" + `${loaddata.tele}`
 
     return (
+
         <View style={[styles.container, { backgroundColor: mode }]}>
             {/* --------------------------------- */}
             <TouchableOpacity onPress={handelModal}>
@@ -250,68 +182,56 @@ function HomePage() {
                 showsVerticalScrollIndicator={false}
 
                 style={styles.ViewStyle}>
+                <View style={{ flexDirection: "row" }}>
+                    <Avatar
+                        rounded
+                        size={100}
+                        //icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
+                        overlayContainerStyle={{ backgroundColor: 'gray' }}
+                        //onPress={() => console.log("Works!")}
+                        containerStyle={{ alignSelf: "flex-start" }}
+                        source={image}
+                    />
+                    <View >
+                        <Text style={{ marginRight: 10, fontSize: 22, color: textcoler, fontWeight: 'bold', marginBottom: 10, marginStart: 50 }}>{loaddata.nom}</Text>
 
-                {datauser.couverture != '' &&
-                    <ImageBackground
-                        imageStyle={{ borderBottomLeftRadius: 25 }}
-                        source={couverture}
-                        resizeMode="contain"
-                        style={styles.cover}
-                    >
-                        <Text style={styles.text}></Text>
-                    </ImageBackground>}
-                <TouchableOpacity onPress={handelchnagecover}>
-                    <Entypo name='camera' color={maincolor} size={23} style={{ top: 106, left: 340, }} />
-                </TouchableOpacity>
-                <Avatar
-                    rounded
-                    size={100}
-                    //icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
-                    overlayContainerStyle={{ backgroundColor: 'gray' }}
-                    //onPress={() => console.log("Works!")}
-                    containerStyle={{ flex: 1, marginTop: 40 }}
-                    source={image}
-                />
-                <View style={{ flexDirection: 'row', padding: 10 }}>
-                    <Text style={{ marginRight: 10, fontSize: 20, fontStyle: 'bold', color: textcoler, }}>{datauser.nom}</Text>
 
-                </View>
-                <View style={{ marginLeft: 10 }}>
-                    {/* --------------------------------------- */}
-                    <Text style={{ width: 300, height: 50, color: textcoler, }}>{data.bio}</Text>
-                </View>
-                <View style={{ marginLeft: 10 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginRight: 100, }}>{data.nb_following}</Text>
-                        <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic' }}>{data.nb_followers}</Text>
+                        {/* --------------------------------------- */}
+                        <View style={{ flexDirection: row, marginBottom: 10, marginHorizontal: 50 }}>
+                            <View style={{ flexDirection: row }}>
+                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>amis :</Text>
+                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>10</Text>
+                            </View>
+                            <View style={{ flexDirection: row }}>
+                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>posts :</Text>
+                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>5</Text>
+                            </View>
+                        </View>
+
+                        <Text style={{ width: 300, height: 60, color: textcoler, marginStart: 50 }}>{Data.bio}</Text>
+
 
                     </View>
+                </View>
 
-                    <View style={{ flexDirection: row }}>
-                        <View style={{ flexDirection: row }}>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>{language.followers} :</Text>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{followers.length}</Text>
-                        </View>
-                        <View style={{ flexDirection: row }}>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>{language.posts} :</Text>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{posts.length}</Text>
-                        </View>
-                        <View style={{ flexDirection: row }}>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>{language.albums} :</Text>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{Albums.length}</Text>
-                        </View>
 
-                    </View>
+                <View style={{ marginLeft: 10 }}>
+                    {/* <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginRight: 100, }}>nb_following</Text>
+                        <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic' }}>data.nb_followers</Text>
+
+                    </View> */}
+
+
 
                     <Pressable onPress={handelseemore}>
                         <Text style={{ fontSize: 13, color: '#8e8e8f', marginEnd: 20 }}>{language.see_more} ...</Text>
                     </Pressable>
                 </View>
-                {/* ----------------------mid nav-------------------------- */}
-                <TabBarProfil />
-                {/* ------------------------------------------------------- */}
-            </ScrollView >
+                {/* --------------------------------------------- */}
 
+                <UserBarProfil />
+            </ScrollView >
             <RBSheet
                 ref={refRBSheet}
                 closeOnDragDown={true}
@@ -351,15 +271,19 @@ function HomePage() {
                         <TouchableOpacity onPress={handellinktwitter}>
                             <Entypo name='twitter' size={23} color={maincolor} style={{ margin: 10 }} />
                         </TouchableOpacity>
+                        <TouchableOpacity onPress={handellinkLinkedin}>
+                            <AntDesign name='linkedin-square' size={23} color={maincolor} style={{ margin: 10 }} />
+                        </TouchableOpacity>
                     </View>
 
                 </View>
             </RBSheet>
-
-        </View >
-
+        </View>
     )
 }
+
+export default UserHome
+
 const styles = StyleSheet.create({
     centeredView: {
         flex: 1,
@@ -433,7 +357,4 @@ const styles = StyleSheet.create({
     },
 
 
-
-
-});
-export default HomePage
+})
