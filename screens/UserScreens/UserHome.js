@@ -21,7 +21,7 @@ const UserHome = () => {
         laodData_User()
         laodDataUser()
     }, []);
-    const [loaddata, setloaddata] = useState([])
+    const [loaddata, setloaddata] = store.useState('loaddata')
     const laodData_User = async () => {
         await Client.post("/getuser", email)
             .then(function (res) {
@@ -96,7 +96,8 @@ const UserHome = () => {
     }
     var qrcode = `${loaddata.nom}` + "\n" + `${loaddata.ville}`
         + "\n" + `${loaddata.email_contact}` + "\n" + `${loaddata.tele}`
-
+    const [Friends, setFriends] = store.useState("Friends")
+    const [followers, setfollowers] = store.useState("followers")
     return (
 
         <View style={[styles.container, { backgroundColor: mode }]}>
@@ -200,11 +201,11 @@ const UserHome = () => {
                         <View style={{ flexDirection: row, marginBottom: 10, marginHorizontal: 50 }}>
                             <View style={{ flexDirection: row }}>
                                 <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>amis :</Text>
-                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>10</Text>
+                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{Friends.length}</Text>
                             </View>
                             <View style={{ flexDirection: row }}>
-                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>posts :</Text>
-                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>5</Text>
+                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>suivants :</Text>
+                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{followers.length}</Text>
                             </View>
                         </View>
 

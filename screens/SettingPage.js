@@ -167,17 +167,27 @@ const SettingPage = ({ navigation }) => {
                 changelink.facebook = res.data.res.facebook
                 changelink.instagram = res.data.res.instagram
                 changelink.twitter = res.data.res.twitter
+                changelink.linkedin = res.data.res.linkedin
             }).catch(function (e) {
                 console.log('error from loaddata', e)
             })
     }
     const loadDataUser = async () => {
-        await Client.post('/getclub', email)
-            .then(function (res) {
-                changename.name = res.data.club.nom
-            }).catch(function (e) {
-                console.log('error data from laoddatauser', e)
-            })
+        if (whoareyou == "club") {
+            await Client.post('/getclub', email)
+                .then(function (res) {
+                    changename.name = res.data.club.nom
+                }).catch(function (e) {
+                    console.log('error data from laoddatauser', e)
+                })
+        } else {
+            await Client.post('/getuser', email)
+                .then(function (res) {
+                    changename.name = res.data.user.nom
+                }).catch(function (e) {
+                    console.log('error data from laoddatauser', e)
+                })
+        }
     }
     const refreshuser = async () => {
         await Client.post('/getclub', email).then(function (res) {
@@ -326,6 +336,7 @@ const SettingPage = ({ navigation }) => {
         facebook: '',
         instagram: '',
         twitter: '',
+        linkedin: '',
         email: '',
     })
 
@@ -343,7 +354,7 @@ const SettingPage = ({ navigation }) => {
         })
     }
 
-
+    const [whoareyou, setwhoareyou] = store.useState("whoareyou")
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
             <TouchableOpacity onPress={handelModal}>
@@ -487,13 +498,14 @@ const SettingPage = ({ navigation }) => {
                                     <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20, marginEnd: 10 }}>{language.u_p}</Text>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelDeleteCouverture()}>
-                                <View style={{ flexDirection: row }}>
+                            {whoareyou == "club" ?
+                                <TouchableOpacity style={{ marginBottom: 10, marginLeft: 25 }} onPress={() => handelDeleteCouverture()}>
+                                    <View style={{ flexDirection: row }}>
 
-                                    < FontAwesome5 name='trash' size={25} color={maincolor} style={{ marginRight: 20 }} />
-                                    <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20, marginEnd: 10 }}>{language.d_c}</Text>
-                                </View>
-                            </TouchableOpacity>
+                                        < FontAwesome5 name='trash' size={25} color={maincolor} style={{ marginRight: 20 }} />
+                                        <Text style={{ color: textcoler, fontFamily: 'bold', fontSize: 20, marginEnd: 10 }}>{language.d_c}</Text>
+                                    </View>
+                                </TouchableOpacity> : null}
                         </View>
                     }
                     <View
@@ -905,31 +917,31 @@ const SettingPage = ({ navigation }) => {
                             }}
                             value={changelink.twitter}
                         />
+                        {whoareyou == "user" ?
+                            <TextInput
+                                style={[{ borderColor: isFocusM ? maincolor : inputS },
+                                {
+                                    backgroundColor: inputS,
+                                    color: textcoler,
+                                    borderRadius: 20,
+                                    width: 350,
+                                    marginHorizontal: 10,
+                                    marginBottom: 70,
 
-                        {/* <TextInput
-                            style={[{ borderColor: isFocusM ? maincolor : inputS },
-                            {
-                                backgroundColor: inputS,
-                                color: textcoler,
-                                borderRadius: 20,
-                                width: 350,
-                                marginHorizontal: 10,
-                                marginBottom: 70,
+                                }]}
 
-                            }]}
-
-                            onFocus={() => {
-                                setisFocusM(true)
-                            }}
-                            onBlur={() => {
-                                setisFocusM(false)
-                            }}
-                            placeholder="Tiktok link"
-                            onChangeText={val => {
-                                setchangelink({ ...changelink, tiktok: val });
-                            }}
-                            value={changelink.tiktok}
-                        /> */}
+                                onFocus={() => {
+                                    setisFocusM(true)
+                                }}
+                                onBlur={() => {
+                                    setisFocusM(false)
+                                }}
+                                placeholder="Linkedin"
+                                onChangeText={val => {
+                                    setchangelink({ ...changelink, linkedin: val });
+                                }}
+                                value={changelink.linkedin}
+                            /> : null}
                         <TouchableOpacity onPress={handelsavechangelinks} style={{ marginHorizontal: 130, backgroundColor: maincolor, height: 40, borderRadius: 20 }}>
                             <Text style={{ color: mode, fontWeight: "bold", alignSelf: 'center', top: 8 }}>{language.save}</Text>
                         </TouchableOpacity>

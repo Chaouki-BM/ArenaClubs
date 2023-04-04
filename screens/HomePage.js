@@ -273,7 +273,7 @@ function HomePage() {
                     source={image}
                 />
                 <View style={{ flexDirection: 'row', padding: 10 }}>
-                    <Text style={{ marginRight: 10, fontSize: 20, fontStyle: 'bold', color: textcoler, }}>{datauser.nom}</Text>
+                    <Text style={{ marginRight: 10, fontSize: 20, fontWeight: 'bold', color: textcoler, }}>{datauser.nom}</Text>
 
                 </View>
                 <View style={{ marginLeft: 10 }}>

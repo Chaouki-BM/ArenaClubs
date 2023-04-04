@@ -16,17 +16,33 @@ const RecherchePage = () => {
     const [search, setsearch] = useState({ nom: '' })
     const [users, setusers] = useState([])
     const initial = {}
+    const [whoareyou, setwhoareyou] = store.useState("whoareyou")
     const handelsearsh = async () => {
         if (search.nom != "") {
-            await Client.post("/recherche_club", search)
-                .then(function (res) {
-                    if (res.data.res != 'not found') {
-                        setusers(res.data.res)
-                        search.nom = initial
-                    }
-                }).catch(function (e) {
-                    console.log("error from handelshearsh", e)
-                })
+            if (whoareyou == 'club') {
+                console.log("clubb")
+                await Client.post("/recherche_club", search)
+                    .then(function (res) {
+                        if (res.data.res != 'not found') {
+                            setusers(res.data.res)
+                            search.nom = initial
+                        }
+                    }).catch(function (e) {
+                        console.log("error from handelshearsh", e)
+                    })
+            } else if (whoareyou == 'user') {
+                console.log("userrr")
+                await Client.post("/recherche_user", search)
+                    .then(function (res) {
+                        if (res.data.res != 'not found') {
+                            setusers(res.data.res)
+                            console.log(res.data.res);
+                            search.nom = initial
+                        }
+                    }).catch(function (e) {
+                        console.log("error from handelshearsh", e)
+                    })
+            }
         }
 
     }

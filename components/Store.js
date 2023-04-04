@@ -24,5 +24,6 @@ store.setState("membres", [])
 store.setState("followers", [])
 store.setState("posts", [])
 store.setState("notifications", [])
-
+store.setState("Friends", [])
+store.setState("loaddata", [])
 export default store;
