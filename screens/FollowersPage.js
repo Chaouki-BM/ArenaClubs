@@ -47,7 +47,9 @@ const FollowersPage = () => {
         email_club: '',
         email_user: '',
         name_user: '',
+        name_club: '',
         image_user: '',
+        image_club: '',
         role: '',
         date: '',
 
@@ -69,6 +71,7 @@ const FollowersPage = () => {
                 console.log("error from handel send notification", e);
             })
     }
+
     const handelAcceptReq = async (req) => {
         var today = new Date();
         var y = today.getFullYear();
@@ -76,8 +79,10 @@ const FollowersPage = () => {
         datareq.email_club = req.email_club
         datareq.email_user = req.email_user
         datareq.image_user = req.image_user
+        datareq.image_club = datauser.image
         datareq.role = "Membre"
         datareq.name_user = req.name_user
+        datareq.name_club = datauser.nom
         // ---------------------
         sendnotif.email_do = email.email
         sendnotif.email_to = req.email_user

@@ -78,6 +78,9 @@ const UserFriend = () => {
                             if (show) {
                                 return (
                                     <View key={index} style={{ flexDirection: 'row' }}>
+                                        <TouchableOpacity onPress={() => handeldeleteFriend(Friend)}>
+                                            <MaterialIcons name='cancel' size={22} color={'#A30000'} style={{ marginVertical: 15, marginLeft: 20, }} />
+                                        </TouchableOpacity>
                                         <Avatar
                                             rounded
                                             size={50}
@@ -90,9 +93,7 @@ const UserFriend = () => {
                                         />
                                         <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{Friend.name_user_2}</Text>
                                         <View style={{ flexDirection: 'row' }}>
-                                            <TouchableOpacity onPress={() => handeldeleteFriend(Friend)}>
-                                                <MaterialIcons name='cancel' size={22} color={maincolor} style={{ marginVertical: 15, marginLeft: 20, }} />
-                                            </TouchableOpacity>
+
 
                                         </View>
                                     </View>)

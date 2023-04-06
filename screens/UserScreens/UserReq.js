@@ -27,7 +27,7 @@ const UserReq = () => {
         await Client.post("/get_request_friend", email)
             .then(function (res) {
                 setreqs(res.data)
-                console.log("bbb", res.data);
+
             }).catch(function (e) {
                 console.log("error from load request friend", e)
             })
@@ -141,6 +141,15 @@ const UserReq = () => {
                             if (show) {
                                 return (
                                     <View key={index} style={{ flexDirection: 'row' }}>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <TouchableOpacity onPress={() => handelAcceptReq(req)}>
+                                                <AntDesign name='check' size={22} color={'#00A300'} style={{ marginVertical: 15, marginLeft: 20 }} />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => handeldeletereq(req)}>
+                                                <MaterialIcons name='cancel' size={22} color={'#A30000'} style={{ marginVertical: 15, marginLeft: 20, }} />
+                                            </TouchableOpacity>
+
+                                        </View>
                                         <Avatar
                                             rounded
                                             size={50}
@@ -152,15 +161,7 @@ const UserReq = () => {
                                             source={{ uri: `${Ip}${req.image_user}` }}
                                         />
                                         <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{req.name_user}</Text>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <TouchableOpacity onPress={() => handelAcceptReq(req)}>
-                                                <AntDesign name='check' size={22} color={maincolor} style={{ marginVertical: 15, marginLeft: 20 }} />
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => handeldeletereq(req)}>
-                                                <MaterialIcons name='cancel' size={22} color={maincolor} style={{ marginVertical: 15, marginLeft: 20, }} />
-                                            </TouchableOpacity>
 
-                                        </View>
                                     </View>)
                             }
                         })}
