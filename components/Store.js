@@ -26,4 +26,5 @@ store.setState("posts", [])
 store.setState("notifications", [])
 store.setState("Friends", [])
 store.setState("loaddata", [])
+store.setState("allsave", [])
 export default store;
