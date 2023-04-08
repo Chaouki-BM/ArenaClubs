@@ -25,6 +25,7 @@ const UserFriend = () => {
     const loadFriend = async () => {
         await Client.post("/get__friend", email).then(function (res) {
             setFriends(res.data);
+            console.log(res.data);
         }).catch(function (e) {
             console.log("error from load friend ", e);
         })
@@ -81,21 +82,33 @@ const UserFriend = () => {
                                         <TouchableOpacity onPress={() => handeldeleteFriend(Friend)}>
                                             <MaterialIcons name='cancel' size={22} color={'#A30000'} style={{ marginVertical: 15, marginLeft: 20, }} />
                                         </TouchableOpacity>
-                                        <Avatar
-                                            rounded
-                                            size={50}
-                                            //icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
-                                            overlayContainerStyle={{ backgroundColor: 'gray' }}
-                                            //onPress={() => console.log("Works!")}
-                                            containerStyle={{ marginLeft: 20, marginBottom: 20 }}
-                                            //source={image}
-                                            source={{ uri: `${Ip}${Friend.image_user_2}` }}
-                                        />
-                                        <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{Friend.name_user_2}</Text>
-                                        <View style={{ flexDirection: 'row' }}>
-
-
-                                        </View>
+                                        {email.email == Friend.email_user_1 ?
+                                            <>
+                                                <Avatar
+                                                    rounded
+                                                    size={50}
+                                                    //icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
+                                                    overlayContainerStyle={{ backgroundColor: 'gray' }}
+                                                    //onPress={() => console.log("Works!")}
+                                                    containerStyle={{ marginLeft: 20, marginBottom: 20 }}
+                                                    //source={image}
+                                                    source={{ uri: `${Ip}${Friend.image_user_2}` }}
+                                                />
+                                                <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{Friend.name_user_2}</Text>
+                                            </>
+                                            : <>
+                                                <Avatar
+                                                    rounded
+                                                    size={50}
+                                                    //icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
+                                                    overlayContainerStyle={{ backgroundColor: 'gray' }}
+                                                    //onPress={() => console.log("Works!")}
+                                                    containerStyle={{ marginLeft: 20, marginBottom: 20 }}
+                                                    //source={image}
+                                                    source={{ uri: `${Ip}${Friend.image_user_1}` }}
+                                                />
+                                                <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{Friend.name_user_1}</Text>
+                                            </>}
                                     </View>)
                             }
                         })}

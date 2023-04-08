@@ -71,7 +71,7 @@ const Acc = () => {
     const [posts, setposts] = useState([])
 
     const loadposts = async () => {
-        await Client.post("getallimages_following", email).
+        await Client.post("/getallimages_following", email).
             then(function (res) {
                 //setposts(res.data[0]);
                 res.data[0].forEach(async element => {
@@ -139,6 +139,7 @@ const Acc = () => {
 
         }
     }
+    const [postss, setpostss] = store.useState("posts")
     const [allsave, setallsave] = store.useState("allsave")
     const getsave = async () => {
         save.email_saved = email.email
@@ -146,9 +147,10 @@ const Acc = () => {
             if (res.data.msg == "success") {
                 console.log("save", res.data.saves);
                 setallsave(res.data.saves)
-
+                setpostss(res.data.saves)
             } else {
                 setallsave([])
+                setpostss([])
             }
         }).catch(function (e) {
             console.log("error from get save", e);
@@ -204,11 +206,19 @@ const Acc = () => {
             var today = new Date();
             var time = today.getHours() + ":" + today.getMinutes();
             com.time = time
-            console.log(com)
+            // -------------------------
+            sendnotif.email_do = email.email
+            sendnotif.email_to = post.email
+            //sendnotif.vu = false
+            sendnotif.img_do = post.image
+            sendnotif.name = loaddata.nom
+            sendnotif.img_profil = loaddata.image
+            sendnotif.msg = "commenter"
             await Client.post("/add_commenter", com).then(function (res) {
                 if (res.data.msg == 'yes') {
                     Alert.alert("Comment send")
                     setcomment(initialState)
+                    handelsendnotif()
                 }
             }).catch(function (e) {
                 console.log("error from handel comment", e)
@@ -265,8 +275,15 @@ const Acc = () => {
         islike.email_img = post.email;
         islike.image = post.image;
         islike.email_like = email.email;
+        // --------------------------
+        sendnotif.email_do = email.email
+        sendnotif.email_to = post.email
+        //sendnotif.vu = false
+        sendnotif.img_do = post.image
+        sendnotif.msg = "like"
         await Client.post("/deletelike", islike).then(function (res) {
             loadposts()
+            handelDeletenotifLIke()
         })
     }
     const handelheart = async (post, index) => {
@@ -278,7 +295,18 @@ const Acc = () => {
         islike.email_img = post.email;
         islike.image = post.image;
         islike.email_like = email.email;
-        await Client.post("/addlike", islike).then(function (res) { loadposts() })
+        // -------------------------------
+        sendnotif.email_do = email.email
+        sendnotif.email_to = post.email
+        //sendnotif.vu = false
+        sendnotif.img_do = post.image
+        sendnotif.name = loaddata.nom
+        sendnotif.img_profil = loaddata.image
+        sendnotif.msg = "like"
+        await Client.post("/addlike", islike).then(function (res) {
+            loadposts()
+            handelsendnotif()
+        })
     }
     let a = false
     const [isSave, setisSave] = useState(false)
@@ -288,10 +316,10 @@ const Acc = () => {
         save.id_post_saved = post._id
         saveposts.current.open()
         setisSave(false)
-        if (allsave == "") {
+        if (postss == "") {
             setisSave(false)
         } else {
-            allsave.forEach(element => {
+            postss.forEach(element => {
                 if (element._id == post._id) {
                     console.log("yes");
                     a = true
@@ -311,22 +339,50 @@ const Acc = () => {
         await Client.post("/add_save", save).then(function (res) {
             if (res.data.msg == "add") {
                 getsave()
+
             }
         }).catch(function (e) {
             console.log("error from handel save post ", e);
         })
+        saveposts.current.close()
     }
     const handeldeteteSave = async () => {
         await Client.post("/delete_save", save).then(function (res) {
             if (res.data.msg == "delete") {
                 getsave()
+
             }
         }).catch(function (e) {
             console.log("error from handel delete save", e);
         })
+        saveposts.current.close()
     }
     const handelrepostPost = () => {
 
+    }
+    const [sendnotif, setsendnotif] = useState({
+        email_do: '',
+        email_to: '',
+        vu: '',
+        msg: '',
+        img_profil: '',
+        name: '',
+        img_do: '',
+    })
+    const handelsendnotif = async () => {
+        await Client.post("/addnotification", sendnotif).
+            then(function (res) {
+                console.log(res.data.msg);
+            }).catch(function (e) {
+                console.log("error from handel send notification", e);
+            })
+    }
+    const handelDeletenotifLIke = async () => {
+        await Client.post("/deletenotification_like",).then(function (res) {
+
+        }).catch(function (e) {
+            console.log("error from delete noti like", e);
+        })
     }
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
