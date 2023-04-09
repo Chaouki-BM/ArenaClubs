@@ -5,8 +5,7 @@ import Client from '../../api/Client';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Ip from '../../api/Ip';
 import { Avatar } from 'react-native-elements';
-
-const UserFriend = ({ navigation }) => {
+const FriendViewUser = ({ navigation }) => {
     const [mode, setmode] = store.useState("mode");
     const [maincolor, setmaincolor] = store.useState("maincolor");
     const [inputS, setinputS] = store.useState("inputS");
@@ -17,37 +16,23 @@ const UserFriend = ({ navigation }) => {
     const [albumS, setalbumS] = store.useState("albumS")
     const [email, setemail] = store.useState("email");
     const [search, setsearch] = useState({ search: '' })
+    const [emailView, setemailView] = store.useState("emailView")
     let show = true
-    const [Friends, setFriends] = store.useState("Friends")
+    const [FriendsV, setFriendsV] = store.useState('FriendsV')
     useEffect(() => {
         loadFriend()
     }, [])
     const loadFriend = async () => {
-        await Client.post("/get__friend", email).then(function (res) {
-            setFriends(res.data);
+        await Client.post("/get__friend", emailView).then(function (res) {
+            setFriendsV(res.data);
+            console.log(res.data);
+        }).catch(function (e) {
+            console.log("error from load friend ", e);
+        })
+    }
 
-        }).catch(function (e) {
-            console.log("error from load friend ", e);
-        })
-    }
-    const [datafriend, setdatafriend] = useState({
-        email_user_1: '',
-        email_user_2: '',
-    })
-    const handeldeleteFriend = async (friend) => {
-        datafriend.email_user_1 = friend.email_user_1
-        datafriend.email_user_2 = friend.email_user_2
-        await Client.post("/delete_friend", datafriend).then(function (res) {
-            if (res.data.s = "s") {
-                loadFriend()
-            }
-        }).catch(function (e) {
-            console.log("error from load friend ", e);
-        })
-    }
-    const [emailView, setemailView] = store.useState("emailView")
     const handelshowFriend = (e) => {
-
+        console.log(e);
         emailView.email = e
         navigation.navigate('HomeViewUser');
     }
@@ -77,7 +62,7 @@ const UserFriend = ({ navigation }) => {
                             }}
                             value={search.search}
                         />
-                        {Friends.map((Friend, index) => {
+                        {FriendsV.map((Friend, index) => {
 
                             if (Friend.name_user_2.indexOf(search.search) != -1 || Friend.name_user_1.indexOf(search.search) != -1) { show = true }
                             else { show = false }
@@ -85,10 +70,10 @@ const UserFriend = ({ navigation }) => {
                             if (show) {
                                 return (
                                     <View key={index} style={{ flexDirection: 'row' }}>
-                                        <TouchableOpacity onPress={() => handeldeleteFriend(Friend)}>
+                                        {/* <TouchableOpacity onPress={() => handeldeleteFriend(Friend)}>
                                             <MaterialIcons name='cancel' size={22} color={'#A30000'} style={{ marginVertical: 15, marginLeft: 20, }} />
-                                        </TouchableOpacity>
-                                        {email.email == Friend.email_user_1 ?
+                                        </TouchableOpacity> */}
+                                        {emailView.email == Friend.email_user_1 ?
                                             <>
                                                 <TouchableOpacity onPress={() => handelshowFriend(Friend.email_user_2)} style={{ flexDirection: 'row' }}>
                                                     <Avatar
@@ -130,7 +115,7 @@ const UserFriend = ({ navigation }) => {
     )
 }
 
-export default UserFriend
+export default FriendViewUser
 
 const styles = StyleSheet.create({
     container: {

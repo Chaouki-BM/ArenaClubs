@@ -27,4 +27,7 @@ store.setState("notifications", [])
 store.setState("Friends", [])
 store.setState("loaddata", [])
 store.setState("allsave", [])
+store.setState("emailView", { email: '' })
+store.setState("FriendsV", [])
+store.setState("followersV", [])
 export default store;

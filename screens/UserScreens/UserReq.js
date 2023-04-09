@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ip from '../../api/Ip';
 import { Avatar } from 'react-native-elements';
-const UserReq = () => {
+const UserReq = ({ navigation }) => {
     const [mode, setmode] = store.useState("mode");
     const [maincolor, setmaincolor] = store.useState("maincolor");
     const [inputS, setinputS] = store.useState("inputS");
@@ -108,7 +108,12 @@ const UserReq = () => {
             console.log("error from add_request_friend", e);
         })
     }
-
+    const [emailView, setemailView] = store.useState("emailView")
+    const handelshowFriend = (e) => {
+        console.log(e)
+        emailView.email = e
+        navigation.navigate('HomeViewUser');
+    }
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
             <ScrollView
@@ -150,18 +155,19 @@ const UserReq = () => {
                                             </TouchableOpacity>
 
                                         </View>
-                                        <Avatar
-                                            rounded
-                                            size={50}
-                                            //icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
+                                        <TouchableOpacity onPress={() => handelshowFriend(req.email_user)} style={{ flexDirection: 'row' }}>
+                                            <Avatar
+                                                rounded
+                                                size={50}
+                                                //icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
 
-                                            //onPress={() => console.log("Works!")}
-                                            containerStyle={{ marginLeft: 20, marginBottom: 20 }}
-                                            //source={image}
-                                            source={{ uri: `${Ip}${req.image_user}` }}
-                                        />
-                                        <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{req.name_user}</Text>
-
+                                                //onPress={() => console.log("Works!")}
+                                                containerStyle={{ marginLeft: 20, marginBottom: 20 }}
+                                                //source={image}
+                                                source={{ uri: `${Ip}${req.image_user}` }}
+                                            />
+                                            <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{req.name_user}</Text>
+                                        </TouchableOpacity>
                                     </View>)
                             }
                         })}

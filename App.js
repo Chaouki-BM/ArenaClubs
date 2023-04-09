@@ -14,6 +14,7 @@ import RegisterClub from './screens/RegisterClub';
 const Stack = createNativeStackNavigator();
 import store from './components/Store';
 import UserTabBottom from './screens/UserScreens/UserTabBottom';
+import HomeViewUser from './screens/ViewUser/HomeViewUser';
 function App() {
 
   const [log, setlog] = store.useState("log")
@@ -37,7 +38,7 @@ function App() {
           <Stack.Screen name="UserTabBottom" component={UserTabBottom} />
           <Stack.Screen name="TabNavigation" component={TabNavigation} />
           <Stack.Screen name="PostsAlbum" component={PostsAlbum} />
-
+          <Stack.Screen name="HomeViewUser" component={HomeViewUser} />
 
 
         </Stack.Navigator>
