@@ -25,7 +25,7 @@ const FriendViewUser = ({ navigation }) => {
     const loadFriend = async () => {
         await Client.post("/get__friend", emailView).then(function (res) {
             setFriendsV(res.data);
-            console.log(res.data);
+
         }).catch(function (e) {
             console.log("error from load friend ", e);
         })

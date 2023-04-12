@@ -77,7 +77,7 @@ const UserSaved = () => {
         await Client.post("/get_save", d).
             then(function (res) {
                 //setposts(res.data[0]);
-                console.log(res.data.saves);
+                console.log("getsave", res.data.saves);
                 res.data.saves.forEach(async element => {
                     loadLike(element)
                     setposts([])

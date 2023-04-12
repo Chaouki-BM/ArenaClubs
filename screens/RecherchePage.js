@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Ip from '../api/Ip';
 import { Avatar } from 'react-native-elements';
 
-const RecherchePage = () => {
+const RecherchePage = ({ navigation }) => {
     const [mode, setmode] = store.useState("mode");
     const [maincolor, setmaincolor] = store.useState("maincolor");
     const [inputS, setinputS] = store.useState("inputS");
@@ -17,32 +17,48 @@ const RecherchePage = () => {
     const [users, setusers] = useState([])
     const initial = {}
     const [whoareyou, setwhoareyou] = store.useState("whoareyou")
+    useEffect(() => {
+        search.nom = initial
+        setusers([])
+    }, [])
     const handelsearsh = async () => {
         if (search.nom != "") {
-            if (whoareyou == 'club') {
-                console.log("clubb")
-                await Client.post("/recherche_club", search)
-                    .then(function (res) {
-                        if (res.data.res != 'not found') {
-                            setusers(res.data.res)
-                            search.nom = initial
-                        }
-                    }).catch(function (e) {
-                        console.log("error from handelshearsh", e)
-                    })
-            } else if (whoareyou == 'user') {
-                console.log("userrr")
-                await Client.post("/recherche_user", search)
-                    .then(function (res) {
-                        if (res.data.res != 'not found') {
-                            setusers(res.data.res)
-                            console.log(res.data.res);
-                            search.nom = initial
-                        }
-                    }).catch(function (e) {
-                        console.log("error from handelshearsh", e)
-                    })
-            }
+            // if (whoareyou == 'club') {
+            //     console.log("clubb")
+            //     await Client.post("/recherche_club", search)
+            //         .then(function (res) {
+            //             if (res.data.res != 'not found') {
+            //                 setusers(res.data.res)
+            //                 search.nom = initial
+            //             }
+            //         }).catch(function (e) {
+            //             console.log("error from handelshearsh", e)
+            //         })
+            // } else if (whoareyou == 'user') {
+            //console.log("userrr")
+            await Client.post("/recherche_user", search)
+                .then(function (res) {
+                    if (res.data.res != 'not found') {
+                        setusers(res.data.res)
+
+                        search.nom = initial
+                    }
+                }).catch(function (e) {
+                    console.log("error from handelshearsh", e)
+                })
+            // }
+        }
+
+    }
+    const [emailView, setemailView] = store.useState("emailView")
+    const handelnavto = (user) => {
+        //console.log(user);
+        if (user.anniversaire) {
+            emailView.email = user.email
+            navigation.navigate('HomeViewUser');
+            console.log("user");
+        } else {
+            console.log("club");
         }
 
     }
@@ -74,21 +90,23 @@ const RecherchePage = () => {
             {users.map((user, index) => {
 
                 return (
-                    <TouchableOpacity key={index}>
-                        <View style={{ flexDirection: "row", marginBottom: 10, backgroundColor: inputS, borderRadius: 10, width: 350, marginHorizontal: 20 }}>
-                            <Avatar
-                                rounded
-                                size={50}
-                                //icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
-                                overlayContainerStyle={{ backgroundColor: 'gray' }}
-                                //onPress={() => console.log("Works!")}
-                                containerStyle={{ marginLeft: 20, marginBottom: 10, marginTop: 10 }}
-                                //source={image}
-                                source={{ uri: `${Ip}${user.image}` }}
-                            />
-                            <Text style={{ marginStart: 20, marginVertical: 20, fontStyle: "italic", fontSize: 18, color: textcoler }}>{user.nom}</Text>
-                        </View>
-                    </TouchableOpacity>
+                    <View key={index}>
+                        <TouchableOpacity onPress={() => handelnavto(user)}>
+                            <View style={{ flexDirection: "row", marginBottom: 10, backgroundColor: inputS, borderRadius: 10, width: 350, marginHorizontal: 20 }}>
+                                <Avatar
+                                    rounded
+                                    size={50}
+                                    //icon={{ name: 'user', color: 'black', type: 'font-awesome' }}
+                                    overlayContainerStyle={{ backgroundColor: 'gray' }}
+                                    //onPress={() => console.log("Works!")}
+                                    containerStyle={{ marginLeft: 20, marginBottom: 10, marginTop: 10 }}
+                                    //source={image}
+                                    source={{ uri: `${Ip}${user.image}` }}
+                                />
+                                <Text style={{ marginStart: 20, marginVertical: 20, fontStyle: "italic", fontSize: 18, color: textcoler }}>{user.nom}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 )
 
             })

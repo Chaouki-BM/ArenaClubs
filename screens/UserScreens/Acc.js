@@ -25,11 +25,11 @@ const Acc = () => {
     const [inputS, setinputS] = store.useState("inputS");
     const [language, setlanguage] = store.useState("language")
     const [row, setrow] = store.useState("dir")
+
     useEffect(() => {
         loadposts()
         getlikes()
         getusers()
-        // loadLike()
         getsave()
 
     }, [])
@@ -68,11 +68,13 @@ const Acc = () => {
 
 
     }
+
     const [posts, setposts] = useState([])
 
     const loadposts = async () => {
         await Client.post("/getallimages_following", email).
             then(function (res) {
+                console.log("pp", res.data);
                 //setposts(res.data[0]);
                 res.data[0].forEach(async element => {
                     loadLike(element)
@@ -83,18 +85,6 @@ const Acc = () => {
                 console.log("error from get all images following", e);
             })
     }
-    // ------------------------
-    const [islike, setislike] = useState({
-        // email: '',
-        group_name: '',
-        email_img: '',
-        image: '',
-        email_like: '',
-    })
-
-
-
-
     const convertedData = posts.map(item => ({
         ...item,
         date: item.date.replace(/\//g, "-")
@@ -107,6 +97,19 @@ const Acc = () => {
 
         return bDate - aDate; // note the order of aDate and bDate has been reversed to sort in descending order
     })
+    // ------------------------
+    const [islike, setislike] = useState({
+        // email: '',
+        group_name: '',
+        email_img: '',
+        image: '',
+        email_like: '',
+    })
+
+
+
+
+
 
 
     // ---------------------------

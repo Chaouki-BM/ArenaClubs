@@ -6,6 +6,7 @@ import Fontisto from 'react-native-vector-icons/Fontisto'
 import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Avatar } from 'react-native-elements';
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -27,6 +28,7 @@ const HomeViewUser = () => {
     const [albumS, setalbumS] = store.useState("albumS")
     const [FriendsV, setFriendsV] = store.useState('FriendsV')
     const [followersV, setfollowersV] = store.useState("followersV")
+
     const handelModal = () => {
         if (modalVisible == false) {
             setModalVisible(true)
@@ -49,6 +51,7 @@ const HomeViewUser = () => {
     useEffect(() => {
         laodData()
         data()
+        showbottom()
     }, [])
     const [emailView, setemailView] = store.useState("emailView")
     const [loaddata, setloaddata] = useState([])
@@ -69,6 +72,7 @@ const HomeViewUser = () => {
             console.log("error from data", e);
         })
     }
+
     let image = { uri: `${Ip}${loaddata.image}` };
     const [row, setrow] = store.useState("dir")
     const [language, setlanguage] = store.useState("language")
@@ -98,7 +102,124 @@ const HomeViewUser = () => {
     }
     var qrcode = `${loaddata.nom}` + "\n" + `${loaddata.ville}`
         + "\n" + `${loaddata.email_contact}` + "\n" + `${loaddata.tele}`
+    //const [Friends, setFriends] = store.useState("Friends")
 
+
+
+
+
+    const [whoareyou, setwhoareyou] = store.useState("whoareyou")
+    // -----------------------------------
+    const [btndata, setbtndata] = useState({
+        email_2: '',
+        email_me: '',
+        date: '',
+    })
+    const [btn, setbtn] = useState("")
+    const showbottom = async () => {
+        btndata.email_2 = emailView.email
+        btndata.email_me = email.email
+        var today = new Date();
+        var y = today.getFullYear();
+        btndata.date = y
+        await Client.post("/profil_btn_user", btndata).then(function (res) {
+            setbtn(res.data.type);
+        }).catch(function (e) {
+            console.log("error from show btn", e);
+        })
+    }
+
+    const [sendnotif, setsendnotif] = useState({
+        email_do: '',
+        email_to: '',
+        vu: '',
+        msg: '',
+        img_profil: '',
+        name: '',
+        img_do: '',
+    })
+    const handelsendnotif = async () => {
+        await Client.post("/addnotification", sendnotif).
+            then(function (res) {
+                console.log(res.data.msg);
+            }).catch(function (e) {
+                console.log("error from handel send notification", e);
+            })
+    }
+    const [addreqtofr, setaddreqtofr] = useState({
+        name_user: "",
+        email_user: "",
+        image_user: "",
+        email_to: "",
+    })
+    const [load, setload] = store.useState('loaddata')
+    const handelAddFriend = async () => {
+        addreqtofr.email_to = emailView.email
+        addreqtofr.email_user = email.email
+        addreqtofr.image_user = load.image
+        addreqtofr.name_user = load.nom
+        // --------------------------------------
+        sendnotif.email_do = email.email
+        sendnotif.email_to = emailView.email
+        //sendnotif.vu = false
+        sendnotif.img_do = 'null'
+        sendnotif.name = load.nom
+        sendnotif.img_profil = load.image
+        sendnotif.msg = "new_request"
+        await Client.post("/addrequest_friend", addreqtofr)
+            .then(function (res) {
+                if (res.data.s = "s") {
+                    showbottom()
+                    handelsendnotif()
+                }
+            }).catch(function (e) {
+                console.log("error from handel add friend home view User", e);
+            })
+    }
+    const handelcancelReq = async () => {
+        addreqtofr.email_to = emailView.email
+        addreqtofr.email_user = email.email
+        await Client.post("/delete_request_friend", addreqtofr).then(function (res) {
+            if (res.data.s = "s") {
+                showbottom()
+            }
+        }).catch(function (e) {
+            console.log("error from handel cancel req home view user", e);
+        })
+    }
+    const [datareqfriend, setdatareqfriend] = useState({
+        email_user_1: '',
+        name_user_1: '',
+        image_user_1: '',
+        email_user_2: '',
+        name_user_2: '',
+        image_user_2: '',
+    })
+    const handelAcceptReq = async () => {
+        datareqfriend.email_user_1 = email.email
+        datareqfriend.email_user_2 = emailView.email
+        datareqfriend.image_user_1 = load.image
+        datareqfriend.image_user_2 = loaddata.image
+        datareqfriend.name_user_1 = load.nom
+        datareqfriend.name_user_2 = loaddata.nom
+        // --------------------------------------------
+        sendnotif.email_do = email.email
+        sendnotif.email_to = emailView.email
+        //sendnotif.vu = false
+        sendnotif.img_do = 'null'
+        sendnotif.name = load.nom
+        sendnotif.img_profil = load.image
+        sendnotif.msg = "ac_friend"
+        console.log(datareqfriend);
+        await Client.post("/add_request_friend", datareqfriend).then(function (res) {
+            if (res.data.s = "s") {
+                showbottom()
+                handelsendnotif()
+            }
+        }).catch(function (e) {
+            console.log('error from handel accept req home view user', e);
+        })
+    }
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
             <TouchableOpacity onPress={handelModal}>
@@ -192,9 +313,49 @@ const HomeViewUser = () => {
                         source={image}
                     />
                     <View >
-                        <Text style={{ marginRight: 10, fontSize: 22, color: textcoler, fontWeight: 'bold', marginBottom: 10, marginStart: 50 }}>{loaddata.nom}</Text>
-
-
+                        <View style={{ flexDirection: "row" }}>
+                            <Text style={{ marginRight: 10, fontSize: 22, color: textcoler, fontWeight: 'bold', marginBottom: 10, marginStart: 50 }}>{loaddata.nom}</Text>
+                            {btn == "amis" ?
+                                <TouchableOpacity>
+                                    <View style={{ backgroundColor: maincolor, height: 30, marginLeft: 30, borderRadius: 5, marginVertical: 5, }}>
+                                        <View style={{ flexDirection: row, marginTop: 4 }}>
+                                            <FontAwesome5 name='user-friends' size={20} color={textcoler} style={{ marginLeft: 15 }} />
+                                            <Text style={{ marginRight: 15, color: textcoler, marginLeft: 5, fontSize: 15 }}>Friend</Text>
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                                : null}
+                            {btn == "add_amis" ?
+                                <TouchableOpacity onPress={handelAddFriend}>
+                                    <View style={{ backgroundColor: maincolor, height: 30, marginLeft: 15, borderRadius: 5, marginVertical: 5, }}>
+                                        <View style={{ flexDirection: row, marginTop: 4 }}>
+                                            <FontAwesome5 name='user-plus' size={20} color={textcoler} style={{ marginLeft: 15 }} />
+                                            <Text style={{ marginRight: 15, color: textcoler, marginLeft: 5, fontSize: 15 }}>Add Friend</Text>
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                                : null}
+                            {btn == "can_req" ?
+                                <TouchableOpacity onPress={handelcancelReq}>
+                                    <View style={{ backgroundColor: maincolor, height: 30, marginLeft: 5, borderRadius: 5, marginVertical: 5, }}>
+                                        <View style={{ flexDirection: row, marginTop: 4 }}>
+                                            <FontAwesome5 name='user-times' size={20} color={textcoler} style={{ marginLeft: 15 }} />
+                                            <Text style={{ marginRight: 15, color: textcoler, marginLeft: 5, fontSize: 15 }}>Cancel req</Text>
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                                : null}
+                            {btn == "acc_req" ?
+                                <TouchableOpacity onPress={handelAcceptReq}>
+                                    <View style={{ backgroundColor: maincolor, height: 30, marginLeft: 5, borderRadius: 5, marginVertical: 5, }}>
+                                        <View style={{ flexDirection: row, marginTop: 4 }}>
+                                            <FontAwesome5 name='user-check' size={20} color={textcoler} style={{ marginLeft: 15 }} />
+                                            <Text style={{ marginRight: 15, color: textcoler, marginLeft: 5, fontSize: 15 }}>Accept req</Text>
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                                : null}
+                        </View>
                         {/* --------------------------------------- */}
                         <View style={{ flexDirection: row, marginBottom: 10, marginHorizontal: 50 }}>
                             <View style={{ flexDirection: row }}>
