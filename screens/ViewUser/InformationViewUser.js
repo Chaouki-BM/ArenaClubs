@@ -65,7 +65,7 @@ const InformationViewUser = () => {
                 showsVerticalScrollIndicator={false}>
                 <View style={{ borderRadius: 7, backgroundColor: albumS, width: 350, alignSelf: "center", marginTop: 30 }}>
                     <View style={{ flexDirection: row }}>
-                        <Text style={{ marginTop: 15, marginHorizontal: 20, color: maincolor, fontSize: 19, }}>Information de base</Text>
+                        <Text style={{ marginTop: 15, marginHorizontal: 20, color: maincolor, fontSize: 19, }}>{language.basic_info}</Text>
 
                     </View>
                     {/* <View style={{ marginEnd: 30, borderRadius: 5, alignSelf: "flex-end" }}>
@@ -95,7 +95,11 @@ const InformationViewUser = () => {
                     <View style={{ marginHorizontal: 40, flexDirection: 'row', marginBottom: 10 }}>
 
                         <MaterialCommunityIcons name={data.genre == 'Male' ? 'gender-male' : 'gender-female'} size={25} color={textcoler} style={{ marginEnd: 14 }} />
-                        <Text style={{ color: textcoler, fontStyle: 'normal', fontSize: 15, marginBottom: 20, }}>{data.genre} </Text>
+                        {data.genre == "Femelle" ?
+                            <Text style={{ color: textcoler, fontStyle: 'normal', fontSize: 15, marginBottom: 20, }}>{language.femelle} </Text>
+                            :
+                            <Text style={{ color: textcoler, fontStyle: 'normal', fontSize: 15, marginBottom: 20, }}>{language.male} </Text>
+                        }
 
                     </View>
                 </View>
@@ -132,7 +136,7 @@ const InformationViewUser = () => {
                 {universitys.length != 0 ?
                     <View style={{ borderRadius: 7, backgroundColor: albumS, width: 350, alignSelf: "center", marginTop: 20 }}>
                         <View style={{ flexDirection: row }}>
-                            <Text style={{ marginTop: 15, marginHorizontal: 20, marginBottom: 20, color: maincolor, fontSize: 19 }}>University</Text>
+                            <Text style={{ marginTop: 15, marginHorizontal: 20, marginBottom: 20, color: maincolor, fontSize: 19 }}>{language.university}</Text>
 
                         </View>
                         {/* <TouchableOpacity onPress={() => handelAddUniversity()}>
@@ -168,7 +172,7 @@ const InformationViewUser = () => {
                     <View style={{ borderRadius: 7, backgroundColor: albumS, width: 350, alignSelf: "center", marginTop: 20 }}>
                         <View style={{ flexDirection: row }}>
 
-                            <Text style={{ marginTop: 15, marginHorizontal: 20, marginBottom: 15, color: maincolor, fontSize: 19 }}>Work</Text>
+                            <Text style={{ marginTop: 15, marginHorizontal: 20, marginBottom: 15, color: maincolor, fontSize: 19 }}>{language.work}</Text>
 
                         </View>
                         {/* <TextInput

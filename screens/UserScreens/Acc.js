@@ -31,6 +31,7 @@ const Acc = () => {
         getlikes()
         getusers()
         getsave()
+        // setuserlike([])
 
     }, [])
     const [allUser, setallUser] = useState([])
@@ -43,43 +44,42 @@ const Acc = () => {
         })
     }
 
-    const loadLike = async (item) => {
-        islike.email = email.email;
-        islike.group_name = item.group_name;
-        islike.email_img = item.email;
-        islike.image = item.image;
-        islike.email_like = email.email;
+    // const loadLike = async (item) => {
+    //     islike.email = email.email;
+    //     islike.group_name = item.group_name;
+    //     islike.email_img = item.email;
+    //     islike.image = item.image;
+    //     islike.email_like = email.email;
 
-        await Client.post("/testlike", islike)
-            .then((res) => {
-                if (res.data.test == 0) {
-                    item["heart"] = "heart-o"
-                    //console.log("hhhh", element)
-                    setposts(prevState => [...prevState, item])
+    //     await Client.post("/testlike", islike)
+    //         .then((res) => {
+    //             if (res.data.test == 0) {
+    //                 item["heart"] = "heart-o"
+    //                 //console.log("hhhh", element)
+    //                 setposts(prevState => [...prevState, item])
 
-                } else {
-                    item["heart"] = "heart"
-                    //console.log("hhhh", element)
-                    setposts(prevState => [...prevState, item])
-                }
-            }).catch(function (e) {
-                console.log("error from loadLike post", e)
-            })
+    //             } else {
+    //                 item["heart"] = "heart"
+    //                 //console.log("hhhh", element)
+    //                 setposts(prevState => [...prevState, item])
+    //             }
+    //         }).catch(function (e) {
+    //             console.log("error from loadLike post", e)
+    //         })
 
 
-    }
+    // }
 
     const [posts, setposts] = useState([])
 
     const loadposts = async () => {
         await Client.post("/getallimages_following", email).
             then(function (res) {
-                console.log("pp", res.data);
-                //setposts(res.data[0]);
-                res.data[0].forEach(async element => {
-                    loadLike(element)
-                    setposts([])
-                })
+                setposts(res.data[0]);
+                // res.data[0].forEach(async element => {
+                //     loadLike(element)
+                //     setposts([])
+                // })
 
             }).catch(function (e) {
                 console.log("error from get all images following", e);
@@ -117,6 +117,7 @@ const Acc = () => {
         await Client.post("/getall_like_home")
             .then(function (res) {
                 setlikes(res.data)
+
             }).catch(function (e) {
                 console.log("error from get likes", e)
             })
@@ -128,14 +129,17 @@ const Acc = () => {
     const [allcomment, setallcomment] = useState([])
     const [comments, setcomment] = useState({ comment: '' })
     const handelallliker = async (post) => {
+        //setuserlike([])
         if (Modalshow == false) {
             setModalshow(true)
         }
+
         setuserlike([])
         for (let i = 0; i < likes.length; i++) {
             for (let j = 0; j < allUser.length; j++) {
                 if (likes[i].email_like == allUser[j].email && likes[i].image == post.image && likes[i].group_name == post.group_name) {
                     setuserlike(prevState => [...prevState, allUser[j]])
+
 
                 }
             }
@@ -143,16 +147,15 @@ const Acc = () => {
         }
     }
     const [postss, setpostss] = store.useState("posts")
-    const [allsave, setallsave] = store.useState("allsave")
+    //const [allsave, setallsave] = store.useState("allsave")
     const getsave = async () => {
         save.email_saved = email.email
         await Client.post("/get_save", save).then(function (res) {
             if (res.data.msg == "success") {
-                console.log("save", res.data.saves);
-                setallsave(res.data.saves)
+                //setallsave(res.data.saves)
                 setpostss(res.data.saves)
             } else {
-                setallsave([])
+                // setallsave([])
                 setpostss([])
             }
         }).catch(function (e) {
@@ -250,7 +253,9 @@ const Acc = () => {
         })
     }
     const [chevron, setchivron] = useState('chevron-right')
+
     const [close, setcolse] = useState(true)
+
     const handelEditComment = () => {
         setcolse(close == true ? false : true)
         setchivron(chevron == 'chevron-right' ? 'chevron-down' : 'chevron-right')
@@ -318,7 +323,9 @@ const Acc = () => {
         save.email_saved = email.email
         save.id_post_saved = post._id
         saveposts.current.open()
-        setisSave(false)
+        msgrep.report_account = post.email,
+            msgrep.report_post = post.image,
+            setisSave(false)
         if (postss == "") {
             setisSave(false)
         } else {
@@ -360,8 +367,34 @@ const Acc = () => {
         })
         saveposts.current.close()
     }
-    const handelrepostPost = () => {
+    const [msgrep, setmsgrep] = useState({
+        report_from: "",
+        report_account: "",
 
+        report_msg: "",
+        report_post: "",
+
+        report_from_name: "",
+        report_from_img: ""
+    })
+    const [chevronrep, setchivronrep] = useState('chevron-right')
+    const [closerep, setcolserep] = useState(true)
+    const [rep, setrep] = useState({ msgreport: '' })
+    const handelrepostPost = () => {
+        setcolserep(closerep == true ? false : true)
+        setchivronrep(chevronrep == 'chevron-right' ? 'chevron-down' : 'chevron-right')
+
+    }
+    const handelSaveRep = async () => {
+        msgrep.report_from = email.email,
+            msgrep.report_msg = rep.msgreport,
+            msgrep.report_from_name = loaddata.nom,
+            msgrep.report_from_img = loaddata.image,
+            await Client.post("/report_post", msgrep).then(function (res) {
+                setrep({ msgreport: '' })
+            }).catch(function (e) {
+                console.log("error from handel repost post", e);
+            })
     }
     const [sendnotif, setsendnotif] = useState({
         email_do: '',
@@ -387,6 +420,7 @@ const Acc = () => {
             console.log("error from delete noti like", e);
         })
     }
+
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
             <ScrollView
@@ -398,7 +432,7 @@ const Acc = () => {
                     // heart = post.heart
                     //  console.log(updatedPosts[index].heart)
                     return (
-                        <View key={index} style={{ marginTop: 15, marginHorizontal: 35, backgroundColor: albumS, width: 300, borderRadius: 10 }}>
+                        <View key={index} style={{ marginTop: 15, marginHorizontal: 48, backgroundColor: albumS, width: 300, borderRadius: 10 }}>
                             <View style={{ flexDirection: 'row' }}>
                                 <Avatar rounded
                                     size={40}
@@ -433,14 +467,14 @@ const Acc = () => {
 
 
 
-                                <TouchableOpacity onPress={() => { post.heart == "heart" ? (handelunheart(post, index)) : (handelheart(post, index)) }}>
+                                {/* <TouchableOpacity onPress={() => { post.heart == "heart" ? (handelunheart(post, index)) : (handelheart(post, index)) }}>
                                     {post.heart === "heart" ?
                                         <FontAwesome name="heart" color={maincolor} size={20} style={{ marginTop: 1, marginLeft: 20 }} />
                                         :
                                         <FontAwesome name="heart-o" color={maincolor} size={20} style={{ marginTop: 1, marginLeft: 20 }} />
                                     }
 
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
 
                                 <TouchableOpacity onPress={() => handelshowComment(post)}>
                                     <FontAwesome name='comment-o' size={21} color={maincolor} style={{ marginHorizontal: 15, marginBottom: 10 }} />
@@ -482,7 +516,7 @@ const Acc = () => {
                                     onBlur={() => {
                                         setisFocusM(false)
                                     }}
-                                    placeholder="Comment"
+                                    placeholder={language.addcom}
                                     onChangeText={val => {
                                         setcomment({ ...comments, comment: val });
                                     }}
@@ -549,9 +583,9 @@ const Acc = () => {
                             })}
                         </ScrollView>
                         <TouchableOpacity
-                            style={{ backgroundColor: maincolor, width: 90, height: 25, borderRadius: 10, marginTop: 10 }}
+                            style={{ backgroundColor: maincolor, height: 25, borderRadius: 10, marginTop: 10 }}
                             onPress={() => setModalshow(!Modalshow)}>
-                            <Text style={{ marginVertical: -3, marginHorizontal: 20, color: textcoler, fontSize: 20 }}>close</Text>
+                            <Text style={{ marginVertical: -3, marginHorizontal: 20, color: textcoler, fontSize: 20 }}>{language.close}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -597,7 +631,7 @@ const Acc = () => {
                             <TouchableOpacity onPress={handelEditComment}>
                                 <View style={{ flexDirection: 'row' }}>
                                     <AntDesign name='edit' size={18} style={{ marginRight: 10, color: maincolor }} />
-                                    <Text style={{ color: textcoler, fontSize: 17, marginRight: 40 }}>Edit comment</Text>
+                                    <Text style={{ color: textcoler, fontSize: 17, marginRight: 40 }}>{language.editcom}</Text>
                                     <Entypo name={chevron} size={18} color={maincolor} style={{ marginTop: 5 }} />
                                 </View>
                             </TouchableOpacity>
@@ -626,7 +660,7 @@ const Acc = () => {
                                         onBlur={() => {
                                             setisFocusM(false)
                                         }}
-                                        placeholder="Edit Comment"
+                                        placeholder={language.editcom}
 
 
                                         onChangeText={val => {
@@ -634,8 +668,8 @@ const Acc = () => {
                                         }}
                                         value={editcomments.comment}
                                     />
-                                    <TouchableOpacity onPress={handelSaveEdit} style={{ backgroundColor: maincolor, width: 60, borderRadius: 10, marginHorizontal: 80, marginTop: 10, marginBottom: 10 }}>
-                                        <Text style={{ color: textcoler, fontSize: 20, marginHorizontal: 6 }}>Save</Text>
+                                    <TouchableOpacity onPress={handelSaveEdit} style={{ backgroundColor: maincolor, borderRadius: 10, marginHorizontal: 80, marginTop: 10, marginBottom: 10 }}>
+                                        <Text style={{ color: textcoler, fontSize: 20, marginHorizontal: 6 }}>{language.save}</Text>
                                     </TouchableOpacity>
                                 </View>
                             }
@@ -722,7 +756,7 @@ const Acc = () => {
                 ref={saveposts}
                 closeOnDragDown={true}
                 closeOnPressMask={true}
-                height={200}
+                height={250}
                 openDuration={300}
                 customStyles={{
                     wrapper: {
@@ -750,8 +784,8 @@ const Acc = () => {
                     />
                     <Pressable onPress={isSave == true ? handeldeteteSave : handelsavePost}>
                         {isSave == true ?
-                            <Text style={{ color: textcoler, fontSize: 20 }}>delete save Post</Text> :
-                            <Text style={{ color: textcoler, fontSize: 20 }}> save Post</Text>}
+                            <Text style={{ color: textcoler, fontSize: 20 }}>{language.already_saved}</Text> :
+                            <Text style={{ color: textcoler, fontSize: 20 }}>{language.save_post}</Text>}
 
                     </Pressable>
                     <View
@@ -765,8 +799,49 @@ const Acc = () => {
                         }}
                     />
                     <Pressable onPress={handelrepostPost}>
-                        <Text style={{ color: textcoler, fontSize: 20 }}>report post</Text>
+                        <View style={{ flexDirection: row }}>
+                            <Text style={{ color: textcoler, fontSize: 20 }}>{language.report_post}</Text>
+                            <Entypo name={chevronrep} size={18} color={maincolor} style={{ marginTop: 5 }} />
+                        </View>
                     </Pressable>
+                    {closerep == false &&
+                        <View>
+                            <TextInput
+                                multiline
+                                numberOfLines={3}
+                                //maxLength={40}
+                                style={[{ borderColor: isFocusM ? maincolor : inputS },
+                                {
+
+                                    backgroundColor: inputS,
+                                    color: textcoler,
+                                    borderRadius: 10,
+                                    width: 200,
+                                    //height: 100,
+                                    marginRight: 20
+
+
+                                }]}
+
+                                onFocus={() => {
+                                    setisFocusM(true)
+                                }}
+                                onBlur={() => {
+                                    setisFocusM(false)
+                                }}
+                                placeholder={language.report_post}
+
+
+                                onChangeText={val => {
+                                    setrep({ ...rep, msgreport: val });
+                                }}
+                                value={rep.msgreport}
+                            />
+                            <TouchableOpacity onPress={handelSaveRep} style={{ backgroundColor: maincolor, borderRadius: 10, marginHorizontal: 80, marginTop: 10, marginBottom: 10 }}>
+                                <Text style={{ color: textcoler, fontSize: 20, marginHorizontal: 6 }}>{language.save}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
                     <View
                         style={{
                             borderBottomColor: maincolor,
@@ -777,6 +852,7 @@ const Acc = () => {
 
                         }}
                     />
+
                 </View>
             </RBSheet >
         </View >

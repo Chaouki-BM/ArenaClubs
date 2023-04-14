@@ -200,11 +200,11 @@ const UserHome = () => {
                         {/* --------------------------------------- */}
                         <View style={{ flexDirection: row, marginBottom: 10, marginHorizontal: 50 }}>
                             <View style={{ flexDirection: row }}>
-                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>amis :</Text>
+                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 35 }}>{language.friends} :</Text>
                                 <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{Friends.length}</Text>
                             </View>
                             <View style={{ flexDirection: row }}>
-                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>suivants :</Text>
+                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>{language.following} :</Text>
                                 <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{followers.length}</Text>
                             </View>
                         </View>

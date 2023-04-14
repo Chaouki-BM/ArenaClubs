@@ -85,7 +85,7 @@ const UserTabBottom = () => {
                 <Tab.Screen
                     name="Acc" component={Acc}
                     options={{
-                        title: 'home',
+                        title: `${language.Home}`,
                         tabBarIcon: ({ focused, color, size }) => (
                             <FontAwesome name="home" color={color} size={size} />
 

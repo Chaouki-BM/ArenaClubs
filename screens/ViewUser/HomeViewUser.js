@@ -320,7 +320,7 @@ const HomeViewUser = () => {
                                     <View style={{ backgroundColor: maincolor, height: 30, marginLeft: 30, borderRadius: 5, marginVertical: 5, }}>
                                         <View style={{ flexDirection: row, marginTop: 4 }}>
                                             <FontAwesome5 name='user-friends' size={20} color={textcoler} style={{ marginLeft: 15 }} />
-                                            <Text style={{ marginRight: 15, color: textcoler, marginLeft: 5, fontSize: 15 }}>Friend</Text>
+                                            <Text style={{ marginRight: 15, color: textcoler, marginLeft: 5, fontSize: 15 }}>{language.friends}</Text>
                                         </View>
                                     </View>
                                 </TouchableOpacity>
@@ -330,27 +330,27 @@ const HomeViewUser = () => {
                                     <View style={{ backgroundColor: maincolor, height: 30, marginLeft: 15, borderRadius: 5, marginVertical: 5, }}>
                                         <View style={{ flexDirection: row, marginTop: 4 }}>
                                             <FontAwesome5 name='user-plus' size={20} color={textcoler} style={{ marginLeft: 15 }} />
-                                            <Text style={{ marginRight: 15, color: textcoler, marginLeft: 5, fontSize: 15 }}>Add Friend</Text>
+                                            <Text style={{ marginRight: 15, color: textcoler, marginLeft: 5, fontSize: 15 }}>{language.add_friend}</Text>
                                         </View>
                                     </View>
                                 </TouchableOpacity>
                                 : null}
                             {btn == "can_req" ?
                                 <TouchableOpacity onPress={handelcancelReq}>
-                                    <View style={{ backgroundColor: maincolor, height: 30, marginLeft: 5, borderRadius: 5, marginVertical: 5, }}>
+                                    <View style={{ backgroundColor: maincolor, height: 30, marginLeft: -6, borderRadius: 5, marginVertical: 5, }}>
                                         <View style={{ flexDirection: row, marginTop: 4 }}>
                                             <FontAwesome5 name='user-times' size={20} color={textcoler} style={{ marginLeft: 15 }} />
-                                            <Text style={{ marginRight: 15, color: textcoler, marginLeft: 5, fontSize: 15 }}>Cancel req</Text>
+                                            <Text style={{ marginRight: 5, color: textcoler, marginLeft: 2, fontSize: 15 }}>{language.cancel_request}</Text>
                                         </View>
                                     </View>
                                 </TouchableOpacity>
                                 : null}
                             {btn == "acc_req" ?
                                 <TouchableOpacity onPress={handelAcceptReq}>
-                                    <View style={{ backgroundColor: maincolor, height: 30, marginLeft: 5, borderRadius: 5, marginVertical: 5, }}>
+                                    <View style={{ backgroundColor: maincolor, height: 30, marginLeft: -9, borderRadius: 5, marginVertical: 5, }}>
                                         <View style={{ flexDirection: row, marginTop: 4 }}>
-                                            <FontAwesome5 name='user-check' size={20} color={textcoler} style={{ marginLeft: 15 }} />
-                                            <Text style={{ marginRight: 15, color: textcoler, marginLeft: 5, fontSize: 15 }}>Accept req</Text>
+                                            <FontAwesome5 name='user-check' size={20} color={textcoler} style={{ marginLeft: 5 }} />
+                                            <Text style={{ marginRight: 10, color: textcoler, marginLeft: 0, fontSize: 15 }}>{language.confirm_req}</Text>
                                         </View>
                                     </View>
                                 </TouchableOpacity>
@@ -359,11 +359,11 @@ const HomeViewUser = () => {
                         {/* --------------------------------------- */}
                         <View style={{ flexDirection: row, marginBottom: 10, marginHorizontal: 50 }}>
                             <View style={{ flexDirection: row }}>
-                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>amis :</Text>
+                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 35 }}>{language.friends} :</Text>
                                 <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{FriendsV.length}</Text>
                             </View>
                             <View style={{ flexDirection: row }}>
-                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>suivants :</Text>
+                                <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>{language.following} :</Text>
                                 <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{followersV.length}</Text>
                             </View>
                         </View>

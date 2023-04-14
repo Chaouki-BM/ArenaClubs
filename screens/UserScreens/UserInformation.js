@@ -162,36 +162,36 @@ const UserInformation = () => {
     const onToggleSwitchville = async () => {
         setauxpartnership({ ...auxpartnership, ville_partnership: !auxpartnership.ville_partnership })
         if (auxpartnership.ville_partnership == true) {
-            ToastAndroid.show("private", ToastAndroid.SHORT)
+            ToastAndroid.show(language.only_me, ToastAndroid.SHORT)
         } else {
-            ToastAndroid.show("public", ToastAndroid.SHORT)
+            ToastAndroid.show(language.public, ToastAndroid.SHORT)
         }
         await Client.post("/change_ville_partnership", email);
     }
     const onToggleSwitchtele = async () => {
         setauxpartnership({ ...auxpartnership, tele_partnership: !auxpartnership.tele_partnership })
         if (auxpartnership.tele_partnership == true) {
-            ToastAndroid.show("private", ToastAndroid.SHORT)
+            ToastAndroid.show(language.only_me, ToastAndroid.SHORT)
         } else {
-            ToastAndroid.show("public", ToastAndroid.SHORT)
+            ToastAndroid.show(language.public, ToastAndroid.SHORT)
         }
         await Client.post("/change_tele_partnership", email);
     }
     const onToggleSwitchemail = async () => {
         setauxpartnership({ ...auxpartnership, email_partnership: !auxpartnership.email_partnership })
         if (auxpartnership.email_partnership == true) {
-            ToastAndroid.show("private", ToastAndroid.SHORT)
+            ToastAndroid.show(language.only_me, ToastAndroid.SHORT)
         } else {
-            ToastAndroid.show("public", ToastAndroid.SHORT)
+            ToastAndroid.show(language.public, ToastAndroid.SHORT)
         }
         await Client.post("/change_email_partnership", email);
     }
     const onToggleSwitchanniv = async () => {
         setauxpartnership({ ...auxpartnership, anniversaire_partnership: !auxpartnership.anniversaire_partnership })
         if (auxpartnership.anniversaire_partnership == true) {
-            ToastAndroid.show("private", ToastAndroid.SHORT)
+            ToastAndroid.show(language.only_me, ToastAndroid.SHORT)
         } else {
-            ToastAndroid.show("public", ToastAndroid.SHORT)
+            ToastAndroid.show(language.public, ToastAndroid.SHORT)
         }
         await Client.post("/change_anniversaire_partnership", email);
     }
@@ -202,7 +202,7 @@ const UserInformation = () => {
                 showsVerticalScrollIndicator={false}>
                 <View style={{ borderRadius: 7, backgroundColor: albumS, width: 350, alignSelf: "center", marginTop: 30 }}>
                     <View style={{ flexDirection: row }}>
-                        <Text style={{ marginTop: 15, marginHorizontal: 20, color: maincolor, fontSize: 19, }}>Information de base</Text>
+                        <Text style={{ marginTop: 15, marginHorizontal: 20, color: maincolor, fontSize: 19, }}>{language.basic_info}</Text>
 
                     </View>
                     <View style={{ marginEnd: 30, borderRadius: 5, alignSelf: "flex-end" }}>
@@ -225,14 +225,19 @@ const UserInformation = () => {
                     <View style={{ marginHorizontal: 77, flexDirection: 'row', marginBottom: 10 }}>
 
                         <MaterialCommunityIcons name={data.genre == 'Male' ? 'gender-male' : 'gender-female'} size={25} color={textcoler} style={{ marginEnd: 14 }} />
-                        <Text style={{ color: textcoler, fontStyle: 'normal', fontSize: 15, marginBottom: 20, }}>{data.genre} </Text>
+                        {data.genre == "Femelle" ?
+                            <Text style={{ color: textcoler, fontStyle: 'normal', fontSize: 15, marginBottom: 20, }}>{language.femelle} </Text>
+                            :
+                            <Text style={{ color: textcoler, fontStyle: 'normal', fontSize: 15, marginBottom: 20, }}>{language.male} </Text>
+                        }
+
 
                     </View>
                 </View>
                 {/* ----------------------------------------------- */}
                 <View style={{ borderRadius: 7, backgroundColor: albumS, width: 350, alignSelf: "center", marginTop: 20 }}>
                     <View style={{ flexDirection: row }}>
-                        <Text style={{ marginTop: 15, marginHorizontal: 20, color: maincolor, fontSize: 19, }}>language.contact</Text>
+                        <Text style={{ marginTop: 15, marginHorizontal: 20, color: maincolor, fontSize: 19, }}>{language.contact}</Text>
 
                     </View>
                     <View style={{ marginEnd: 30, borderRadius: 5, alignSelf: 'flex-end' }}>
@@ -256,7 +261,7 @@ const UserInformation = () => {
                 {/* --------------------------------------------- */}
                 <View style={{ borderRadius: 7, backgroundColor: albumS, width: 350, alignSelf: "center", marginTop: 20 }}>
                     <View style={{ flexDirection: row }}>
-                        <Text style={{ marginTop: 15, marginHorizontal: 20, marginBottom: 20, color: maincolor, fontSize: 19 }}>University</Text>
+                        <Text style={{ marginTop: 15, marginHorizontal: 20, marginBottom: 20, color: maincolor, fontSize: 19 }}>{language.university}</Text>
 
                     </View>
                     <TouchableOpacity onPress={() => handelAddUniversity()}>
@@ -287,7 +292,7 @@ const UserInformation = () => {
                 <View style={{ borderRadius: 7, backgroundColor: albumS, width: 350, alignSelf: "center", marginTop: 20 }}>
                     <View style={{ flexDirection: row }}>
 
-                        <Text style={{ marginTop: 15, marginHorizontal: 20, marginBottom: 15, color: maincolor, fontSize: 19 }}>Work</Text>
+                        <Text style={{ marginTop: 15, marginHorizontal: 20, marginBottom: 15, color: maincolor, fontSize: 19 }}>{language.work}</Text>
 
                     </View>
                     {/* <TextInput
