@@ -100,6 +100,15 @@ const HomeViewUser = () => {
             Linking.openURL(Data.linkedin)
         }
     }
+    // const qrrr = () => {
+    //     let i = 0; let ch2 = ''
+    //     for (let t of loaddata.email_contact) {
+    //         if (loaddata.email_contact[i] == '.') { ch2 = ch2 + ' . ' }
+    //         else { ch2 = ch2 + loaddata.email_contact[i] }
+    //         i++
+    //     }
+    //     return ch2
+    // }
     var qrcode = `${loaddata.nom}` + "\n" + `${loaddata.ville}`
         + "\n" + `${loaddata.email_contact}` + "\n" + `${loaddata.tele}`
     //const [Friends, setFriends] = store.useState("Friends")
@@ -315,46 +324,7 @@ const HomeViewUser = () => {
                     <View >
                         <View style={{ flexDirection: "row" }}>
                             <Text style={{ marginRight: 10, fontSize: 22, color: textcoler, fontWeight: 'bold', marginBottom: 10, marginStart: 50 }}>{loaddata.nom}</Text>
-                            {btn == "amis" ?
-                                <TouchableOpacity>
-                                    <View style={{ backgroundColor: maincolor, height: 30, marginLeft: 30, borderRadius: 5, marginVertical: 5, }}>
-                                        <View style={{ flexDirection: row, marginTop: 4 }}>
-                                            <FontAwesome5 name='user-friends' size={20} color={textcoler} style={{ marginLeft: 15 }} />
-                                            <Text style={{ marginRight: 15, color: textcoler, marginLeft: 5, fontSize: 15 }}>{language.friends}</Text>
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
-                                : null}
-                            {btn == "add_amis" ?
-                                <TouchableOpacity onPress={handelAddFriend}>
-                                    <View style={{ backgroundColor: maincolor, height: 30, marginLeft: 15, borderRadius: 5, marginVertical: 5, }}>
-                                        <View style={{ flexDirection: row, marginTop: 4 }}>
-                                            <FontAwesome5 name='user-plus' size={20} color={textcoler} style={{ marginLeft: 15 }} />
-                                            <Text style={{ marginRight: 15, color: textcoler, marginLeft: 5, fontSize: 15 }}>{language.add_friend}</Text>
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
-                                : null}
-                            {btn == "can_req" ?
-                                <TouchableOpacity onPress={handelcancelReq}>
-                                    <View style={{ backgroundColor: maincolor, height: 30, marginLeft: -6, borderRadius: 5, marginVertical: 5, }}>
-                                        <View style={{ flexDirection: row, marginTop: 4 }}>
-                                            <FontAwesome5 name='user-times' size={20} color={textcoler} style={{ marginLeft: 15 }} />
-                                            <Text style={{ marginRight: 5, color: textcoler, marginLeft: 2, fontSize: 15 }}>{language.cancel_request}</Text>
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
-                                : null}
-                            {btn == "acc_req" ?
-                                <TouchableOpacity onPress={handelAcceptReq}>
-                                    <View style={{ backgroundColor: maincolor, height: 30, marginLeft: -9, borderRadius: 5, marginVertical: 5, }}>
-                                        <View style={{ flexDirection: row, marginTop: 4 }}>
-                                            <FontAwesome5 name='user-check' size={20} color={textcoler} style={{ marginLeft: 5 }} />
-                                            <Text style={{ marginRight: 10, color: textcoler, marginLeft: 0, fontSize: 15 }}>{language.confirm_req}</Text>
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
-                                : null}
+
                         </View>
                         {/* --------------------------------------- */}
                         <View style={{ flexDirection: row, marginBottom: 10, marginHorizontal: 50 }}>
@@ -373,7 +343,57 @@ const HomeViewUser = () => {
 
                     </View>
                 </View>
+                {/* ------------------ */}
+                {btn == "amis" ?
+                    <View style={{ marginLeft: 150 }}>
+                        <TouchableOpacity>
+                            <View style={{ backgroundColor: maincolor, height: 30, width: 180, borderRadius: 5, marginVertical: 5, }}>
+                                <View style={{ flexDirection: row, marginTop: 4 }}>
+                                    <FontAwesome5 name='user-friends' size={20} color={'white'} style={{ marginLeft: 20, marginRight: 10 }} />
+                                    <Text style={{ marginRight: 5, color: 'white', marginLeft: 2, fontSize: 15 }}>{language.friends}</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    : null}
+                {btn == "add_amis" ?
+                    <View style={{ marginLeft: 150 }}>
+                        <TouchableOpacity onPress={handelAddFriend}>
+                            <View style={{ backgroundColor: maincolor, height: 30, width: 180, borderRadius: 5, marginVertical: 5, }}>
+                                <View style={{ flexDirection: row, marginTop: 4 }}>
+                                    <FontAwesome5 name='user-plus' size={20} color={'white'} style={{ marginLeft: 20, marginRight: 10 }} />
+                                    <Text style={{ marginRight: 5, color: 'white', marginLeft: 2, fontSize: 15 }}>{language.add_friend}</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    : null}
+                {btn == "can_req" ?
+                    <View style={{ marginLeft: 150 }}>
+                        <TouchableOpacity onPress={handelcancelReq}>
+                            <View style={{ backgroundColor: maincolor, height: 30, width: 180, borderRadius: 5, marginVertical: 5, }}>
+                                <View style={{ flexDirection: row, marginTop: 4 }}>
+                                    <FontAwesome5 name='user-times' size={20} color={"white"} style={{ marginLeft: 20, marginRight: 10 }} />
+                                    <Text style={{ marginRight: 5, color: 'white', marginLeft: 2, fontSize: 15 }}>{language.cancel_request}</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
 
+                    : null}
+                {btn == "acc_req" ?
+                    <View style={{ marginLeft: 150 }}>
+                        <TouchableOpacity onPress={handelAcceptReq}>
+                            <View style={{ backgroundColor: maincolor, height: 30, width: 180, borderRadius: 5, marginVertical: 5, }}>
+                                <View style={{ flexDirection: row, marginTop: 4 }}>
+                                    <FontAwesome5 name='user-check' size={20} color={'white'} style={{ marginLeft: 20, marginRight: 10 }} />
+                                    <Text style={{ marginRight: 5, color: 'white', marginLeft: 2, fontSize: 15 }}>{language.confirm_req}</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    : null}
+                {/* --------------- */}
 
                 <View style={{ marginLeft: 10 }}>
                     {/* <View style={{ flexDirection: 'row' }}>

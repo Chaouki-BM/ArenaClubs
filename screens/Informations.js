@@ -138,7 +138,7 @@ const Informations = () => {
                     </View>
                     <View style={{ marginHorizontal: 88, flexDirection: 'row' }}>
                         <FontAwesome name='map-marker' size={25} color={maincolor} style={{ marginEnd: 20 }} />
-                        <Text style={{ marginBottom: 20, color: textcoler, fontStyle: 'normal', fontSize: 15 }}>{data.ville}</Text>
+                        <Text style={{ marginBottom: 20, color: textcoler, fontStyle: 'normal', fontSize: 15 }}>{data.signe} {data.ville}</Text>
                     </View>
                 </View>
                 {/* ----------------------------------------------- */}
@@ -181,6 +181,12 @@ const Informations = () => {
                         if (show) {
                             return (
                                 <View key={index} style={{ flexDirection: 'row' }}>
+                                    <TouchableOpacity onPress={() => handeldeltemembre(membre)}>
+                                        <MaterialIcons name='cancel' size={22} color={maincolor} style={{ marginVertical: 15, marginLeft: 10, }} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => { handeleditrole(membre), setModalVisible(true) }}>
+                                        <MaterialIcons name='edit' size={22} color={'#3F4347'} style={{ marginVertical: 15, marginLeft: 10 }} />
+                                    </TouchableOpacity>
                                     <Avatar
                                         rounded
                                         size={50}
@@ -191,21 +197,18 @@ const Informations = () => {
                                         //source={image}
                                         source={{ uri: `${Ip}${membre.image_user}` }}
                                     />
-                                    <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{membre.name_user}</Text>
+
+                                    <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17, width: 190 }}>{membre.name_user} ({membre.role})</Text>
                                     <View style={{ flexDirection: 'row' }}>
-                                        <TouchableOpacity onPress={() => handeldeltemembre(membre)}>
-                                            <MaterialIcons name='cancel' size={22} color={maincolor} style={{ marginVertical: 15, marginLeft: 20, }} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { handeleditrole(membre), setModalVisible(true) }}>
-                                            <MaterialIcons name='edit' size={22} color={maincolor} style={{ marginVertical: 15, marginLeft: 20 }} />
-                                        </TouchableOpacity>
+
+
                                     </View>
                                 </View>)
                         }
                     })}
                 </View>
 
-            </ScrollView>
+            </ScrollView >
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -265,7 +268,7 @@ const Informations = () => {
                     </View>
                 </View>
             </Modal>
-        </View>
+        </View >
 
     )
 

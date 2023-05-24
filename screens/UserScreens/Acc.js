@@ -444,7 +444,7 @@ const Acc = () => {
                                 />
                                 <Text style={{ color: textcoler, marginVertical: 20, marginStart: 20, fontSize: 16, fontWeight: 'bold' }}>{post.nom}</Text>
                                 <TouchableOpacity onPress={() => handelThreeDotssave(post)}>
-                                    <Entypo name='dots-three-horizontal' size={20} color={maincolor} style={{ marginHorizontal: 140, marginVertical: 20 }} />
+                                    <Entypo name='dots-three-horizontal' size={20} color={maincolor} style={{ marginHorizontal: 110, marginVertical: 20 }} />
                                 </TouchableOpacity>
                             </View>
                             <View style={{ flexDirection: row, }}>
@@ -465,7 +465,7 @@ const Acc = () => {
 
                             <View style={{ flexDirection: row }}>
 
-
+                                {/* <FontAwesome name="heart" color={maincolor} size={20} style={{ marginTop: 1, marginLeft: 20 }} /> */}
 
                                 {/* <TouchableOpacity onPress={() => { post.heart == "heart" ? (handelunheart(post, index)) : (handelheart(post, index)) }}>
                                     {post.heart === "heart" ?
@@ -728,7 +728,7 @@ const Acc = () => {
                                         overlayContainerStyle={{ backgroundColor: 'gray' }}
                                         //onPress={() => console.log("Works!")}
                                         containerStyle={{ marginRight: 10 }}
-                                    //source={{ uri: `${Ip}${element.img_comment}` }}
+                                        source={{ uri: `${Ip}${element.img_comment}` }}
                                     />
                                     <Text style={{ color: textcoler, fontSize: 18, marginTop: 5 }}>{element.name_comment}</Text>
                                     {/* <Text style={{ marginLeft: 10, color: textcoler, fontSize: 18, marginTop: 5 }}>{element.tag_comment}</Text> */}

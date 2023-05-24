@@ -138,18 +138,20 @@ const AlbumPage = ({ navigation }) => {
 
                 nestedScrollEnabled={true}
                 showsVerticalScrollIndicator={false}>
-                {Albums.slice(0).reverse().map((Album, index) => {
-                    return (
-                        <View key={index} style={{ alignItems: 'center', marginLeft: 9, marginTop: 10, backgroundColor: albumS, width: '95%', height: 55, borderRadius: 10, flexDirection: 'row' }}>
-                            <TouchableOpacity onPress={() => handelopenalbum(Album)} style={{ alignItems: 'center', backgroundColor: albumS, width: '95%', height: 55, borderRadius: 10, flexDirection: 'row' }}>
-                                <MaterialIcons name='photo-album' color={maincolor} size={30} style={{ alignSelf: 'flex-start', marginTop: 10 }} />
-                                <Text style={{ flex: 1, textAlign: 'center', fontSize: 18, fontStyle: 'bold', color: textcoler }}>{Album.group_name}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{ marginLeft: -10 }} onPress={() => handelthreedots(Album)}>
-                                <Entypo name='dots-three-horizontal' size={20} color={maincolor} />
-                            </TouchableOpacity>
-                        </View>
-                    )
+                {Albums.map((Album, index) => {
+                    if (Album.group_name != 'test0') {
+                        return (
+                            <View key={index} style={{ alignItems: 'center', marginLeft: 9, marginTop: 10, backgroundColor: albumS, width: '95%', height: 55, borderRadius: 10, flexDirection: 'row' }}>
+                                <TouchableOpacity onPress={() => handelopenalbum(Album)} style={{ alignItems: 'center', backgroundColor: albumS, width: '95%', height: 55, borderRadius: 10, flexDirection: 'row' }}>
+                                    <MaterialIcons name='photo-album' color={maincolor} size={30} style={{ alignSelf: 'flex-start', marginTop: 10 }} />
+                                    <Text style={{ flex: 1, textAlign: 'center', fontSize: 18, fontStyle: 'bold', color: textcoler }}>{Album.group_name}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ marginLeft: -10 }} onPress={() => handelthreedots(Album)}>
+                                    <Entypo name='dots-three-horizontal' size={20} color={maincolor} />
+                                </TouchableOpacity>
+                            </View>
+                        )
+                    }
                 })}
             </ScrollView >
 

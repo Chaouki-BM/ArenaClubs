@@ -154,12 +154,22 @@ function HomePage() {
 
             })
     }
+
     const [pic, setpic] = useState({ pic: '' })
     const [followers, setfollowers] = store.useState("followers")
     const [Albums, setAlbums] = store.useState("Albums")
     const [language, setlanguage] = store.useState("language")
     const [row, setrow] = store.useState("dir")
     const [posts, setposts] = store.useState("posts")
+    // const qrrr = () => {
+    //     let i = 0; let ch2 = ''
+    //     for (let t of datauser.email_contact) {
+    //         if (datauser.email_contact[i] == '.') { ch2 = ch2 + ' . ' }
+    //         else { ch2 = ch2 + datauser.email_contact[i] }
+    //         i++
+    //     }
+    //     return ch2
+    // }
     var qrcode = `${datauser.nom}` + "\n" + `${datauser.nom_universite}` + " " + `${datauser.ville}`
         + "\n" + `${datauser.email_contact}` + "\n" + `${datauser.tele}`
 
@@ -298,7 +308,7 @@ function HomePage() {
                         </View>
                         <View style={{ flexDirection: row }}>
                             <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 20 }}>{language.albums} :</Text>
-                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{Albums.length}</Text>
+                            <Text style={{ fontSize: 13, color: textcoler, fontStyle: 'italic', marginEnd: 30 }}>{Albums.length - 1}</Text>
                         </View>
 
                     </View>

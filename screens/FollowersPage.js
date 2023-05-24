@@ -36,7 +36,7 @@ const FollowersPage = () => {
         datareq.email_user = req.email_user
         await Client.post("/delete_request", datareq)
             .then(function (res) {
-                if (res.data.msg == "success") {
+                if (res.data.s == "s") {
                     loadreq()
                 }
             }).catch(function (e) {
@@ -93,7 +93,7 @@ const FollowersPage = () => {
         sendnotif.msg = "ac_request"
         await Client.post("/add_request", datareq)
             .then(function (res) {
-                if (res.data.msg == "success") {
+                if (res.data.s == "s") {
                     loadreq()
                     loadmembres()
                     handelsendnotif()

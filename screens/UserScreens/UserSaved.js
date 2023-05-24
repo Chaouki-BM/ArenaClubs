@@ -417,7 +417,7 @@ const UserSaved = () => {
                                 />
                                 <Text style={{ color: textcoler, marginVertical: 20, marginStart: 20, fontSize: 16, fontWeight: 'bold' }}>{post.nom}</Text>
                                 <TouchableOpacity onPress={() => handelThreeDotssave(post)}>
-                                    <Entypo name='dots-three-horizontal' size={20} color={maincolor} style={{ marginHorizontal: 140, marginVertical: 20 }} />
+                                    <Entypo name='dots-three-horizontal' size={20} color={maincolor} style={{ marginHorizontal: 100, marginVertical: 20 }} />
                                 </TouchableOpacity>
                             </View>
                             <View style={{ flexDirection: row, }}>

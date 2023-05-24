@@ -94,6 +94,15 @@ const UserHome = () => {
             Linking.openURL(Data.linkedin)
         }
     }
+    // const qrrr = () => {
+    //     let i = 0; let ch2 = ''
+    //     for (let t of loaddata.email_contact) {
+    //         if (loaddata.email_contact[i] == '.') { ch2 = ch2 + ' . ' }
+    //         else { ch2 = ch2 + loaddata.email_contact[i] }
+    //         i++
+    //     }
+    //     return ch2
+    // }
     var qrcode = `${loaddata.nom}` + "\n" + `${loaddata.ville}`
         + "\n" + `${loaddata.email_contact}` + "\n" + `${loaddata.tele}`
     const [Friends, setFriends] = store.useState("Friends")
@@ -193,7 +202,7 @@ const UserHome = () => {
                         containerStyle={{ alignSelf: "flex-start" }}
                         source={image}
                     />
-                    <View >
+                    <View  >
                         <Text style={{ marginRight: 10, fontSize: 22, color: textcoler, fontWeight: 'bold', marginBottom: 10, marginStart: 50 }}>{loaddata.nom}</Text>
 
 
@@ -209,7 +218,7 @@ const UserHome = () => {
                             </View>
                         </View>
 
-                        <Text style={{ width: 300, height: 60, color: textcoler, marginStart: 50 }}>{Data.bio}</Text>
+                        <Text style={{ width: 220, color: textcoler, marginStart: 50 }}>{Data.bio}</Text>
 
 
                     </View>

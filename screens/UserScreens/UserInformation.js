@@ -207,7 +207,7 @@ const UserInformation = () => {
                     </View>
                     <View style={{ marginEnd: 30, borderRadius: 5, alignSelf: "flex-end" }}>
                         <TouchableOpacity onPress={() => handelchangebaseinfo()}>
-                            <AntDesign name='edit' size={25} color={'#00A300'} />
+                            <AntDesign name='edit' size={25} color={'#3F4347'} />
                             {/* <Text style={{ color: textcoler, fontSize: 19, }}>edit</Text> */}
                         </TouchableOpacity>
                     </View>
@@ -243,7 +243,7 @@ const UserInformation = () => {
                     <View style={{ marginEnd: 30, borderRadius: 5, alignSelf: 'flex-end' }}>
                         <TouchableOpacity onPress={() => handelchangecontactinfo()} >
                             {/* <Text style={{ color: textcoler, fontSize: 19, }}>edit</Text> */}
-                            <AntDesign name='edit' size={25} color={'#00A300'} />
+                            <AntDesign name='edit' size={25} color={"#3F4347"} />
                         </TouchableOpacity>
                     </View>
                     <View style={{ marginHorizontal: 35, flexDirection: 'row', marginBottom: 10 }}>
@@ -267,7 +267,7 @@ const UserInformation = () => {
                     <TouchableOpacity onPress={() => handelAddUniversity()}>
                         <View style={{ width: 50, height: 47, alignSelf: 'flex-end', flexDirection: 'row' }}>
 
-                            <FontAwesome name='plus-circle' size={25} color={'#00A300'} style={{ marginBottom: 20 }} />
+                            <FontAwesome name='plus-circle' size={25} color={"#3F4347"} style={{ marginBottom: 20 }} />
 
                         </View>
                     </TouchableOpacity>
@@ -279,8 +279,8 @@ const UserInformation = () => {
                                         <TouchableOpacity onPress={() => handeldeleteuniv(university)}>
                                             <MaterialIcons name='cancel' size={22} color={'#A30000'} style={{ marginEnd: 10 }} />
                                         </TouchableOpacity>
-                                        <FontAwesome name='graduation-cap' size={25} color={textcoler} style={{ marginBottom: 20, marginEnd: 10 }} />
-                                        <Text style={{ marginBottom: 20, color: textcoler, fontStyle: 'normal', fontSize: 15 }}>{university.university}</Text>
+                                        <FontAwesome name='graduation-cap' size={25} color={textcoler} style={{ marginBottom: 20, marginEnd: 10, }} />
+                                        <Text style={{ marginBottom: 20, color: textcoler, fontStyle: 'normal', fontSize: 15, width: 230 }}>{university.university}</Text>
                                     </View>
                                 </View>
                             )
@@ -325,10 +325,12 @@ const UserInformation = () => {
                                     //source={image}
                                     source={{ uri: `${Ip}${work.image_club}` }}
                                 />
-                                <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{work.name_club}</Text>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>({work.role})</Text>
-                                    <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{work.date}</Text>
+                                <View style={{ width: 280, flexDirection: 'row' }}>
+                                    <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{work.name_club}</Text>
+                                    <View style={{ flexDirection: 'row', }}>
+                                        <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>({work.role})</Text>
+                                        <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{work.date}</Text>
+                                    </View>
                                 </View>
                             </View>)
                         // }

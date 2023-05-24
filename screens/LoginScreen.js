@@ -18,12 +18,14 @@ function Login({ navigation }) {
 
         await Client.post('/get_language', lang).then(function (res) {
             setlanguage(res.data.My_language)
+            console.log(res.data.My_language);
         }).catch(function () {
             console.log("error from get long login")
         })
     }
     useEffect(() => {
         changelang()
+
 
     }, [])
     const [row, setrow] = store.useState("dir")

@@ -198,7 +198,7 @@ const Notification = () => {
                                 />
 
                                 <Text style={{ color: textcoler, fontSize: 18, marginStart: 10, marginTop: 15 }}>{notification.name} :</Text>
-                                <View style={{ width: 190 }}>
+                                <View style={{ width: 100 }}>
                                     <Text style={{ color: textcoler, fontSize: 17, marginHorizontal: 10, marginTop: 15, fontWeight: 'bold' }}>{msgg} </Text>
                                 </View>
                                 {notification.img_do != "null" ?

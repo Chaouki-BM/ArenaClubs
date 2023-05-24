@@ -157,7 +157,7 @@ const InformationViewUser = () => {
                                             <MaterialIcons name='cancel' size={22} color={'#A30000'} style={{ marginEnd: 10 }} />
                                         </TouchableOpacity> */}
                                             <FontAwesome name='graduation-cap' size={25} color={textcoler} style={{ marginBottom: 20, marginEnd: 10 }} />
-                                            <Text style={{ marginBottom: 20, color: textcoler, fontStyle: 'normal', fontSize: 15 }}>{university.university}</Text>
+                                            <Text style={{ marginBottom: 20, color: textcoler, fontStyle: 'normal', fontSize: 15, width: 260, }}>{university.university}</Text>
                                         </View>
                                     </View>
                                 )
@@ -169,12 +169,12 @@ const InformationViewUser = () => {
                     : null}
                 {/* -------------------------------------- */}
                 {works.length != 0 ?
-                    <View style={{ borderRadius: 7, backgroundColor: albumS, width: 350, alignSelf: "center", marginTop: 20 }}>
-                        <View style={{ flexDirection: row }}>
+                    <View style={{ borderRadius: 7, backgroundColor: albumS, width: 350, alignSelf: "center", marginTop: 20, marginBottom: 120 }}>
 
-                            <Text style={{ marginTop: 15, marginHorizontal: 20, marginBottom: 15, color: maincolor, fontSize: 19 }}>{language.work}</Text>
 
-                        </View>
+                        <Text style={{ marginTop: 15, marginHorizontal: 20, marginBottom: 15, color: maincolor, fontSize: 19 }}>{language.work}</Text>
+
+
                         {/* <TextInput
                         style={[{ width: 250, alignSelf: 'center', height: 40, borderRadius: 15, marginBottom: 20 }, { borderColor: isFocusM ? maincolor : inputS }, { backgroundColor: inputS }, { color: textcoler }]}
                         onFocus={() => {
@@ -203,10 +203,12 @@ const InformationViewUser = () => {
                                         //source={image}
                                         source={{ uri: `${Ip}${work.image_club}` }}
                                     />
-                                    <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{work.name_club}</Text>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>({work.role})</Text>
-                                        <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{work.date}</Text>
+                                    <View style={{ width: 275, flexDirection: 'row' }}>
+                                        <Text style={{ marginVertical: 15, marginLeft: 20, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{work.name_club}</Text>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text style={{ marginVertical: 15, marginLeft: 10, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>({work.role})</Text>
+                                            <Text style={{ marginVertical: 15, marginLeft: 10, color: textcoler, fontStyle: 'italic', fontSize: 17 }}>{work.date}</Text>
+                                        </View>
                                     </View>
                                 </View>
                             )

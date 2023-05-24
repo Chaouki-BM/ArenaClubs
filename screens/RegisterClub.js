@@ -53,14 +53,29 @@ function RegisterScreen({ navigation }) {
         Alert.alert('error', msg)
 
     }
-
-
+    const [addAlbum, setaddAlbum] = useState({
+        group_name: 'test0',
+        email: '',
+    })
+    const handelsaveAlbum = async () => {
+        addAlbum.email = RegisterInfo.email
+        await Client.post("/creategroup", addAlbum).then(function (res) {
+            if (res.data.type == 'error') {
+                setaddAlbum(initialState)
+            } else {
+                setaddAlbum(initialState)
+            }
+        }).catch(function (e) {
+            console.log("error from save album", e)
+        })
+    }
     const resgister = async () => {
         await Client.post('/inscription_club', RegisterInfo)
             .then(function (res) {
                 if (res.data.type == 'error') {
                     alertmsg(res.data.msg)
                 } else {
+                    handelsaveAlbum()
                     navigation.navigate('Sign Up');
                 }
 
