@@ -23,14 +23,26 @@ const TabNavigation = () => {
     const [row, setrow] = store.useState("dir")
     const [email, setemail] = store.useState("email");
     const [numbernotif, setnumbernotif] = useState("")
+    const [numbermsg, setnumbermsg] = store.useState("numbermsg")
     useEffect(() => {
         getNumberNotificationsNoVu()
-    }, [])
+        getNumberMessageNoVu()
 
+    }, [])
+    const getNumberMessageNoVu = async () => {
+        await Client.post("/get_nb_msg_non_vu", email)
+            .then(function (res) {
+
+                setnumbermsg(res.data.nb)
+            }).catch(function (e) {
+                console.log("error from get number msg no vu ", e)
+            })
+    }
     const getNumberNotificationsNoVu = async () => {
         await Client.post("/getnotification_vu", email)
             .then(function (res) {
                 setnumbernotif(res.data.nbr_vu)
+
             }).catch(function (e) {
                 console.log("error from get Number Notifications No Vu ", e);
             })
@@ -117,12 +129,13 @@ const TabNavigation = () => {
                 />
                 <Tab.Screen name="Messagerie" component={Messagerie}
                     options={{
-                        tabBarBadge: 3,
+                        tabBarBadge: numbermsg == 0 ? null : numbermsg,
                         title: `${language.msg}`,
                         tabBarIcon: ({ focused, color, size }) => (
                             <Entypo name="message" color={color} size={size} />
                         ),
                     }}
+
 
                 />
                 <Tab.Screen name="SettingPage" component={SettingPage}

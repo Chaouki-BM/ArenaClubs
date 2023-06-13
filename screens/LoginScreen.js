@@ -48,7 +48,7 @@ function Login({ navigation }) {
 
     };
     const alertmsg = (msg) => {
-        Alert.alert('error', msg)
+        Alert.alert(language.error, msg)
 
     }
     // const sendcode = async (msgg) => {
@@ -89,10 +89,17 @@ function Login({ navigation }) {
         await Client.post('/login', loginInfo)
             .then(function (res) {
                 if (res.data.type == 'error') {
-                    alertmsg(res.data.msg)
+                    if (res.data.msg == "acc_disactive") {
+                        alertmsg(language.desactive_acc)
+                    } else if (res.data.msg == "erreur_p") {
+                        alertmsg(language.errpass)
+                    } else if (res.data.msg == "erreur_e") {
+                        alertmsg(language.erremail)
+                    }
+
                 } else if (res.data.type == 'info') {
                     email.email = loginInfo.email
-                    alertmsg(res.data.msg)
+                    //alertmsg(res.data.msg)
                     navigation.navigate('Sign Up');
                 } else if (res.data.type == 'success') {
                     setlog(true)
@@ -258,6 +265,7 @@ function Login({ navigation }) {
                         onBlur={() => {
                             setisFocus(false)
                         }}
+                        secureTextEntry={true}
                         placeholder={language.password}
                         value={loginInfo.password}
                         onChangeText={val => {

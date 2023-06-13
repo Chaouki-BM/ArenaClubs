@@ -30,4 +30,5 @@ store.setState("allsave", [])
 store.setState("emailView", { email: '' })
 store.setState("FriendsV", [])
 store.setState("followersV", [])
+store.setState("msgemail", { email: '', name: '', img: '' })
 export default store;

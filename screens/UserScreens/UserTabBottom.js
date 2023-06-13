@@ -25,8 +25,17 @@ const UserTabBottom = () => {
     const [numbernotif, setnumbernotif] = useState("")
     useEffect(() => {
         getNumberNotificationsNoVu()
+        getNumberMessageNoVu()
     }, [])
+    const getNumberMessageNoVu = async () => {
+        await Client.post("/get_nb_msg_non_vu", email)
+            .then(function (res) {
 
+                setnumbermsg(res.data.nb)
+            }).catch(function (e) {
+                console.log("error from get number msg no vu ", e)
+            })
+    }
     const getNumberNotificationsNoVu = async () => {
         await Client.post("/getnotification_vu", email)
             .then(function (res) {
@@ -49,7 +58,7 @@ const UserTabBottom = () => {
                 })
         }
     }
-
+    const [numbermsg, setnumbermsg] = useState("")
     const [notifications, setnotifications] = store.useState("notifications")
     const getnotification = async () => {
 
@@ -129,7 +138,7 @@ const UserTabBottom = () => {
                 />
                 <Tab.Screen name="Messagerie" component={Messagerie}
                     options={{
-                        tabBarBadge: 3,
+                        tabBarBadge: numbermsg == 0 ? null : numbermsg,
                         title: `${language.msg}`,
                         tabBarIcon: ({ focused, color, size }) => (
                             <Entypo name="message" color={color} size={size} />
