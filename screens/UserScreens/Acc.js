@@ -44,42 +44,42 @@ const Acc = () => {
         })
     }
 
-    // const loadLike = async (item) => {
-    //     islike.email = email.email;
-    //     islike.group_name = item.group_name;
-    //     islike.email_img = item.email;
-    //     islike.image = item.image;
-    //     islike.email_like = email.email;
+    const loadLike = async (item) => {
+        islike.email = email.email;
+        islike.group_name = item.group_name;
+        islike.email_img = item.email;
+        islike.image = item.image;
+        islike.email_like = email.email;
 
-    //     await Client.post("/testlike", islike)
-    //         .then((res) => {
-    //             if (res.data.test == 0) {
-    //                 item["heart"] = "heart-o"
-    //                 //console.log("hhhh", element)
-    //                 setposts(prevState => [...prevState, item])
+        await Client.post("/testlike", islike)
+            .then((res) => {
+                if (res.data.test == 0) {
+                    item["heart"] = "heart-o"
+                    //console.log("hhhh", element)
+                    setposts(prevState => [...prevState, item])
 
-    //             } else {
-    //                 item["heart"] = "heart"
-    //                 //console.log("hhhh", element)
-    //                 setposts(prevState => [...prevState, item])
-    //             }
-    //         }).catch(function (e) {
-    //             console.log("error from loadLike post", e)
-    //         })
+                } else {
+                    item["heart"] = "heart"
+                    //console.log("hhhh", element)
+                    setposts(prevState => [...prevState, item])
+                }
+            }).catch(function (e) {
+                console.log("error from loadLike post", e)
+            })
 
 
-    // }
+    }
 
     const [posts, setposts] = useState([])
 
     const loadposts = async () => {
         await Client.post("/getallimages_following", email).
             then(function (res) {
-                setposts(res.data[0]);
-                // res.data[0].forEach(async element => {
-                //     loadLike(element)
-                //     setposts([])
-                // })
+                // setposts(res.data[0]);
+                res.data[0].forEach(async element => {
+                    loadLike(element)
+                    setposts([])
+                })
 
             }).catch(function (e) {
                 console.log("error from get all images following", e);
@@ -467,14 +467,14 @@ const Acc = () => {
 
                                 {/* <FontAwesome name="heart" color={maincolor} size={20} style={{ marginTop: 1, marginLeft: 20 }} /> */}
 
-                                {/* <TouchableOpacity onPress={() => { post.heart == "heart" ? (handelunheart(post, index)) : (handelheart(post, index)) }}>
+                                <TouchableOpacity onPress={() => { post.heart == "heart" ? (handelunheart(post, index)) : (handelheart(post, index)) }}>
                                     {post.heart === "heart" ?
                                         <FontAwesome name="heart" color={maincolor} size={20} style={{ marginTop: 1, marginLeft: 20 }} />
                                         :
                                         <FontAwesome name="heart-o" color={maincolor} size={20} style={{ marginTop: 1, marginLeft: 20 }} />
                                     }
 
-                                </TouchableOpacity> */}
+                                </TouchableOpacity>
 
                                 <TouchableOpacity onPress={() => handelshowComment(post)}>
                                     <FontAwesome name='comment-o' size={21} color={maincolor} style={{ marginHorizontal: 15, marginBottom: 10 }} />
