@@ -27,6 +27,7 @@ const UserTabBottom = () => {
         getNumberNotificationsNoVu()
         getNumberMessageNoVu()
     }, [])
+    const [numbermsg, setnumbermsg] = store.useState("numbermsg")
     const getNumberMessageNoVu = async () => {
         await Client.post("/get_nb_msg_non_vu", email)
             .then(function (res) {
@@ -58,7 +59,6 @@ const UserTabBottom = () => {
                 })
         }
     }
-    const [numbermsg, setnumbermsg] = useState("")
     const [notifications, setnotifications] = store.useState("notifications")
     const getnotification = async () => {
 

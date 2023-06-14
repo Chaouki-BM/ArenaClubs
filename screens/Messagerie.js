@@ -28,7 +28,16 @@ const Messagerie = ({ navigation }) => {
             console.log("error from get mmsg")
         })
     }
+    const [numbermsg, setnumbermsg] = store.useState("numbermsg")
+    const getNumberMessageNoVu = async () => {
+        await Client.post("/get_nb_msg_non_vu", email)
+            .then(function (res) {
 
+                setnumbermsg(res.data.nb)
+            }).catch(function (e) {
+                console.log("error from get number msg no vu ", e)
+            })
+    }
     const [pra, setpara] = useState({ email_user_1: '', email_user_2: '' })
     const handelopenmsg = async (e, i, n, vu, last) => {
         navigation.navigate('Conversation');
@@ -41,6 +50,7 @@ const Messagerie = ({ navigation }) => {
             await Client.post("/vu_conversation", pra).then(function (res) {
                 console.log(res.data.res);
                 getmssg()
+                getNumberMessageNoVu()
             }).catch(function (e) {
                 console.log('errro from vu conversation', e);
             })
