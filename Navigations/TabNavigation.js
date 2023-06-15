@@ -108,11 +108,10 @@ const TabNavigation = () => {
                         blur: () => {
                             setnumbernotif(0)
                             vunotification()
-                            // getnotification()
+                            getnotification()
+                            getNumberNotificationsNoVu()
                             // aux = true
                         },
-
-
                     })}
                 />
                 <Tab.Screen

@@ -31,4 +31,5 @@ store.setState("emailView", { email: '' })
 store.setState("FriendsV", [])
 store.setState("followersV", [])
 store.setState("msgemail", { email: '', name: '', img: '' })
+store.setState("reqs", [])
 export default store;

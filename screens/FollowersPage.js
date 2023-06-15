@@ -22,7 +22,7 @@ const FollowersPage = () => {
     useEffect(() => {
         loadreq()
     }, []);
-    const [reqs, setreqs] = useState([])
+    const [reqs, setreqs] = store.useState("reqs")
     const loadreq = async () => {
         await Client.post("/get_request_club", email)
             .then(function (res) {
@@ -119,6 +119,8 @@ const FollowersPage = () => {
                 console.log("error from load membres", e)
             })
     }
+    const [refreshing, setRefreshing] = React.useState(false);
+
     return (
         <View style={[styles.container, { backgroundColor: mode }]}>
             <ScrollView
